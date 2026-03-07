@@ -1,6 +1,6 @@
 --Timetable (Sessions)
 CREATE TABLE Timetable(
-    Session_id CHAR(6),
+    Timetable_id CHAR(6),
     Day CHAR(3),
     Start_time TIME,
     End_time TIME,
@@ -11,7 +11,7 @@ CREATE TABLE Timetable(
 );
 
 
-INSERT INTO SESSION (Session_id, Day, Start_time, End_time, C_code, Type) VALUES
+INSERT INTO Timetable (Timetable_id, Day, Start_time, End_time, C_code, Type) VALUES
 ('SES001','Mon','09:00:00','11:00:00','ICT2113','T'),
 ('SES002','Mon','11:00:00','13:00:00','ICT2113','P'),
 ('SES003','Mon','15:00:00','16:00:00','TCS2112','T'), --econ tutorial
