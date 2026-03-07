@@ -1,12 +1,12 @@
 --Timetable (Sessions)
 CREATE TABLE Timetable(
     Timetable_id CHAR(6),
-    Day CHAR(3),
+    Day ENUM('Mon','Tue','Wed','Thu','Fri','Sat','Sun'),
     Start_time TIME,
     End_time TIME,
     C_code CHAR(8),
-    Type CHAR(1),
-    PRIMARY KEY (Session_id),
+    Type ENUM('T','P'),
+    PRIMARY KEY (Timetable_id),
     FOREIGN KEY (C_code) REFERENCES COURSE(C_code) ON DELETE CASCADE
 );
 
