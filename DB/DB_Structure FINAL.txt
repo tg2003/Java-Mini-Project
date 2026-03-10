@@ -1,0 +1,194 @@
+DROP DATABASE IF EXISTS LMS_DB;
+CREATE DATABASE LMS_DB;
+USE LMS_DB;
+
+-- User
+CREATE TABLE USER (
+    User_id CHAR(6) PRIMARY KEY,
+    Password VARCHAR(100),
+    Role ENUM('Admin','Lecturer','Tech_Officer','Undergraduate'),
+    Profile_pic VARCHAR(255)
+);
+
+-- ADMIN
+CREATE TABLE ADMIN (
+    Admin_id CHAR(6) PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Nic VARCHAR(12),
+    Dob DATE,
+    Dpt_name VARCHAR(50),
+    Phone VARCHAR(15),
+    No VARCHAR(10),
+    Street VARCHAR(100),
+    City VARCHAR(50),
+
+    FOREIGN KEY (Admin_id) REFERENCES USER(User_id) ON DELETE CASCADE
+);
+
+-- LECTURER
+CREATE TABLE LECTURER (
+    Lec_id CHAR(6) PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Nic VARCHAR(12),
+    Dob DATE,
+    Education_lvl ENUM('Bachelor','Master','Phd'),
+    Dpt_name VARCHAR(50),
+    No VARCHAR(10),
+    Street VARCHAR(100),
+    City VARCHAR(50),
+
+    FOREIGN KEY (Lec_id) REFERENCES USER(User_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE LECTURER_PHONE (
+    Lec_id CHAR(6),
+    Phone CHAR(10),
+
+    PRIMARY KEY (Lec_id, Phone),
+    FOREIGN KEY (Lec_id) REFERENCES LECTURER(Lec_id)
+);
+
+-- TECH_OFFICER
+CREATE TABLE TECH_OFFICER (
+    Techoff_id CHAR(6) PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Nic VARCHAR(12),
+    Dob DATE,
+    Phone VARCHAR(15),
+    No VARCHAR(10),
+    Street VARCHAR(100),
+    City VARCHAR(50),
+
+    FOREIGN KEY (Techoff_id) REFERENCES USER(User_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE TECH_OFFICER_PHONE (
+    Techoff_id CHAR(6),
+    Phone CHAR(10),
+
+    PRIMARY KEY (Techoff_id, Phone),
+    FOREIGN KEY (Techoff_id) REFERENCES TECH_OFFICER(Techoff_id)
+);
+
+-- UNDERGRADUATE
+CREATE TABLE UNDERGRADUATE (
+    Ug_id CHAR(6) PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Nic VARCHAR(12),
+    Dob DATE,
+    Dpt_name VARCHAR(50),
+    No VARCHAR(10),
+    Street VARCHAR(100),
+    City VARCHAR(50),
+
+    FOREIGN KEY (Ug_id) REFERENCES USER(User_id)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE UNDERGRADUATE_PHONE (
+    Ug_id CHAR(6),
+    Phone CHAR(10),
+
+    PRIMARY KEY (Ug_id, Phone),
+    FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id)
+);
+
+-- COURSE
+CREATE TABLE COURSE (
+    C_code CHAR(7) PRIMARY KEY,
+    C_name VARCHAR(100),
+    Credit ENUM('1','2','3')
+);
+
+CREATE TABLE COURSE_MATERIAL (
+    C_code CHAR(7),
+    Material VARCHAR(255),
+
+    PRIMARY KEY(C_code, Material),
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code)
+    ON DELETE CASCADE
+);
+
+CREATE TABLE ENROLLS_IN (
+    Ug_id CHAR(6),
+    C_code CHAR(7),
+    Status ENUM('Proper','Repeat','Batchmissed'),
+    Sem TINYINT,
+    Batch_yr INT,
+    Level TINYINT,
+
+    PRIMARY KEY (Ug_id, C_code),
+    FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id),
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code)
+);
+
+CREATE TABLE NOTICE (
+    Notice_no INT AUTO_INCREMENT PRIMARY KEY,
+    Title VARCHAR(200),
+    Date_time DATETIME,
+    Download_link VARCHAR(255)
+);
+
+-- Timetable (Sessions)
+CREATE TABLE TIMETABLE (
+    Timetable_id INT AUTO_INCREMENT PRIMARY KEY,  -- ✅ duplicate PRIMARY KEY එක ඉවත් කළා
+    Day CHAR(3),
+    Start_time TIME,
+    End_time TIME,
+    C_code CHAR(7),
+    Type ENUM('Theory','Practical'),
+
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code) ON DELETE CASCADE
+);
+
+CREATE TABLE MARK (
+    Mark_id INT AUTO_INCREMENT PRIMARY KEY,
+    Ug_id CHAR(6),
+    C_code CHAR(7),
+    Quiz01 DECIMAL(5,2),
+    Quiz02 DECIMAL(5,2),
+    Quiz03 DECIMAL(5,2),
+    Assignment1 DECIMAL(5,2),
+    Assignment2 DECIMAL(5,2),
+    Project DECIMAL(5,2),
+    Mid_T DECIMAL(5,2),
+    Mid_P DECIMAL(5,2),
+    Final_T DECIMAL(5,2),
+    Final_P DECIMAL(5,2),
+    Attempt_type VARCHAR(20),
+
+    FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id),
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code)
+);
+
+CREATE TABLE MEDICAL (
+    Medical_id INT PRIMARY KEY,
+    Ug_id CHAR(6),
+    Date_submitted DATE,
+    Status ENUM('Pending','Approved','Rejected'),
+    Purpose ENUM('Lecture','Exam'),
+    Verified_by CHAR(6),
+
+    FOREIGN KEY (Verified_by) REFERENCES TECH_OFFICER(Techoff_id),
+    FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id)
+);
+
+CREATE TABLE ATTENDANCE (
+    Attendance_id INT,
+    Ug_id CHAR(6),
+    Techoff_id CHAR(6),
+    Timetable_id INT,
+    Week_no INT,
+    Status ENUM('Present','Absent','Medical Approved','Medical Rejected'),
+
+    PRIMARY KEY (Ug_id, Timetable_id, Attendance_id, Week_no),
+    FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id),
+    FOREIGN KEY (Timetable_id) REFERENCES TIMETABLE(Timetable_id),  -- ✅ C_code FK වෙනුවට නිවැරදි FK දැම්මා
+    FOREIGN KEY (Techoff_id) REFERENCES TECH_OFFICER(Techoff_id)
+);
