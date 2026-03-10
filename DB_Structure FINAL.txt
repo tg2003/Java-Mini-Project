@@ -33,7 +33,7 @@ CREATE TABLE LECTURER (
     Email VARCHAR(100),
     Nic VARCHAR(12),
     Dob DATE,
-    Education_lvl VARCHAR(100),
+    Education_lvl ENUM('Bachelor','Master','Phd'),
     Dpt_name VARCHAR(50),
     No VARCHAR(10),
     Street VARCHAR(100),
