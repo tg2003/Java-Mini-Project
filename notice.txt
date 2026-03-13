@@ -1,0 +1,6 @@
+INSERT INTO NOTICE (Title, Date_time, Download_link) VALUES
+('Semester Examination Notice', '2026-04-10 09:00:00', 'exam_timetable.pdf'),
+('ICT2132 Mini Project Submission', '2026-04-15 10:30:00', 'oop_project_submission_guidelines.pdf'),
+('Medical Submission Reminder', '2026-04-16 08:00:00', NULL),
+('Guest Lecture on Artificial Intelligence', '2026-04-18 11:00:00', 'ai_guest_lecture_details.pdf'),
+('Library Maintenance Notice', '2026-04-20 14:00:00', NULL);
