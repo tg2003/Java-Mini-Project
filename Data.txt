@@ -1,0 +1,74 @@
+
+--COURSE
+INSERT INTO COURSE (C_code, C_name, Credit) VALUES
+('ICT2113', 'Data Structures and Algorithms', '3'),
+('ICT2122', 'Object Oriented Programming', '2'),
+('ICT2132', 'Object Oriented Programming Practicum', '2'),
+('ICT2142', 'Object Oriented Analysis and Design', '2'),
+('ICT2152', 'E-Commerce', '2'),
+('ENG2122', 'English', '2'),
+('TCS2112', 'Business Economics', '2'),
+('TCS2122', 'Soft Skills', '2');
+
+--COURSE_MATERIAL
+INSERT INTO COURSE_MATERIAL (C_code, Material) VALUES
+
+('ICT2113','DSA_Lecture01_Introduction.pdf'),
+('ICT2113','DSA_Lecture02_Stacks.pdf'),
+('ICT2113','DSA_Lecture03_Queues.pdf'),
+('ICT2113','DSA_Tutorial01.pdf'),
+
+('ICT2122','OOP_Lecture01_Basics.pdf'),
+('ICT2122','OOP_Lecture02_Inheritance.pdf'),
+('ICT2122','OOP_Lecture03_Polymorphism.pdf'),
+('ICT2122','OOP_Lecture04_Abstraction.pdf'),
+
+('ICT2132','OOP_Practicum_Lab01.pdf'),
+('ICT2132','OOP_Practicum_Lab02.pdf'),
+('ICT2132','OOP_Practicum_Project_Guide.pdf'),
+
+('ICT2142','OOAD_Lecture01_Introduction.pdf'),
+('ICT2142','OOAD_Lecture02_UML_Diagrams.pdf'),
+('ICT2142','OOAD_Lecture03_Design_Patterns.pdf'),
+
+
+('ICT2152','Ecommerce_Lecture01_Introduction.pdf'),
+('ICT2152','Ecommerce_Lecture02_Business_Models.pdf'),
+('ICT2152','Ecommerce_Lecture03_Payment_Systems.pdf'),
+
+('ENG2122','English_Academic_Writing.pdf'),
+('ENG2122','English_Presentation_Skills.pdf'),
+
+('TCS2112','Business_Economics_Lecture01.pdf'),
+('TCS2112','Business_Economics_Lecture02_Demand_Supply.pdf'),
+
+
+('TCS2122','SoftSkills_Communication.pdf'),
+('TCS2122','SoftSkills_Teamwork.pdf');
+
+
+
+
+
+--TIMETABLE
+INSERT INTO TIMETABLE (Day, Start_time, End_time, C_code, Type) VALUES
+
+
+('Monday','09:00:00','11:00:00','ICT2113','Theory'),
+('Monday','11:00:00','13:00:00','ICT2113','Practical'),
+('Monday','15:00:00','16:00:00','TCS2112','Theory'),
+
+
+('Tuesday','09:00:00','11:00:00','ICT2142','Theory'),
+
+('Wednesday','08:00:00','10:00:00','TCS2122','Theory'),
+('Wednesday','11:00:00','13:00:00','ICT2152','Theory'),
+
+
+('Thursday','09:00:00','11:00:00','ICT2122','Theory'),
+('Thursday','11:00:00','13:00:00','ICT2132','Practical'),
+('Thursday','14:00:00','16:00:00','ICT2132','Practical'),
+
+
+('Friday','08:00:00','10:00:00','TCS2112','Theory'),
+('Friday','10:00:00','12:00:00','ENG2122','Theory');
