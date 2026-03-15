@@ -52,6 +52,21 @@ CREATE TABLE LECTURER_PHONE (
     FOREIGN KEY (Lec_id) REFERENCES LECTURER(Lec_id)
 );
 
+-- TECH_OFFICER
+CREATE TABLE TECH_OFFICER (
+    Techoff_id CHAR(6) PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Nic VARCHAR(12),
+    Dob DATE,
+    Phone VARCHAR(15),
+    No VARCHAR(10),
+    Street VARCHAR(100),
+    City VARCHAR(50),
+
+    FOREIGN KEY (Techoff_id) REFERENCES USER(User_id)
+    ON DELETE CASCADE
+);
 
 
 
