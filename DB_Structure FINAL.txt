@@ -26,3 +26,20 @@ CREATE TABLE ADMIN (
 
     FOREIGN KEY (Admin_id) REFERENCES USER(User_id) ON DELETE CASCADE
 );
+
+-- LECTURER
+CREATE TABLE LECTURER (
+    Lec_id CHAR(6) PRIMARY KEY,
+    Name VARCHAR(100),
+    Email VARCHAR(100),
+    Nic VARCHAR(12),
+    Dob DATE,
+    Education_lvl ENUM('Bachelor','Master','Phd'),
+    Dpt_name VARCHAR(50),
+    No VARCHAR(10),
+    Street VARCHAR(100),
+    City VARCHAR(50),
+
+    FOREIGN KEY (Lec_id) REFERENCES USER(User_id)
+    ON DELETE CASCADE
+);
