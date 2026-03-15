@@ -136,7 +136,12 @@ CREATE TABLE ENROLLS_IN (
 );
 
 
-
+CREATE TABLE NOTICE (
+    Notice_no INT AUTO_INCREMENT PRIMARY KEY,
+    Title VARCHAR(200),
+    Date_time DATETIME,
+    Download_link VARCHAR(255)
+);
 
 
 
