@@ -191,37 +191,19 @@ CREATE TABLE MEDICAL (
 
 
 
+CREATE TABLE ATTENDANCE (
+    Attendance_id INT,
+    Ug_id CHAR(6),
+    Techoff_id CHAR(6),
+    Timetable_id INT,
+    Week_no INT,
+    Status ENUM('Present','Absent','Medical Approved','Medical Rejected'),
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+    PRIMARY KEY (Ug_id, Timetable_id, Attendance_id, Week_no),
+    FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id),
+    FOREIGN KEY (Timetable_id) REFERENCES TIMETABLE(Timetable_id),
+    FOREIGN KEY (Techoff_id) REFERENCES TECH_OFFICER(Techoff_id)
+);
 
 
 
