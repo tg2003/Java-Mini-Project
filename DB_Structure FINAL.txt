@@ -104,6 +104,33 @@ CREATE TABLE UNDERGRADUATE_PHONE (
 );
 
 
+-- COURSE
+CREATE TABLE COURSE (
+    C_code CHAR(7) PRIMARY KEY,
+    C_name VARCHAR(100),
+    Credit ENUM('1','2','3')
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
