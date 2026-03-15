@@ -143,6 +143,42 @@ CREATE TABLE NOTICE (
     Download_link VARCHAR(255)
 );
 
+-- Timetable (Sessions)
+CREATE TABLE TIMETABLE (
+    Timetable_id INT AUTO_INCREMENT PRIMARY KEY, 
+    Day CHAR(3),
+    Start_time TIME,
+    End_time TIME,
+    C_code CHAR(7),
+    Type ENUM('Theory','Practical'),
+
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code) ON DELETE CASCADE
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
