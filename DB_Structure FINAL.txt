@@ -155,6 +155,25 @@ CREATE TABLE TIMETABLE (
     FOREIGN KEY (C_code) REFERENCES COURSE(C_code) ON DELETE CASCADE
 );
 
+CREATE TABLE MARK (
+    Mark_id INT AUTO_INCREMENT PRIMARY KEY,
+    Ug_id CHAR(6),
+    C_code CHAR(7),
+    Quiz01 DECIMAL(5,2),
+    Quiz02 DECIMAL(5,2),
+    Quiz03 DECIMAL(5,2),
+    Assignment1 DECIMAL(5,2),
+    Assignment2 DECIMAL(5,2),
+    Project DECIMAL(5,2),
+    Mid_T DECIMAL(5,2),
+    Mid_P DECIMAL(5,2),
+    Final_T DECIMAL(5,2),
+    Final_P DECIMAL(5,2),
+    Attempt_type VARCHAR(20),
+
+    FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id),
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code)
+);
 
 
 
