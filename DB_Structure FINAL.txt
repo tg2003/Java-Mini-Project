@@ -1,0 +1,11 @@
+DROP DATABASE IF EXISTS LMS_DB;
+CREATE DATABASE LMS_DB;
+USE LMS_DB;
+
+-- User
+CREATE TABLE USER (
+    User_id CHAR(6) PRIMARY KEY,
+    Password VARCHAR(100),
+    Role ENUM('Admin','Lecturer','Tech_Officer','Undergraduate'),
+    Profile_pic VARCHAR(255)
+);
