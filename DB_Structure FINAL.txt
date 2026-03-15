@@ -112,7 +112,14 @@ CREATE TABLE COURSE (
 );
 
 
+CREATE TABLE COURSE_MATERIAL (
+    C_code CHAR(7),
+    Material VARCHAR(255),
 
+    PRIMARY KEY(C_code, Material),
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code)
+    ON DELETE CASCADE
+);
 
 
 
