@@ -43,3 +43,28 @@ CREATE TABLE LECTURER (
     FOREIGN KEY (Lec_id) REFERENCES USER(User_id)
     ON DELETE CASCADE
 );
+
+CREATE TABLE LECTURER_PHONE (
+    Lec_id CHAR(6),
+    Phone CHAR(10),
+
+    PRIMARY KEY (Lec_id, Phone),
+    FOREIGN KEY (Lec_id) REFERENCES LECTURER(Lec_id)
+);
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
