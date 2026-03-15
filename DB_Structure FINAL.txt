@@ -177,6 +177,18 @@ CREATE TABLE MARK (
 
 
 
+CREATE TABLE MEDICAL (
+    Medical_id INT PRIMARY KEY,
+    Ug_id CHAR(6),
+    Date_submitted DATE,
+    Status ENUM('Pending','Approved','Rejected'),
+    Purpose ENUM('Lecture','Exam'),
+    Verified_by CHAR(6),
+
+    FOREIGN KEY (Verified_by) REFERENCES TECH_OFFICER(Techoff_id),
+    FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id)
+);
+
 
 
 
