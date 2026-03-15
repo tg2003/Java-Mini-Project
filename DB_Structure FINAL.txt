@@ -122,6 +122,22 @@ CREATE TABLE COURSE_MATERIAL (
 );
 
 
+CREATE TABLE ENROLLS_IN (
+    Ug_id CHAR(6),
+    C_code CHAR(7),
+    Status ENUM('Proper','Repeat','Batchmissed'),
+    Sem TINYINT,
+    Batch_yr INT,
+    Level TINYINT,
+
+    PRIMARY KEY (Ug_id, C_code),
+    FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id),
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code)
+);
+
+
+
+
 
 
 
