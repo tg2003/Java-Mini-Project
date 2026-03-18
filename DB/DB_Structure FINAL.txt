@@ -161,7 +161,7 @@ CREATE TABLE MARK (
     Mid_P DECIMAL(5,2),
     Final_T DECIMAL(5,2),
     Final_P DECIMAL(5,2),
-    Attempt_type VARCHAR(20),
+    Attempt_type ENUM ('Proper','Repeat','MedicalRepeat'),
 
     FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id),
     FOREIGN KEY (C_code) REFERENCES COURSE(C_code)
