@@ -1,0 +1,33 @@
+INSERT INTO MEDICAL (Medical_id, Ug_id, Date_submitted, Status, Purpose, Verified_by) VALUES
+
+-- Approved (Lecture)
+(1, 'TG1701', '2026-03-01', 'Approved', 'Lecture', 'TO0001'),
+(2, 'TG1702', '2026-03-02', 'Approved', 'Lecture', 'TO0002'),
+
+-- Approved (Exam)
+(3, 'TG1703', '2026-03-03', 'Approved', 'Exam', 'TO0003'),
+(4, 'TG1704', '2026-03-04', 'Approved', 'Exam', 'TO0004'),
+
+-- Pending
+(5, 'TG1705', '2026-03-05', 'Pending', 'Lecture', 'TO0001'),
+(6, 'TG1706', '2026-03-06', 'Pending', 'Exam', 'TO0002'),
+
+-- Rejected
+(7, 'TG1707', '2026-03-07', 'Rejected', 'Lecture', 'TO0003'),
+(8, 'TG1708', '2026-03-08', 'Rejected', 'Exam', 'TO0004'),
+
+-- Mixed scenarios
+(9,  'TG1709',  '2026-03-09', 'Approved', 'Lecture', 'TO0001'),
+(10, 'TG1710', '2026-03-10', 'Approved', 'Exam',    'TO0002'),
+(11, 'TG1711', '2026-03-11', 'Pending',  'Lecture', 'TO0003'),
+(12, 'TG1712', '2026-03-12', 'Rejected', 'Exam',    'TO0004'),
+
+
+(13, 'TG1713', '2026-03-13', 'Approved', 'Lecture', 'TO0001'),
+(14, 'TG1714', '2026-03-14', 'Approved', 'Exam',    'TO0002'),
+(15, 'TG1715', '2026-03-15', 'Pending',  'Lecture', 'TO0003'),
+(16, 'TG1716', '2026-03-16', 'Approved', 'Lecture', 'TO0004'),
+(17, 'TG1717', '2026-03-17', 'Rejected', 'Lecture', 'TO0001'),
+(18, 'TG1718', '2026-03-18', 'Approved', 'Exam',    'TO0002'),
+(19, 'TG1719', '2026-03-19', 'Pending',  'Exam',    'TO0003'),
+(20, 'TG1720', '2026-03-20', 'Approved', 'Lecture', 'TO0004');
