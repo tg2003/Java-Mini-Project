@@ -1,0 +1,130 @@
+-- DATA INSERTION by Gimhana
+
+-- 1. USER
+INSERT INTO USER (User_id, Password, Role, Profile_pic) VALUES
+-- Admin (1)
+('A00001', 'adminpwd',  'Admin',        NULL),
+
+-- Lecturers (5)
+('L00001', 'lecpwd1',   'Lecturer',     NULL),
+('L00002', 'lecpwd2',   'Lecturer',     NULL),
+('L00003', 'lecpwd3',   'Lecturer',     NULL),
+('L00004', 'lecpwd4',   'Lecturer',     NULL),
+('L00005', 'lecpwd5',   'Lecturer',     NULL),
+
+-- Tech Officers (4)
+('TO0001', 'topwd1',    'Tech_Officer', NULL),
+('TO0002', 'topwd2',    'Tech_Officer', NULL),
+('TO0003', 'topwd3',    'Tech_Officer', NULL),
+('TO0004', 'topwd4',    'Tech_Officer', NULL),
+
+-- Undergraduates (20)
+('TG1701', 'stpwd1',    'Undergraduate', NULL),
+('TG1702', 'stpwd2',    'Undergraduate', NULL),
+('TG1703', 'stpwd3',    'Undergraduate', NULL),
+('TG1704', 'stpwd4',    'Undergraduate', NULL),
+('TG1705', 'stpwd5',    'Undergraduate', NULL),
+('TG1706', 'stpwd6',    'Undergraduate', NULL),
+('TG1707', 'stpwd7',    'Undergraduate', NULL),
+('TG1708', 'stpwd8',    'Undergraduate', NULL),
+('TG1709', 'stpwd9',    'Undergraduate', NULL),
+('TG1710', 'stpwd10',   'Undergraduate', NULL),
+('TG1711', 'stpwd11',   'Undergraduate', NULL),
+('TG1712', 'stpwd12',   'Undergraduate', NULL),
+('TG1713', 'stpwd13',   'Undergraduate', NULL),
+('TG1714', 'stpwd14',   'Undergraduate', NULL),
+('TG1715', 'stpwd15',   'Undergraduate', NULL),
+('TG1716', 'stpwd16',   'Undergraduate', NULL),
+('TG1717', 'stpwd17',   'Undergraduate', NULL),
+('TG1718', 'stpwd18',   'Undergraduate', NULL),
+('TG1719', 'stpwd19',   'Undergraduate', NULL),
+('TG1720', 'stpwd20',   'Undergraduate', NULL);
+
+
+-- 2. ADMIN (1)
+INSERT INTO ADMIN (Admin_id, Name, Email, Nic, Dob, Dpt_name, Phone, No, Street, City) VALUES
+('A00001', 'Tharinda Gimhana', 'tharinda.gimhana@example.com', '850715123V', '1985-07-15', 'Computer Science', '0712345678', '12', 'Galle Rd', 'Colombo');
+
+
+-- 3. LECTURER (5)  – old 4 records reused + 1 new
+INSERT INTO LECTURER (Lec_id, Name, Email, Nic, Dob, Education_lvl, Dpt_name, No, Street, City) VALUES
+('L00001', 'Nirosha Perera',     'nirosha.perera@gmail.com',       '901234567V', '1985-03-15', 'Master',   'ICT', '12', 'Galle Rd',    'Colombo'),
+('L00002', 'Shanika Fernando',   'shanika.fernando@yahoo.com',     '921234568V', '1987-07-22', 'Phd',      'ICT', '45', 'Temple St',   'Kandy'),
+('L00003', 'Dilani Jayasinghe',  'dilani.jayasinghe@gmail.com',    '931234569V', '1986-11-30', 'Bachelor', 'ICT', '78', 'Main St',     'Galle'),
+('L00004', 'Chamara Senanayake', 'chamara.senanayake@gmail.com',   '841234570V', '1984-05-10', 'Master',   'ICT', '56', 'Lake Rd',     'Colombo'),
+('L00005', 'Ruwan Bandara',      'ruwan.bandara@gmail.com',        '880512345V', '1988-05-12', 'Phd',      'ICT', '34', 'Kandy Rd',    'Peradeniya');
+
+INSERT INTO LECTURER_PHONE (Lec_id, Phone) VALUES
+('L00001', '0771234567'),
+('L00001', '0712345678'),
+('L00002', '0758765432'),
+('L00003', '0723456789'),
+('L00004', '0769876543'),
+('L00004', '0715554321'),
+('L00005', '0701122334');
+
+
+-- 4. TECH_OFFICER (4)
+INSERT INTO TECH_OFFICER (Techoff_id, Name, Email, Nic, Dob, Phone, No, Street, City) VALUES
+('TO0001', 'Ravindu Perera',    'ravindu.perera@example.com',    '982345678V', '1998-03-14', '0771234567', '12A', 'Temple Road',    'Colombo'),
+('TO0002', 'Sajani Silva',      'sajani.silva@example.com',      '992456789V', '1999-05-23', '0759876543', '45B', 'Lake View St',   'Kandy'),
+('TO0003', 'Isuru Jayasena',    'isuru.jayasena@example.com',    '972567890V', '1997-11-10', '0761122334', '88C', 'Beach Road',     'Galle'),
+('TO0004', 'Tharushi Fernando', 'tharushi.fernando@example.com', '002345678V', '2000-08-02', '0723344556', '22D', 'Main Street',    'Kurunegala');
+
+INSERT INTO TECH_OFFICER_PHONE (Techoff_id, Phone) VALUES
+('TO0001', '0771234567'),
+('TO0001', '0712345678'),
+('TO0002', '0759876543'),
+('TO0003', '0761122334'),
+('TO0004', '0723344556'),
+('TO0004', '0745566778');
+
+
+-- 5. UNDERGRADUATE (20)  
+INSERT INTO UNDERGRADUATE (Ug_id, Name, Email, Nic, Dob, Dpt_name, No, Street, City) VALUES
+('TG1701', 'Kamal Perera',          'kamal.perera@email.com',       '200312345678', '2003-04-12', 'ICT', '123', 'Galle Road',          'Colombo'),
+('TG1702', 'Nimal Silva',           'nimal.silva@email.com',        '200387654321', '2003-09-25', 'ICT', '45',  'Kandy Street',         'Kandy'),
+('TG1703', 'Saman Fernando',        'saman.fernando@email.com',     '200212345678', '2002-02-10', 'ICT', '78',  'Negombo Road',         'Negombo'),
+('TG1704', 'Priya Rathnayake',      'priya.rathnayake@email.com',   '200344556677', '2003-12-02', 'ICT', '256', 'Peradeniya Road',      'Peradeniya'),
+('TG1705', 'Asiri Bandara',         'asiri.bandara@email.com',      '200311223344', '2003-06-18', 'ICT', '34',  'Matara Road',          'Matara'),
+('TG1706', 'Dilani Wickramasinghe', 'dilani.wick@email.com',        '200112345678', '2001-08-21', 'ICT', '89',  'Kurunegala Road',      'Kurunegala'),
+('TG1707', 'Rajitha Herath',        'rajitha.herath@email.com',     '200245678912', '2002-03-15', 'ICT', '67',  'Anuradhapura Road',    'Anuradhapura'),
+('TG1708', 'Chaminda Alwis',        'chaminda.alwis@email.com',     '200378945612', '2003-05-09', 'ICT', '112', 'Badulla Road',         'Badulla'),
+('TG1709', 'Kushani Jayawardena',   'kushani.jaya@email.com',       '200212345679', '2002-07-22', 'ICT', '23',  'Ratnapura Road',       'Ratnapura'),
+('TG1710', 'Sanjaya Kumara',        'sanjaya.kumara@email.com',     '200112345655', '2001-01-27', 'ICT', '156', 'Gampaha Road',         'Gampaha'),
+('TG1711', 'Tharindu Liyanage',     'tharindu.liyanage@email.com',  '200112345644', '2001-09-03', 'ICT', '78',  'Kegalle Road',         'Kegalle'),
+('TG1712', 'Madhavi Dissanayake',   'madhavi.dissa@email.com',      '200112348867', '2001-11-17', 'ICT', '45',  'Kalutara Road',        'Kalutara'),
+('TG1713', 'Lakmal Fonseka',        'lakmal.fonseka@email.com',     '200012345678', '2000-05-30', 'ICT', '189', 'Panadura Road',        'Panadura'),
+('TG1714', 'Nayomi Rajapakse',      'nayomi.raja@email.com',        '200212245678', '2002-03-08', 'ICT', '67',  'Ambalangoda Road',     'Ambalangoda'),
+('TG1715', 'Prasanna Zoysa',        'prasanna.zoysa@email.com',     '200112845678', '2001-10-12', 'ICT', '234', 'Hikkaduwa Road',       'Hikkaduwa'),
+('TG1716', 'Gihan Sandeepa',        'gihansandeepa@gmail.com',      '200275000957', '2002-11-15', 'ICT', '56',  'Udugama Road',         'Galle'),
+('TG1717', 'Ishara Madushani',      'ishara.madushani@email.com',   '200356781234', '2003-02-28', 'ICT', '90',  'Colombo Road',         'Horana'),
+('TG1718', 'Nuwan Pathirana',       'nuwan.pathirana@email.com',    '200198765432', '2001-07-14', 'ICT', '14',  'Puttalam Road',        'Chilaw'),
+('TG1719', 'Sachini Gunawardena',   'sachini.guna@email.com',       '200267891234', '2002-04-19', 'ICT', '33',  'Avissawella Road',     'Avissawella'),
+('TG1720', 'Dilan Samarawickrama',  'dilan.samara@email.com',       '200334512678', '2003-08-07', 'ICT', '77',  'Kaduwela Road',        'Kaduwela');
+
+INSERT INTO UNDERGRADUATE_PHONE (Ug_id, Phone) VALUES
+('TG1701', '0771234567'),
+('TG1702', '0712345678'),
+('TG1703', '0789876543'),
+('TG1703', '0712223344'),
+('TG1704', '0701122334'),
+('TG1705', '0765566778'),
+('TG1705', '0776655443'),
+('TG1706', '0782233445'),
+('TG1707', '0716677889'),
+('TG1708', '0773344556'),
+('TG1709', '0789988776'),
+('TG1710', '0704455667'),
+('TG1710', '0704455668'),
+('TG1711', '0767788990'),
+('TG1712', '0715566778'),
+('TG1713', '0781122334'),
+('TG1714', '0779988776'),
+('TG1715', '0703344556'),
+('TG1715', '0709998888'),
+('TG1716', '0765422874'),
+('TG1717', '0771122334'),
+('TG1718', '0756677889'),
+('TG1719', '0789001122'),
+('TG1720', '0712334455');
