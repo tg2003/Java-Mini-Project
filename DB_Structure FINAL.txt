@@ -178,9 +178,9 @@ CREATE TABLE MARK (
 
 
 CREATE TABLE MEDICAL (
-    Medical_id INT PRIMARY KEY,
+    Medical_id INT AUTO_INCREMENT PRIMARY KEY ,
     Ug_id CHAR(6),
-    Date_submitted DATE,
+    Medical_Date DATE,                           -- we get all the medical full day
     Status ENUM('Pending','Approved','Rejected'),
     Purpose ENUM('Lecture','Exam'),
     Verified_by CHAR(6),
@@ -192,14 +192,14 @@ CREATE TABLE MEDICAL (
 
 
 CREATE TABLE ATTENDANCE (
-    Attendance_id INT,
-    Ug_id CHAR(6),
-    Techoff_id CHAR(6),
-    Timetable_id INT,
     Week_no INT,
-    Status ENUM('Present','Absent','Medical Approved','Medical Rejected'),
+    Ug_id CHAR(6),
+    Timetable_id INT,
+    Date DATE,
+    Techoff_id CHAR(6),
+    Status ENUM('Present','Absent'),
 
-    PRIMARY KEY (Ug_id, Timetable_id, Attendance_id, Week_no),
+    PRIMARY KEY (Ug_id, Timetable_id, Week_no),
     FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id),
     FOREIGN KEY (Timetable_id) REFERENCES TIMETABLE(Timetable_id),
     FOREIGN KEY (Techoff_id) REFERENCES TECH_OFFICER(Techoff_id)
