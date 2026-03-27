@@ -204,14 +204,3 @@ CREATE TABLE ATTENDANCE (
     FOREIGN KEY (Timetable_id) REFERENCES TIMETABLE(Timetable_id),
     FOREIGN KEY (Techoff_id) REFERENCES TECH_OFFICER(Techoff_id)
 );
-
-
-
-
-
-
-
-
-
-
-
