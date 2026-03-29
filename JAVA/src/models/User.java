@@ -1,4 +1,4 @@
-package modules;
+package models;
 
 public abstract class User {
     private String userId;
