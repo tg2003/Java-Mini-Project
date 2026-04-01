@@ -14,6 +14,7 @@ public class ViewUndergraduatesGUI extends JFrame{
     private JTable table;
     private JScrollPane scrollPanel;
     private JLabel title;
+    private JPanel titlePanel;
 
     public ViewUndergraduatesGUI(){
         setContentPane(mainPanel);

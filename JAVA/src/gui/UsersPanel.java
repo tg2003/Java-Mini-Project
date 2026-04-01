@@ -31,5 +31,15 @@ public class UsersPanel extends JPanel{
         viewUndergraduatesButton.addActionListener(e->{
             new ViewUndergraduatesGUI().setVisible(true);
         });
+
+        //view Lec
+        viewLecturersButton.addActionListener(e -> {
+            new ViewLecturers().setVisible(true);
+        });
+
+        //view TO
+        viewTechnicalOfficersButton.addActionListener(e -> {
+            new ViewTOGUI().setVisible(true);
+        });
     }
 }
