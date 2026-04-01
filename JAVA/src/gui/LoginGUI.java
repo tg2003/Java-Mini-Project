@@ -18,18 +18,19 @@ public class LoginGUI extends JFrame{
         setSize(400,300);
         setLocationRelativeTo(null);
 
+
         //login button e
         loginButton.addActionListener(e -> {
             String id = usernameTextField.getText();
             String pwd = passwordField.getText();
-            String role = Login.login(id,pwd);
+            String role = Login.login(id,pwd); //send user enterd - id,pwd to db & check
 
             if (role==null){
                     JOptionPane.showMessageDialog(this,"Invalid Credintials !","Error",JOptionPane.ERROR_MESSAGE);
             }
             else{
                 JOptionPane.showMessageDialog(this,"Welcome "+role);
-                new AdminGUI().setVisible(true);;
+                new AdminGUI().setVisible(true);
             }
         });
     }

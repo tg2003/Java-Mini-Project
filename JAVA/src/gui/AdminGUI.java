@@ -16,6 +16,9 @@ public class AdminGUI extends JFrame {
     private JLabel timetableLabel;
     private JLabel menuLabel;
     private JLabel logoutLabel;
+    private JButton logoutButton;
+    private JLabel adminDashboardTitle;
+    private JLabel pplabel;
 
     public AdminGUI (){
         setContentPane(mainPanel);
@@ -85,19 +88,11 @@ public class AdminGUI extends JFrame {
             }
         });
 
-        //logout
-        logoutLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        logoutLabel.addMouseListener(new MouseAdapter(){
-            public void mouseEntered(MouseEvent e) {
-                logoutLabel.setForeground(Color.RED);
-            }
-            public void mouseExited(MouseEvent e){
-                logoutLabel.setForeground(Color.GRAY);
-            }
+        //pp icon
+        pplabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        pplabel.addMouseListener(new MouseAdapter() {
             public void mouseClicked(MouseEvent e){
-                System.out.println("done test");
-                dispose();//it removes the current window without exit(0)
-                new LoginGUI().setVisible(true);//showing the login page again
+                //directs to the edit profile gui
             }
         });
 
@@ -110,7 +105,11 @@ public class AdminGUI extends JFrame {
         CardLayout cl = (CardLayout) contentPanel.getLayout();
         cl.show(contentPanel, "home");
 
+
+
         }//end of AdminGUI constructor
 }//end of class
+
+
 
 
