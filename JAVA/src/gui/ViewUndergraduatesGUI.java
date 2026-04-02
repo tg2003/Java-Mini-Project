@@ -63,16 +63,16 @@ public class ViewUndergraduatesGUI extends JFrame{
             table.getColumn("Action").setCellRenderer(new TableCellRenderer() {
                 public Component getTableCellRendererComponent(JTable table, Object value,
                        boolean isSelected, boolean hasFocus, int row, int column) {
-                    JButton btn = new JButton("✏");
-                    btn.setBackground(new Color(70, 130, 180));
-                    btn.setForeground(Color.WHITE);
+                    JButton btn = new JButton("📝️   Edit");
+                    btn.setBackground(Color.decode("#E1D4C2"));
+                    btn.setForeground(Color.decode("#291c0egi"));
                     return btn;
                 }
             });
 
             // Edit button editor
             table.getColumn("Action").setCellEditor(new DefaultCellEditor(new JCheckBox()) {
-                private JButton btn = new JButton("✏");
+                private JButton btn = new JButton("📝️   Edit");
 
                 {
                     btn.addActionListener(e -> {

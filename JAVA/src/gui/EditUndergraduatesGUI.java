@@ -148,26 +148,6 @@ public class EditUndergraduatesGUI extends JFrame{
 
     }
 
-//    private void loadProfilePic(String path) {
-//        if (path != null && !path.isEmpty()) {
-//            File file = new File(path);
-//            System.out.println("path: >"+path+"<");
-//            System.out.println(file.exists());
-//            if (file.exists()) {
-//                ImageIcon icon = new ImageIcon(new ImageIcon(path)
-//                        .getImage().getScaledInstance(100, 100, Image.SCALE_SMOOTH));
-//                pplabel.setIcon(icon);
-//                pplabel.setText("");
-//            } else {
-//                pplabel.setText("No Photo1");
-//            }
-//        } else {
-//            pplabel.setText("No Photo2");
-//        }
-//        File f = new File("D:/z Campus work folder/NOTES/2-1/OOP - JAVA Practicle/Mini project/Java-Mini-Project/JAVA/src/resources/userPP/test.jpg");
-//        System.out.println(f.exists());
-//    }
-
     private void loadProfilePic(String path) {
         if (path != null && !path.isEmpty()) {
             // creating absolute path

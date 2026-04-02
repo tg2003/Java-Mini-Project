@@ -24,7 +24,7 @@ public class AdminGUI extends JFrame {
         setContentPane(mainPanel);
         setTitle("Admin Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setSize(1000,600);
+        setSize(600,500);
         setLocationRelativeTo(null);
 
         //setting the sidePanel
@@ -85,14 +85,6 @@ public class AdminGUI extends JFrame {
             public void mouseClicked(MouseEvent e){
                 CardLayout c = (CardLayout) contentPanel.getLayout();
                 c.show(contentPanel, "timetable");
-            }
-        });
-
-        //pp icon
-        pplabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        pplabel.addMouseListener(new MouseAdapter() {
-            public void mouseClicked(MouseEvent e){
-                //directs to the edit profile gui
             }
         });
 

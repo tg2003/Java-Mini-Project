@@ -8,15 +8,9 @@ public class UsersPanel extends JPanel{
     private JButton viewLecturersButton;
     private JButton viewTechnicalOfficersButton;
     private JButton viewUndergraduatesButton;
-    private JButton editAdminButton;
-    private JButton editLecturersButton;
-    private JButton editTechnicalOfficersButton;
-    private JButton editUndergraduatesButton;
     private JButton createButton;
     private JPanel viewPanel;
-    private JPanel editPanel;
     private JPanel createPanel;
-    private JLabel edituserLabel;
     private JLabel viewuserLabel;
     private JLabel createLabel;
 
