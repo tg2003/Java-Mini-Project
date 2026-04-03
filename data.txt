@@ -1,1 +1,37 @@
-this folder has database data
+this folder has medical  data
+INSERT INTO MEDICAL (Medical_id, Ug_id, Medical_Date, Status, Purpose, Verified_by) VALUES
+
+-- Approved (Exam)
+(6, 'TG1713', '2026-06-08', 'Approved', 'Exam', 'TO0001'),
+(8, 'TG1714', '2026-06-08', 'Approved', 'Exam', 'TO0001'),
+(9, 'TG1715', '2026-06-08', 'Approved', 'Exam', 'TO0001'),
+(10, 'TG1715', '2026-06-09', 'Approved', 'Exam', 'TO0002'),
+(11, 'TG1715', '2026-06-10', 'Approved', 'Exam', 'TO0003'),
+(12, 'TG1715', '2026-06-11', 'Approved', 'Exam', 'TO0004'),
+(15, 'TG1716', '2026-06-08', 'Approved', 'Exam', 'TO0001'),
+(19, 'TG1718', '2026-06-08', 'Approved', 'Exam', 'TO0001'),
+(23, 'TG1720', '2026-06-08', 'Approved', 'Exam', 'TO0001'),
+(24, 'TG1720', '2026-06-09', 'Approved', 'Exam', 'TO0002'),
+(25, 'TG1720', '2026-06-10', 'Approved', 'Exam', 'TO0003'),
+(26, 'TG1720', '2026-06-11', 'Approved', 'Exam', 'TO0004'),
+
+-- Approved (Lecture)
+(16, 'TG1717', '2026-03-02', 'Approved', 'Lecture', 'TO0001'),
+(20, 'TG1719', '2026-03-02', 'Approved', 'Lecture', 'TO0001'),
+(22, 'TG1720', '2026-03-05', 'Approved', 'Lecture', 'TO0004'),
+
+-- Pending
+(1, 'TG1711', '2026-04-13', 'Pending', 'Lecture', 'TO0001'),
+(2, 'TG1711', '2026-06-08', 'Pending', 'Exam', 'TO0001'),
+(4, 'TG1712', '2026-06-08', 'Pending', 'Exam', 'TO0001'),
+(13, 'TG1715', '2026-06-12', 'Pending', 'Exam', 'TO0001'),
+(14, 'TG1716', '2026-03-13', 'Pending', 'Lecture', 'TO0001'),
+(17, 'TG1717', '2026-06-11', 'Pending', 'Exam', 'TO0004'),
+(21, 'TG1719', '2026-06-08', 'Pending', 'Exam', 'TO0001'),
+(27, 'TG1720', '2026-06-12', 'Pending', 'Exam', 'TO0001'),
+
+-- Rejected
+(3, 'TG1712', '2026-03-26', 'Rejected', 'Lecture', 'TO0004'),
+(5, 'TG1713', '2026-03-11', 'Rejected', 'Lecture', 'TO0003'),
+(7, 'TG1714', '2026-03-09', 'Rejected', 'Lecture', 'TO0001'),
+(18, 'TG1718', '2026-03-02', 'Rejected', 'Lecture', 'TO0001');
