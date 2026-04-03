@@ -65,7 +65,7 @@ public class ViewUndergraduatesGUI extends JFrame{
                        boolean isSelected, boolean hasFocus, int row, int column) {
                     JButton btn = new JButton("📝️   Edit");
                     btn.setBackground(Color.decode("#E1D4C2"));
-                    btn.setForeground(Color.decode("#291c0egi"));
+                    btn.setForeground(Color.decode("#291c0e"));
                     return btn;
                 }
             });
