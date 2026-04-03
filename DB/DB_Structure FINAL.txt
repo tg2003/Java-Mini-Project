@@ -184,7 +184,9 @@ CREATE TABLE MEDICAL (
     Status ENUM('Pending','Approved','Rejected'),
     Purpose ENUM('Lecture','Exam'),
     Verified_by CHAR(6),
+    C_code CHAR(7) ,
 
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code),
     FOREIGN KEY (Verified_by) REFERENCES TECH_OFFICER(Techoff_id),
     FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id)
 );
