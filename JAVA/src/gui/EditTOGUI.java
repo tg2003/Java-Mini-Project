@@ -36,6 +36,8 @@ public class EditTOGUI extends JFrame {
     private JTextField contacttextField2;
     private JLabel contactLabel1;
     private JLabel contactLabel2;
+    private JTextField pwdtextField;
+    private JLabel pwdLabel;
     private String selectedImagePath = null;
 
     public EditTOGUI(String techId, String name, String email, String nic, String dob,
@@ -111,8 +113,17 @@ public class EditTOGUI extends JFrame {
                 ps.setString(7, citytextField.getText());
                 ps.setString(8, idtextField.getText());
                 ps.executeUpdate();
+                // password update - if a new pwd has set
+                if (!pwdtextField.getText().isEmpty()) {
+                    String pwdQuery = "UPDATE USER SET Password=? WHERE User_id=?";
+                    PreparedStatement psPwd = con.prepareStatement(pwdQuery);
+                    psPwd.setString(1, pwdtextField.getText());
+                    psPwd.setString(2, idtextField.getText());
+                    psPwd.executeUpdate();
+                }
 
-                // save phone number update on click 'save'
+
+                // save phone number update on click 'save' (edit & re_insertaion)
                 String deletePhone = "DELETE FROM TECH_OFFICER_PHONE WHERE Techoff_id = ?";
                 PreparedStatement psDel = con.prepareStatement(deletePhone);
                 psDel.setString(1, idtextField.getText());

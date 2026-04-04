@@ -39,6 +39,8 @@ public class EditLecturerGUI extends JFrame {
     private JTextField textField1;
     private JLabel edulvlLabel;
     private JComboBox EduLvlcomboBox;
+    private JTextField pwdtextField;
+    private JLabel pwdLabel;
     private String selectedImagePath = null;
 
     public EditLecturerGUI(String lecId, String name, String email, String nic, String dob, String education,
@@ -126,8 +128,16 @@ public class EditLecturerGUI extends JFrame {
                 ps.setString(9, citytextField.getText());
                 ps.setString(10, idtextField.getText());
                 ps.executeUpdate();
+                // password update - if a new pwd has set
+                if (!pwdtextField.getText().isEmpty()) {
+                    String pwdQuery = "UPDATE USER SET Password=? WHERE User_id=?";
+                    PreparedStatement psPwd = con.prepareStatement(pwdQuery);
+                    psPwd.setString(1, pwdtextField.getText());
+                    psPwd.setString(2, idtextField.getText());
+                    psPwd.executeUpdate();
+                }
 
-                // save phone number update on click 'save'
+                // save phone number update on click 'save' (delete & re-insert)
                 String deletePhone = "DELETE FROM LECTURER_PHONE WHERE Lec_id = ?";
                 PreparedStatement psDel = con.prepareStatement(deletePhone);
                 psDel.setString(1, idtextField.getText());
