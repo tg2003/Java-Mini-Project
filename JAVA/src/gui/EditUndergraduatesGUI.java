@@ -3,12 +3,12 @@ package gui;
 import db.DBConnection;
 
 import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 
 public class EditUndergraduatesGUI extends JFrame{
@@ -36,6 +36,12 @@ public class EditUndergraduatesGUI extends JFrame{
     private JLabel nicLabel;
     private JLabel dobLabel;
     private JTextField emailtextField;
+    private JTextField contacttextField1;
+    private JTextField contacttextField2;
+    private JLabel contactLabel1;
+    private JLabel contactLabel2;
+    private JTextField pwdtextField;
+    private JLabel pwdLabel;
     private String selectedImagePath = null;
 
     public EditUndergraduatesGUI(String ugId, String name, String email, String nic, String dob, String dpt, String no,
@@ -61,16 +67,33 @@ public class EditUndergraduatesGUI extends JFrame{
         // load pp
         loadProfilePic(profilePic);
 
+        // load contact no
+        try {
+            Connection con = DBConnection.getConnection();
+            PreparedStatement ps = con.prepareStatement(
+                    "SELECT Phone FROM UNDERGRADUATE_PHONE WHERE Ug_id = ?"
+            );
+            ps.setString(1, ugId);
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) contacttextField1.setText(rs.getString("Phone"));
+            if (rs.next()) contacttextField2.setText(rs.getString("Phone"));
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
         //change pp btn
         changePPbtn.addActionListener(e->{
             JFileChooser fc = new JFileChooser(); // open file choosing window
             int result= fc.showOpenDialog(null);
 
-            //if the user go to the Jfilechooser and cancel the operation,this won't executed.
+            //if the user go to the Jfilechooser and cancel the operation,this won't execute.
             if (result==JFileChooser.APPROVE_OPTION){
-                System.out.println("Approved opt");
+                System.out.println("Approved opt"); // debug - chk whether we are inside the if{}
                 File file = fc.getSelectedFile();
 
+                System.out.println("directory path: {" +System.getProperty("user.dir")+"} ...My manual path");//Debug - the current path
                 File destFile = new File(System.getProperty("user.dir") + "/JAVA/src/resources/userPP/" + file.getName());
                 try {
                     java.nio.file.Files.copy(
@@ -102,6 +125,37 @@ public class EditUndergraduatesGUI extends JFrame{
                 ps.setString(8, citytextField.getText());
                 ps.setString(9, idtextField.getText());
                 ps.executeUpdate();
+                // password update - if a new pwd has set
+                if (!pwdtextField.getText().isEmpty()) {
+                    String pwdQuery = "UPDATE USER SET Password=? WHERE User_id=?";
+                    PreparedStatement psPwd = con.prepareStatement(pwdQuery);
+                    psPwd.setString(1, pwdtextField.getText());
+                    psPwd.setString(2, idtextField.getText());
+                    psPwd.executeUpdate();
+                }
+                //Delete phone numbers and reinsert data
+                String deletePhone = "DELETE FROM UNDERGRADUATE_PHONE WHERE Ug_id = ?";
+                PreparedStatement psDel = con.prepareStatement(deletePhone);
+                psDel.setString(1, idtextField.getText());
+                psDel.executeUpdate();
+
+                // save phone number update on click 'save'
+                if (!contacttextField1.getText().isEmpty()) {
+                    PreparedStatement psP1 = con.prepareStatement(
+                            "INSERT INTO UNDERGRADUATE_PHONE (Ug_id, Phone) VALUES (?, ?)");
+                    psP1.setString(1, idtextField.getText());
+                    psP1.setString(2, contacttextField1.getText());
+                    psP1.executeUpdate();
+                }
+
+                if (!contacttextField2.getText().isEmpty()) {
+                    PreparedStatement psP2 = con.prepareStatement(
+                            "INSERT INTO UNDERGRADUATE_PHONE (Ug_id, Phone) VALUES (?, ?)");
+                    psP2.setString(1, idtextField.getText());
+                    psP2.setString(2, contacttextField2.getText());
+                    psP2.executeUpdate();
+                }
+
 
                 //pp update
                 if(selectedImagePath!=null){

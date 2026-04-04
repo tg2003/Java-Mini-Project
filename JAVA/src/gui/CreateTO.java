@@ -1,4 +1,6 @@
 package gui;
 
-public class CreateTO {
+import javax.swing.*;
+
+public class CreateTO extends JFrame {
 }

@@ -21,13 +21,13 @@ public class ViewUndergraduatesGUI extends JFrame{
         setContentPane(mainPanel);
         setTitle("View Undergraduates");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setSize(1000,600);
+        setSize(1200,600);
         setLocationRelativeTo(null);
         loadUndergraduates();
     }
 
     void loadUndergraduates(){
-        String[] columns = {"ID", "Name", "Email", "NIC", "DOB", "Department", "No", "Street", "City","Profile Picture", "Action"};
+        String[] columns = {"ID", "Name", "Email", "NIC", "DOB", "Department", "No", "Street", "City","Profile Picture", "Phone","Action"};
         DefaultTableModel model = new DefaultTableModel(columns,0);
         String query = "SELECT u.Profile_pic,ug.* FROM UNDERGRADUATE ug JOIN user u ON ug.Ug_id = u.User_id";
 
@@ -48,11 +48,36 @@ public class ViewUndergraduatesGUI extends JFrame{
                         rs.getString("Street"),
                         rs.getString("City"),
                         rs.getString("Profile_pic"),
-                        "Edit"
+                        "View", // view phone numbers
+                        "Edit" //edit profile btn
                 };
                 model.addRow(row);
             }
             table.setModel(model);
+
+            //show phone numbers btn
+            table.getColumn("Phone").setCellRenderer((tbl, val, isSel, hasFocus, row, col) -> {
+                JButton btn = new JButton("📞 Contact");
+                btn.setBackground(Color.decode("#E1D4C2"));
+                btn.setForeground(Color.decode("#291c0e"));
+                return btn;
+            });
+
+            table.getColumn("Phone").setCellEditor(new DefaultCellEditor(new JCheckBox()) {
+                private JButton btn = new JButton("📞 Contact");
+                {
+                    btn.addActionListener(e -> {
+                        int row = table.getSelectedRow();
+                        fireEditingStopped();
+                        String ugId = table.getValueAt(row, 0).toString();
+                        new ViewPhonesGUI(ugId, "UNDERGRADUATE_PHONE", "Ug_id").setVisible(true);
+                    });
+                }
+                public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
+                    return btn;
+                }
+            });
+
             table.getTableHeader().setBackground(Color.decode("#291c0e"));
             table.getTableHeader().setFont(new Font("Arial", Font.BOLD, 13));
             table.getTableHeader().setForeground(Color.WHITE);
@@ -70,7 +95,7 @@ public class ViewUndergraduatesGUI extends JFrame{
                 }
             });
 
-            // Edit button editor
+            // Edit button editor - these values will be passed to EditUgGUI consturctor
             table.getColumn("Action").setCellEditor(new DefaultCellEditor(new JCheckBox()) {
                 private JButton btn = new JButton("📝️   Edit");
 

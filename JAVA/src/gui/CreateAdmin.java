@@ -1,4 +1,7 @@
 package gui;
 
-public class CreateAdmin {
+import javax.swing.*;
+
+public class CreateAdmin extends JFrame {
+
 }
