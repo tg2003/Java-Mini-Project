@@ -199,8 +199,10 @@ public class EditUndergraduatesGUI extends JFrame{
             }
 
         });
-
+        cancelButton.addActionListener(e -> dispose());
     }
+
+
 
     private void loadProfilePic(String path) {
         if (path != null && !path.isEmpty()) {

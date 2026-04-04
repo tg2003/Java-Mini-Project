@@ -62,9 +62,9 @@ public class CreateUG extends JFrame {
             if(rs.next()){
                 String lastidInDB = rs.getString("User_id");
                 int num =Integer.parseInt(lastidInDB.substring(2));//remove 'UG' in id and save only the numeric part
-                newid = String.format("UG%04d",num+1);
+                newid = String.format("TG%04d",num+1);
             }else {
-                newid = "UG0001"; // setting first UG
+                newid = "TG0001"; // setting first UG
             }
             idtextField.setText(newid);
         } catch (SQLException e) {
@@ -173,6 +173,9 @@ public class CreateUG extends JFrame {
             }
 
         });
+
+        // cancel btn
+        cancelButton.addActionListener(e -> dispose());
 
     }//end of the constructor
 

@@ -34,6 +34,8 @@ public class EditAdminGUI extends JFrame {
     private JTextField depttextField;
     private JTextField contacttextField1;
     private JLabel contactLabel1;
+    private JTextField pwdtextField;
+    private JLabel pwdLabel;
     private String selectedImagePath = null;
 
     public EditAdminGUI(String adminId, String name, String email, String nic, String dob,
@@ -101,6 +103,15 @@ public class EditAdminGUI extends JFrame {
                 ps.setString(9, citytextField.getText());
                 ps.setString(10, idtextField.getText());
                 ps.executeUpdate();
+                // password update - if a new pwd has set
+                if (!pwdtextField.getText().isEmpty()) {
+                    String pwdQuery = "UPDATE USER SET Password=? WHERE User_id=?";
+                    PreparedStatement psPwd = con.prepareStatement(pwdQuery);
+                    psPwd.setString(1, pwdtextField.getText());
+                    psPwd.setString(2, idtextField.getText());
+                    psPwd.executeUpdate();
+                }
+
 
                 //pp update
                 if (selectedImagePath != null) {
