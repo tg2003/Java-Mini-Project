@@ -196,7 +196,7 @@ CREATE TABLE ATTENDANCE (
     Timetable_id INT,
     Date DATE,
     Techoff_id CHAR(6),
-    Status ENUM('Present','Absent'),
+    Status ENUM('Present','Absent','MedicalApproved','MedicalDeclined'),
 
     PRIMARY KEY (Ug_id, Timetable_id, Week_no),
     FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id) ON DELETE CASCADE,
