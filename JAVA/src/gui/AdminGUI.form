@@ -121,6 +121,7 @@
               <background color="-5796488"/>
               <enabled value="true"/>
               <foreground color="-14083058"/>
+              <hideActionText value="false"/>
               <text value="Logout"/>
             </properties>
           </component>

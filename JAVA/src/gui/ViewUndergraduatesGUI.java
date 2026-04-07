@@ -117,6 +117,7 @@ public class ViewUndergraduatesGUI extends JFrame{
 
 
                         new EditUndergraduatesGUI(ugId, name, email, nic, dob, dpt, no, street, city, pic, ViewUndergraduatesGUI.this).setVisible(true);
+                        // passed ViewUndergraduatesGUI.this to identify the parent, so it can be refreshed.
                     });
                 }
 

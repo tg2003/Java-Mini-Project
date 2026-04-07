@@ -1,4 +1,10 @@
 package gui;
 
-public class CoursesPanel {
+import javax.swing.*;
+
+public class CoursesPanel extends JPanel{
+    private JPanel mainCoursesPanel;
+    public CoursesPanel(){
+
+    }
 }

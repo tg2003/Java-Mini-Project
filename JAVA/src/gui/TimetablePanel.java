@@ -1,4 +1,9 @@
 package gui;
 
-public class TimetablePane {
+import javax.swing.*;
+
+public class TimetablePanel extends JPanel {
+    private JPanel mainTimetablePanel;
+
+    public TimetablePanel(){}
 }
