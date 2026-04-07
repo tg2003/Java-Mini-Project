@@ -137,7 +137,7 @@ INSERT INTO Timetable (Timetable_id, Day, Start_time, End_time, C_code, Type) VA
 
 (4,'Tue','09:00:00','11:00:00','ICT2142','Theory'), -- OOAD
 
-(5,'Wed','08:00:00','10:00:00','TCS2121','Theory'), -- softskill
+(5,'Wed','08:00:00','10:00:00','TCS2122','Theory'), -- softskill (TCS2112 changed to TCS2122)
 (6,'Wed','11:00:00','13:00:00','ICT2152','Theory'), -- e cmz
 
 (7,'Thu','09:00:00','11:00:00','ICT2122','Theory'),
@@ -145,4 +145,4 @@ INSERT INTO Timetable (Timetable_id, Day, Start_time, End_time, C_code, Type) VA
 (9,'Thu','14:00:00','16:00:00','ICT2132','Practical'),
 
 (10,'Fri','08:00:00','10:00:00','TCS2112','Theory'), -- econ
-(11,'Fri','10:00:00','12:00:00','ENG2112','Theory');
+(11,'Fri','10:00:00','12:00:00','ENG2122','Theory'); -- (ENG2112 changed to ENG2122)
