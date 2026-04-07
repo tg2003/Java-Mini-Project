@@ -101,7 +101,7 @@ public class EditUndergraduatesGUI extends JFrame{
                             destFile.toPath(),
                             java.nio.file.StandardCopyOption.REPLACE_EXISTING);
                 } catch (IOException ex) {
-                    throw new RuntimeException(ex);
+                    System.out.println("File copy error : "+ex.getMessage());
                 }
                 selectedImagePath = "src/resources/userPP/" + file.getName();
                 ImageIcon icon = new ImageIcon(new ImageIcon(selectedImagePath).getImage().getScaledInstance(100,100, Image.SCALE_SMOOTH));

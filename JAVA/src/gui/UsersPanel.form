@@ -1,17 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <form xmlns="http://www.intellij.com/uidesigner/form/" version="1" bind-to-class="gui.UsersPanel">
   <grid id="27dc6" binding="usersMainPanel" layout-manager="GridLayoutManager" row-count="5" column-count="1" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
-    <margin top="10" left="10" bottom="10" right="10"/>
+    <margin top="0" left="10" bottom="10" right="10"/>
     <constraints>
-      <xy x="20" y="20" width="711" height="459"/>
+      <xy x="20" y="20" width="485" height="504"/>
     </constraints>
-    <properties/>
+    <properties>
+      <font size="18" style="1"/>
+    </properties>
     <border type="none"/>
     <children>
-      <grid id="2bffd" binding="viewPanel" layout-manager="GridLayoutManager" row-count="2" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="2bffd" binding="viewPanel" layout-manager="GridLayoutManager" row-count="6" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="200" height="-1"/>
+            <preferred-size width="200" height="-1"/>
+            <maximum-size width="200" height="-1"/>
+          </grid>
         </constraints>
         <properties/>
         <border type="none"/>
@@ -25,53 +31,72 @@
               <text value="User Actions"/>
             </properties>
           </component>
+          <component id="7887e" class="javax.swing.JButton" binding="viewAdminButton" default-binding="true">
+            <constraints>
+              <grid row="1" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="View Admin"/>
+            </properties>
+          </component>
+          <component id="5ea59" class="javax.swing.JButton" binding="viewTechnicalOfficersButton" default-binding="true">
+            <constraints>
+              <grid row="2" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="View Technical Officers"/>
+            </properties>
+          </component>
+          <component id="f11d7" class="javax.swing.JButton" binding="viewUndergraduatesButton" default-binding="true">
+            <constraints>
+              <grid row="3" column="0" row-span="1" col-span="2" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="View Undergraduates"/>
+            </properties>
+          </component>
+          <component id="fdd4d" class="javax.swing.JButton" binding="viewLecturersButton" default-binding="true">
+            <constraints>
+              <grid row="4" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+            </constraints>
+            <properties>
+              <text value="View Lecturers"/>
+            </properties>
+          </component>
         </children>
       </grid>
-      <grid id="76c4d" binding="createPanel" layout-manager="GridLayoutManager" row-count="7" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
+      <grid id="76c4d" binding="createPanel" layout-manager="GridLayoutManager" row-count="5" column-count="4" same-size-horizontally="false" same-size-vertically="false" hgap="-1" vgap="-1">
         <margin top="0" left="0" bottom="0" right="0"/>
         <constraints>
-          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false"/>
+          <grid row="4" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <minimum-size width="200" height="-1"/>
+            <preferred-size width="200" height="-1"/>
+            <maximum-size width="200" height="-1"/>
+          </grid>
         </constraints>
         <properties/>
         <border type="none"/>
         <children>
           <component id="de807" class="javax.swing.JButton" binding="createAAdminButton">
             <constraints>
-              <grid row="3" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="1" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Create a Admin"/>
             </properties>
           </component>
-          <vspacer id="5b364">
-            <constraints>
-              <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
-                <minimum-size width="50" height="50"/>
-                <preferred-size width="50" height="50"/>
-                <maximum-size width="50" height="50"/>
-              </grid>
-            </constraints>
-          </vspacer>
           <component id="dc53d" class="javax.swing.JLabel" binding="createLabel">
             <constraints>
-              <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
+              <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="0" anchor="8" fill="0" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <font size="16"/>
               <text value="Create a new user"/>
             </properties>
           </component>
-          <component id="fdd4d" class="javax.swing.JButton" binding="viewLecturersButton" default-binding="true">
-            <constraints>
-              <grid row="0" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
-            </constraints>
-            <properties>
-              <text value="View Lecturers"/>
-            </properties>
-          </component>
           <component id="f573d" class="javax.swing.JButton" binding="createATechnicalOfficerButton" default-binding="true">
             <constraints>
-              <grid row="4" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="2" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Create a &#10;Technical Officer"/>
@@ -79,7 +104,7 @@
           </component>
           <component id="a175a" class="javax.swing.JButton" binding="createAUndergraduateButton" default-binding="true">
             <constraints>
-              <grid row="5" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="3" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Create a Undergraduate"/>
@@ -87,7 +112,7 @@
           </component>
           <component id="d49cb" class="javax.swing.JButton" binding="createALecturerButton">
             <constraints>
-              <grid row="6" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+              <grid row="4" column="0" row-span="1" col-span="4" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
             </constraints>
             <properties>
               <text value="Create a Lecturer"/>
@@ -95,30 +120,47 @@
           </component>
         </children>
       </grid>
-      <component id="5ea59" class="javax.swing.JButton" binding="viewTechnicalOfficersButton" default-binding="true">
+      <grid id="4318a" layout-manager="BorderLayout" hgap="0" vgap="0">
         <constraints>
-          <grid row="2" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="0" column="0" row-span="1" col-span="1" vsize-policy="3" hsize-policy="3" anchor="0" fill="3" indent="0" use-parent-layout="false">
+            <preferred-size width="500" height="30"/>
+          </grid>
         </constraints>
         <properties>
-          <text value="View Technical Officers"/>
+          <background color="-5796488"/>
         </properties>
-      </component>
-      <component id="f11d7" class="javax.swing.JButton" binding="viewUndergraduatesButton" default-binding="true">
+        <border type="none"/>
+        <children>
+          <component id="f6344" class="javax.swing.JLabel">
+            <constraints border-constraint="Center"/>
+            <properties>
+              <font size="18" style="1"/>
+              <foreground color="-14083058"/>
+              <horizontalAlignment value="0"/>
+              <horizontalTextPosition value="0"/>
+              <text value="Manage Users"/>
+            </properties>
+          </component>
+        </children>
+      </grid>
+      <vspacer id="5b364">
         <constraints>
-          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="3" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+            <minimum-size width="50" height="35"/>
+            <preferred-size width="50" height="35"/>
+            <maximum-size width="50" height="35"/>
+          </grid>
         </constraints>
-        <properties>
-          <text value="View Undergraduates"/>
-        </properties>
-      </component>
-      <component id="7887e" class="javax.swing.JButton" binding="viewAdminButton" default-binding="true">
+      </vspacer>
+      <vspacer id="bee1e">
         <constraints>
-          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="1" indent="0" use-parent-layout="false"/>
+          <grid row="1" column="0" row-span="1" col-span="1" vsize-policy="6" hsize-policy="1" anchor="0" fill="2" indent="0" use-parent-layout="false">
+            <minimum-size width="-1" height="6"/>
+            <preferred-size width="-1" height="6"/>
+            <maximum-size width="-1" height="6"/>
+          </grid>
         </constraints>
-        <properties>
-          <text value="View Admin"/>
-        </properties>
-      </component>
+      </vspacer>
     </children>
   </grid>
 </form>
