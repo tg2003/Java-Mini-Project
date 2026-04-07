@@ -23,7 +23,7 @@ public class NoticeCreate extends JFrame {
 
     public NoticeCreate(){
         setContentPane(mainPanel);
-        setTitle("Create a new Admin");
+        setTitle("Create a new notice");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 400);
         setLocationRelativeTo(null);

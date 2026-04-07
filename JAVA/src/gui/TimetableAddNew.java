@@ -16,7 +16,6 @@ public class TimetableAddNew extends JFrame {
     private JTextField startTimeTextField;
     private JButton saveButton;
     private JButton cancelButton;
-    private JButton deleteButton;
     private JTextField endTimetextField;
     private JComboBox typecomboBox;
     private JComboBox daycomboBox;
