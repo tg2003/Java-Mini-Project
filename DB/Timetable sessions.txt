@@ -1,0 +1,29 @@
+--Timetable (Sessions)
+CREATE TABLE Timetable(
+    Timetable_id CHAR(6),
+    Day ENUM('Mon','Tue','Wed','Thu','Fri','Sat','Sun'),
+    Start_time TIME,
+    End_time TIME,
+    C_code CHAR(8),
+    Type ENUM('T','P'),
+    PRIMARY KEY (Timetable_id),
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code) ON DELETE CASCADE
+);
+
+
+INSERT INTO Timetable (Timetable_id, Day, Start_time, End_time, C_code, Type) VALUES
+(1,'Mon','09:00:00','11:00:00','ICT2113','T'),
+(2,'Mon','11:00:00','13:00:00','ICT2113','P'),
+(3,'Mon','15:00:00','16:00:00','TCS2112','T'), --econ tutorial
+
+(4,'Tue','09:00:00','11:00:00','ICT2142','T'), --OOAD
+
+(5,'Wed','08:00:00','10:00:00','TCS2121','T'), --softskill
+(6,'Wed','11:00:00','13:00:00','ICT2152','T'), -- e cmz
+
+(7,'Thu','09:00:00','11:00:00','ICT2122','T'),
+(8,'Thu','11:00:00','13:00:00','ICT2132','P'),
+(9,'Thu','14:00:00','16:00:00','ICT2132','P'),
+
+(10,'Fri','08:00:00','10:00:00','TCS2112','T'), --econ
+(11,'Fri','10:00:00','12:00:00','ENG2112','T');
