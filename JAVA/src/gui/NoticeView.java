@@ -21,7 +21,7 @@ public class NoticeView extends JFrame{
         init();
     }
 
-    // Lecturer/Student - No edit button for viewers
+    // Lecturer/Student/T.O. - No edit button for viewers
     public NoticeView() {
         this.role = "Viewer";
         init();

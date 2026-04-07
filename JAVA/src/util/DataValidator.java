@@ -34,4 +34,23 @@ public class DataValidator {
             return "Phone must be 10 digits!";
         return null;
     }
+
+    public static String validateTime(String time) {
+        if (!time.matches("\\d{2}:\\d{2}:\\d{2}"))
+            return "Time format must be HH:mm:ss!";
+
+        String[] parts = time.split(":");
+        int hours = Integer.parseInt(parts[0]);
+        int minutes = Integer.parseInt(parts[1]);
+        int seconds = Integer.parseInt(parts[2]);
+
+        if (hours < 0 || hours > 23)
+            return "Invalid hours (00-23)!";
+        if (minutes < 0 || minutes > 59)
+            return "Invalid minutes (00-59)!";
+        if (seconds < 0 || seconds > 59)
+            return "Invalid seconds (00-59)!";
+
+        return null;
+    }
 }
