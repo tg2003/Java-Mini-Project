@@ -26,7 +26,7 @@ public class NoticeEdit extends JFrame {
 
     public NoticeEdit(String noticeNo, String title, String dateTime, String downloadLink, NoticeView parent){
         setContentPane(mainPanel);
-        setTitle("Edit Undergraduate");
+        setTitle("Edit Notices");
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setSize(500, 400);
         setLocationRelativeTo(null);

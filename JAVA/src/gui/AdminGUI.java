@@ -109,7 +109,7 @@ public class AdminGUI extends JFrame {
         contentPanel.add(new CoursesPanel(), "courses");
         contentPanel.add(new NoticePanel(), "notices");
         contentPanel.add(new TimetablePanel(), "timetable");
-        //contentPanel.add(new HomePanel(), "home");
+        //contentPanel.add(new HomePanel(), "home"); optional
 
         CardLayout cl = (CardLayout) contentPanel.getLayout();
         cl.show(contentPanel, "home");
