@@ -146,3 +146,240 @@ INSERT INTO Timetable (Timetable_id, Day, Start_time, End_time, C_code, Type) VA
 
 (10,'Fri','08:00:00','10:00:00','TCS2112','Theory'), -- econ
 (11,'Fri','10:00:00','12:00:00','ENG2122','Theory'); -- (ENG2112 changed to ENG2122)
+
+
+--data insertion by Maneesha
+
+--COURSE
+INSERT INTO COURSE (C_code, C_name, Credit) VALUES
+('ICT2113', 'Data Structures and Algorithms', '3'),
+('ICT2122', 'Object Oriented Programming', '2'),
+('ICT2132', 'Object Oriented Programming Practicum', '2'),
+('ICT2142', 'Object Oriented Analysis and Design', '2'),
+('ICT2152', 'E-Commerce', '2'),
+('ENG2122', 'English', '2'),
+('TCS2112', 'Business Economics', '2'),
+('TCS2122', 'Soft Skills', '2');
+
+
+--COURSE_MATERIAL
+INSERT INTO COURSE_MATERIAL (C_code, Material) VALUES
+
+('ICT2113','DSA_Lecture01_Introduction.pdf'),
+('ICT2113','DSA_Lecture02_Stacks.pdf'),
+('ICT2113','DSA_Lecture03_Queues.pdf'),
+('ICT2113','DSA_Tutorial01.pdf'),
+
+('ICT2122','OOP_Lecture01_Basics.pdf'),
+('ICT2122','OOP_Lecture02_Inheritance.pdf'),
+('ICT2122','OOP_Lecture03_Polymorphism.pdf'),
+('ICT2122','OOP_Lecture04_Abstraction.pdf'),
+
+('ICT2132','OOP_Practicum_Lab01.pdf'),
+('ICT2132','OOP_Practicum_Lab02.pdf'),
+('ICT2132','OOP_Practicum_Project_Guide.pdf'),
+
+('ICT2142','OOAD_Lecture01_Introduction.pdf'),
+('ICT2142','OOAD_Lecture02_UML_Diagrams.pdf'),
+('ICT2142','OOAD_Lecture03_Design_Patterns.pdf'),
+
+
+('ICT2152','Ecommerce_Lecture01_Introduction.pdf'),
+('ICT2152','Ecommerce_Lecture02_Business_Models.pdf'),
+('ICT2152','Ecommerce_Lecture03_Payment_Systems.pdf'),
+
+('ENG2122','English_Academic_Writing.pdf'),
+('ENG2122','English_Presentation_Skills.pdf'),
+
+('TCS2112','Business_Economics_Lecture01.pdf'),
+('TCS2112','Business_Economics_Lecture02_Demand_Supply.pdf'),
+
+
+('TCS2122','SoftSkills_Communication.pdf'),
+('TCS2122','SoftSkills_Teamwork.pdf');
+
+
+--ENROLLS_IN
+INSERT INTO ENROLLS_IN (Ug_id, C_code, Status, Sem, Batch_yr, Level) VALUES
+
+-- TG1701 Proper
+('TG1701','ICT2113','Proper',1,2023,2),
+('TG1701','ICT2122','Proper',1,2023,2),
+('TG1701','ICT2132','Proper',1,2023,2),
+('TG1701','ICT2142','Proper',1,2023,2),
+('TG1701','ICT2152','Proper',1,2023,2),
+('TG1701','ENG2122','Proper',1,2023,2),
+('TG1701','TCS2112','Proper',1,2023,2),
+('TG1701','TCS2122','Proper',1,2023,2),
+
+-- TG1702 Proper
+('TG1702','ICT2113','Proper',1,2023,2),
+('TG1702','ICT2122','Proper',1,2023,2),
+('TG1702','ICT2132','Proper',1,2023,2),
+('TG1702','ICT2142','Proper',1,2023,2),
+('TG1702','ICT2152','Proper',1,2023,2),
+('TG1702','ENG2122','Proper',1,2023,2),
+('TG1702','TCS2112','Proper',1,2023,2),
+('TG1702','TCS2122','Proper',1,2023,2),
+
+-- TG1703 Proper
+('TG1703','ICT2113','Proper',1,2023,2),
+('TG1703','ICT2122','Proper',1,2023,2),
+('TG1703','ICT2132','Proper',1,2023,2),
+('TG1703','ICT2142','Proper',1,2023,2),
+('TG1703','ICT2152','Proper',1,2023,2),
+('TG1703','ENG2122','Proper',1,2023,2),
+('TG1703','TCS2112','Proper',1,2023,2),
+('TG1703','TCS2122','Proper',1,2023,2),
+
+-- TG1704 Proper
+('TG1704','ICT2113','Proper',1,2023,2),
+('TG1704','ICT2122','Proper',1,2023,2),
+('TG1704','ICT2132','Proper',1,2023,2),
+('TG1704','ICT2142','Proper',1,2023,2),
+('TG1704','ICT2152','Proper',1,2023,2),
+('TG1704','ENG2122','Proper',1,2023,2),
+('TG1704','TCS2112','Proper',1,2023,2),
+('TG1704','TCS2122','Proper',1,2023,2),
+
+-- TG1705 Proper
+('TG1705','ICT2113','Proper',1,2023,2),
+('TG1705','ICT2122','Proper',1,2023,2),
+('TG1705','ICT2132','Proper',1,2023,2),
+('TG1705','ICT2142','Proper',1,2023,2),
+('TG1705','ICT2152','Proper',1,2023,2),
+('TG1705','ENG2122','Proper',1,2023,2),
+('TG1705','TCS2112','Proper',1,2023,2),
+('TG1705','TCS2122','Proper',1,2023,2),
+
+-- TG1706 Proper
+('TG1706','ICT2113','Proper',1,2023,2),
+('TG1706','ICT2122','Proper',1,2023,2),
+('TG1706','ICT2132','Proper',1,2023,2),
+('TG1706','ICT2142','Proper',1,2023,2),
+('TG1706','ICT2152','Proper',1,2023,2),
+('TG1706','ENG2122','Proper',1,2023,2),
+('TG1706','TCS2112','Proper',1,2023,2),
+('TG1706','TCS2122','Proper',1,2023,2),
+
+-- TG1707 Proper
+('TG1707','ICT2113','Proper',1,2023,2),
+('TG1707','ICT2122','Proper',1,2023,2),
+('TG1707','ICT2132','Proper',1,2023,2),
+('TG1707','ICT2142','Proper',1,2023,2),
+('TG1707','ICT2152','Proper',1,2023,2),
+('TG1707','ENG2122','Proper',1,2023,2),
+('TG1707','TCS2112','Proper',1,2023,2),
+('TG1707','TCS2122','Proper',1,2023,2),
+
+-- TG1708 Proper
+('TG1708','ICT2113','Proper',1,2023,2),
+('TG1708','ICT2122','Proper',1,2023,2),
+('TG1708','ICT2132','Proper',1,2023,2),
+('TG1708','ICT2142','Proper',1,2023,2),
+('TG1708','ICT2152','Proper',1,2023,2),
+('TG1708','ENG2122','Proper',1,2023,2),
+('TG1708','TCS2112','Proper',1,2023,2),
+('TG1708','TCS2122','Proper',1,2023,2),
+
+-- TG1709 Proper
+('TG1709','ICT2113','Proper',1,2023,2),
+('TG1709','ICT2122','Proper',1,2023,2),
+('TG1709','ICT2132','Proper',1,2023,2),
+('TG1709','ICT2142','Proper',1,2023,2),
+('TG1709','ICT2152','Proper',1,2023,2),
+('TG1709','ENG2122','Proper',1,2023,2),
+('TG1709','TCS2112','Proper',1,2023,2),
+('TG1709','TCS2122','Proper',1,2023,2),
+
+-- TG1710 Proper
+('TG1710','ICT2113','Proper',1,2023,2),
+('TG1710','ICT2122','Proper',1,2023,2),
+('TG1710','ICT2132','Proper',1,2023,2),
+('TG1710','ICT2142','Proper',1,2023,2),
+('TG1710','ICT2152','Proper',1,2023,2),
+('TG1710','ENG2122','Proper',1,2023,2),
+('TG1710','TCS2112','Proper',1,2023,2),
+('TG1710','TCS2122','Proper',1,2023,2),
+
+-- TG1711 Proper
+('TG1711','ICT2113','Proper',1,2023,2),
+('TG1711','ICT2122','Proper',1,2023,2),
+('TG1711','ICT2132','Proper',1,2023,2),
+('TG1711','ICT2142','Proper',1,2023,2),
+('TG1711','ICT2152','Proper',1,2023,2),
+('TG1711','ENG2122','Proper',1,2023,2),
+('TG1711','TCS2112','Proper',1,2023,2),
+('TG1711','TCS2122','Proper',1,2023,2),
+
+-- TG1712 Proper
+('TG1712','ICT2113','Proper',1,2023,2),
+('TG1712','ICT2122','Proper',1,2023,2),
+('TG1712','ICT2132','Proper',1,2023,2),
+('TG1712','ICT2142','Proper',1,2023,2),
+('TG1712','ICT2152','Proper',1,2023,2),
+('TG1712','ENG2122','Proper',1,2023,2),
+('TG1712','TCS2112','Proper',1,2023,2),
+('TG1712','TCS2122','Proper',1,2023,2),
+
+-- TG1713 Proper
+('TG1713','ICT2113','Proper',1,2023,2),
+('TG1713','ICT2122','Proper',1,2023,2),
+('TG1713','ICT2132','Proper',1,2023,2),
+('TG1713','ICT2142','Proper',1,2023,2),
+('TG1713','ICT2152','Proper',1,2023,2),
+('TG1713','ENG2122','Proper',1,2023,2),
+('TG1713','TCS2112','Proper',1,2023,2),
+('TG1713','TCS2122','Proper',1,2023,2),
+
+-- TG1714 Proper
+('TG1714','ICT2113','Proper',1,2023,2),
+('TG1714','ICT2122','Proper',1,2023,2),
+('TG1714','ICT2132','Proper',1,2023,2),
+('TG1714','ICT2142','Proper',1,2023,2),
+('TG1714','ICT2152','Proper',1,2023,2),
+('TG1714','ENG2122','Proper',1,2023,2),
+('TG1714','TCS2112','Proper',1,2023,2),
+('TG1714','TCS2122','Proper',1,2023,2),
+
+-- TG1715 Proper
+('TG1715','ICT2113','Proper',1,2023,2),
+('TG1715','ICT2122','Proper',1,2023,2),
+('TG1715','ICT2132','Proper',1,2023,2),
+('TG1715','ICT2142','Proper',1,2023,2),
+('TG1715','ICT2152','Proper',1,2023,2),
+('TG1715','ENG2122','Proper',1,2023,2),
+('TG1715','TCS2112','Proper',1,2023,2),
+('TG1715','TCS2122','Proper',1,2023,2),
+
+-- TG1716 Proper
+('TG1716','ICT2113','Proper',1,2023,2),
+('TG1716','ICT2122','Proper',1,2023,2),
+('TG1716','ICT2132','Proper',1,2023,2),
+('TG1716','ICT2142','Proper',1,2023,2),
+('TG1716','ICT2152','Proper',1,2023,2),
+('TG1716','ENG2122','Proper',1,2023,2),
+('TG1716','TCS2112','Proper',1,2023,2),
+('TG1716','TCS2122','Proper',1,2023,2),
+
+-- Repeat students
+('TG1717','ICT2113','Repeat',1,2022,2),
+('TG1717','ICT2122','Repeat',1,2022,2),
+
+
+('TG1718','ICT2142','Repeat',1,2022,2),
+
+
+('TG1719','ICT2113','Repeat',1,2022,2),
+('TG1719','ICT2142','Repeat',1,2022,2),
+
+
+-- Batchmissed
+('TG1720','ICT2113','Batchmissed',1,2022,2),
+('TG1720','ICT2122','Batchmissed',1,2022,2),
+('TG1720','ICT2132','Batchmissed',1,2022,2),
+('TG1720','ICT2142','Batchmissed',1,2022,2),
+('TG1720','ICT2152','Batchmissed',1,2022,2),
+('TG1720','ENG2122','Batchmissed',1,2022,2),
+('TG1720','TCS2112','Batchmissed',1,2022,2),
+('TG1720','TCS2122','Batchmissed',1,2022,2);
