@@ -384,6 +384,10 @@ INSERT INTO ENROLLS_IN (Ug_id, C_code, Status, Sem, Batch_yr, Level) VALUES
 ('TG1720','TCS2112','Batchmissed',1,2022,2),
 ('TG1720','TCS2122','Batchmissed',1,2022,2);
 
+--data insertion by eeshani
+
+
+
 INSERT INTO NOTICE (Title, Date_time, Download_link) VALUES
 ('Semester Examination Notice', '2026-04-10 09:00:00', 'exam_timetable.pdf'),
 ('ICT2132 Mini Project Submission', '2026-04-15 10:30:00', 'oop_project_submission_guidelines.pdf'),
