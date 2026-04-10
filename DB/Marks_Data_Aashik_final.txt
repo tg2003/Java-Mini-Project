@@ -1,3 +1,5 @@
+-- Marks table
+
 INSERT INTO MARK (
 Ug_id, C_code,
 Quiz01, Quiz02, Quiz03,
