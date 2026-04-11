@@ -148,9 +148,9 @@ INSERT INTO Timetable (Timetable_id, Day, Start_time, End_time, C_code, Type) VA
 (11,'Fri','10:00:00','12:00:00','ENG2122','Theory'); -- (ENG2112 changed to ENG2122)
 
 
---data insertion by Maneesha
+-- data insertion by Maneesha
 
---COURSE
+-- COURSE
 INSERT INTO COURSE (C_code, C_name, Credit) VALUES
 ('ICT2113', 'Data Structures and Algorithms', '3'),
 ('ICT2122', 'Object Oriented Programming', '2'),
@@ -162,7 +162,7 @@ INSERT INTO COURSE (C_code, C_name, Credit) VALUES
 ('TCS2122', 'Soft Skills', '2');
 
 
---COURSE_MATERIAL
+-- COURSE_MATERIAL
 INSERT INTO COURSE_MATERIAL (C_code, Material) VALUES
 
 ('ICT2113','DSA_Lecture01_Introduction.pdf'),
@@ -199,7 +199,7 @@ INSERT INTO COURSE_MATERIAL (C_code, Material) VALUES
 ('TCS2122','SoftSkills_Teamwork.pdf');
 
 
---ENROLLS_IN
+-- ENROLLS_IN
 INSERT INTO ENROLLS_IN (Ug_id, C_code, Status, Sem, Batch_yr, Level) VALUES
 
 -- TG1701 Proper
@@ -384,7 +384,7 @@ INSERT INTO ENROLLS_IN (Ug_id, C_code, Status, Sem, Batch_yr, Level) VALUES
 ('TG1720','TCS2112','Batchmissed',1,2022,2),
 ('TG1720','TCS2122','Batchmissed',1,2022,2);
 
---data insertion by eeshani
+-- data insertion by eeshani
 
 
 
