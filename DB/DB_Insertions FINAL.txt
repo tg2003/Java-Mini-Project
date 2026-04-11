@@ -431,7 +431,7 @@ INSERT INTO MEDICAL (
 
 -- Marks table
 
-INSERT INTO MARK (
+INSERT INTO MARKS (
 Ug_id, C_code,
 Quiz01, Quiz02, Quiz03,
 Assignment1, Assignment2,
