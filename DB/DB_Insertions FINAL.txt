@@ -129,6 +129,17 @@ INSERT INTO UNDERGRADUATE_PHONE (Ug_id, Phone) VALUES
 ('TG1719', '0789001122'),
 ('TG1720', '0712334455');
 
+-- COURSE -- Maneesha
+INSERT INTO COURSE (C_code, C_name, Credit) VALUES
+('ICT2113', 'Data Structures and Algorithms', '3'),
+('ICT2122', 'Object Oriented Programming', '2'),
+('ICT2132', 'Object Oriented Programming Practicum', '2'),
+('ICT2142', 'Object Oriented Analysis and Design', '2'),
+('ICT2152', 'E-Commerce', '2'),
+('ENG2122', 'English', '2'),
+('TCS2112', 'Business Economics', '2'),
+('TCS2122', 'Soft Skills', '2');
+
 -- timetable
 INSERT INTO Timetable (Timetable_id, Day, Start_time, End_time, C_code, Type) VALUES
 (1,'Mon','09:00:00','11:00:00','ICT2113','Theory'),
@@ -137,7 +148,7 @@ INSERT INTO Timetable (Timetable_id, Day, Start_time, End_time, C_code, Type) VA
 
 (4,'Tue','09:00:00','11:00:00','ICT2142','Theory'), -- OOAD
 
-(5,'Wed','08:00:00','10:00:00','TCS2122','Theory'), -- softskill (TCS2112 changed to TCS2122)
+(5,'Wed','08:00:00','10:00:00','TCS2122','Theory'), -- softskill (TCS2121 changed to TCS2122)
 (6,'Wed','11:00:00','13:00:00','ICT2152','Theory'), -- e cmz
 
 (7,'Thu','09:00:00','11:00:00','ICT2122','Theory'),
@@ -149,17 +160,6 @@ INSERT INTO Timetable (Timetable_id, Day, Start_time, End_time, C_code, Type) VA
 
 
 -- data insertion by Maneesha
-
--- COURSE
-INSERT INTO COURSE (C_code, C_name, Credit) VALUES
-('ICT2113', 'Data Structures and Algorithms', '3'),
-('ICT2122', 'Object Oriented Programming', '2'),
-('ICT2132', 'Object Oriented Programming Practicum', '2'),
-('ICT2142', 'Object Oriented Analysis and Design', '2'),
-('ICT2152', 'E-Commerce', '2'),
-('ENG2122', 'English', '2'),
-('TCS2112', 'Business Economics', '2'),
-('TCS2122', 'Soft Skills', '2');
 
 
 -- COURSE_MATERIAL
