@@ -426,3 +426,12 @@ INSERT INTO MEDICAL (
 (10, 'TG1716', '2026-07-20', '2026-07-20', 'MedicalDeclined', 'Exam', 'TO0001');
 
 
+
+-- DATA INSERTION BY Aasik
+
+
+
+
+
+
+
