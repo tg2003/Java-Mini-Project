@@ -53,4 +53,12 @@ public class DataValidator {
 
         return null;
     }
+
+    public static String validateCourseCode(String code) {
+        // Check if it's exactly 7 characters
+        if (code.length() != 7) {
+            return "Course Code must be exactly 7 characters!";
+        }
+        return null; // No errors
+    }
 }
