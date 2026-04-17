@@ -24,4 +24,4 @@ public class CoursesPanel extends JPanel{
             new CourseCreate().setVisible(true);
         });
     }
-}
+}//end of class
