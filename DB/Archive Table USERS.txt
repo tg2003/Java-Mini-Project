@@ -1,0 +1,52 @@
+-- UG Archive Table
+CREATE TABLE DeletedUndergraduate (
+    Ug_id char(6) PRIMARY KEY,
+    Name varchar(100),
+    Email varchar(100),
+    Nic varchar(12),
+    Dob date,
+    Dpt_name varchar(50),
+    No varchar(10),
+    Street varchar(100),
+    City varchar(50)
+);
+
+-- Lecturer Archive Table
+CREATE TABLE DeletedLecturer (
+    Lec_id char(6) PRIMARY KEY,
+    Name varchar(100),
+    Email varchar(100),
+    Nic varchar(12),
+    Dob date,
+    Education_lvl enum('Bachelor','Master','Phd'),
+    Dpt_name varchar(50),
+    No varchar(10),
+    Street varchar(100),
+    City varchar(50)
+);
+
+-- Admin Archive Table
+CREATE TABLE DeletedAdmin (
+    Admin_id char(6) PRIMARY KEY,
+    Name varchar(100),
+    Email varchar(100),
+    Nic varchar(12),
+    Dob date,
+    Dpt_name varchar(50),
+    Phone varchar(15),
+    No varchar(10),
+    Street varchar(100),
+    City varchar(50)
+);
+
+-- Tech Officer Archive Table
+CREATE TABLE DeletedTechOfficer (
+    Techoff_id char(6) PRIMARY KEY,
+    Name varchar(100),
+    Email varchar(100),
+    Nic varchar(12),
+    Dob date,
+    No varchar(10),
+    Street varchar(100),
+    City varchar(50)
+);

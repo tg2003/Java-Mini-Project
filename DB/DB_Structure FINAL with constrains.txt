@@ -58,7 +58,6 @@ CREATE TABLE TECH_OFFICER (
     Email VARCHAR(100),
     Nic VARCHAR(12),
     Dob DATE,
-    Phone VARCHAR(15),
     No VARCHAR(10),
     Street VARCHAR(100),
     City VARCHAR(50),
@@ -136,7 +135,7 @@ CREATE TABLE ENROLLS_IN (
 CREATE TABLE NOTICE (
     Notice_no INT AUTO_INCREMENT PRIMARY KEY,
     Title VARCHAR(200),
-    Date_time DATETIME DEFAULT CURRENT_TIMESTAMP;,
+    Date_time DATETIME DEFAULT CURRENT_TIMESTAMP,
     Download_link VARCHAR(255)
 );
 
@@ -152,7 +151,7 @@ CREATE TABLE TIMETABLE (
     FOREIGN KEY (C_code) REFERENCES COURSE(C_code) ON DELETE CASCADE
 );
 
-CREATE TABLE MARK (
+CREATE TABLE MARKS (
     Mark_id INT AUTO_INCREMENT PRIMARY KEY,
     Ug_id CHAR(6),
     C_code CHAR(7),
@@ -175,19 +174,19 @@ CREATE TABLE MARK (
 
 
 CREATE TABLE MEDICAL (
-    Medical_id INT AUTO_INCREMENT PRIMARY KEY ,
+    Medical_id INT AUTO_INCREMENT PRIMARY KEY,
     Ug_id CHAR(6),
-    Medical_Date DATE,                           -- we get all the medical full day
-    Status ENUM('Pending','Approved','Rejected'),
-    Purpose ENUM('Lecture','Exam'),
-    Verified_by CHAR(6),
-    C_code CHAR(7) ,
+    From_date DATE,
+    To_date DATE,
+    Status ENUM('Pending','MedicalApproved','MedicalDeclined'),
+    Session_type ENUM('Lecture','Exam'),
+    Techoff_id CHAR(6),
+    C_code CHAR(7),
 
-    FOREIGN KEY (C_code) REFERENCES COURSE(C_code) ON DELETE CASCADE ,
-    FOREIGN KEY (Verified_by) REFERENCES TECH_OFFICER(Techoff_id) ON DELETE SET NULL,
-    FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id) ON DELETE CASCADE
+    FOREIGN KEY (Ug_id) REFERENCES UNDERGRADUATE(Ug_id) ON DELETE CASCADE,
+    FOREIGN KEY (Techoff_id) REFERENCES TECH_OFFICER(Techoff_id) ON DELETE SET NULL,
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code) ON DELETE CASCADE
 );
-
 
 
 CREATE TABLE ATTENDANCE (
