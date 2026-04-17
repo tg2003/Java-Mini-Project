@@ -1,6 +1,8 @@
 package gui;
 
 import db.DBConnection;
+import util.DataValidator;
+
 import javax.swing.*;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -30,8 +32,14 @@ public class CourseCreate extends JFrame {
             String name = cnameTextField.getText().trim();
             String credit = ccreditscomboBox.getSelectedItem().toString();
 
-            // check C_code,Name fields are empty or not
-            if (code.isEmpty() || name.isEmpty()) {
+            // check C_code,Name fields are valid or not
+            String codeErr = DataValidator.validateCourseCode(code);
+            if (codeErr != null) {
+                JOptionPane.showMessageDialog(this, codeErr, "Validation Error", JOptionPane.WARNING_MESSAGE);
+                return;
+            }
+
+            if (name.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "All fields must be filled! ⚠️");
                 return;
             }
