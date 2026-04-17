@@ -172,6 +172,19 @@ public class EditTOGUI extends JFrame {
                 String query = "DELETE FROM USER WHERE User_id=?";
                 try {
                     Connection con = DBConnection.getConnection();
+
+                    String archiveQuery = "INSERT INTO DeletedTechOfficer (Techoff_id, Name, Email, Nic, Dob, No, Street, City) VALUES (?, ?, ?, ?, ?, ?, ?, ?)";
+                    PreparedStatement psArchive = con.prepareStatement(archiveQuery);
+                    psArchive.setString(1, idtextField.getText());
+                    psArchive.setString(2, nametextField.getText());
+                    psArchive.setString(3, emailtextField.getText());
+                    psArchive.setString(4, nictextField.getText());
+                    psArchive.setString(5, dobtextField.getText());
+                    psArchive.setString(6, notextField.getText());
+                    psArchive.setString(7, streettextField.getText());
+                    psArchive.setString(8, citytextField.getText());
+                    psArchive.executeUpdate();
+
                     PreparedStatement ps = con.prepareStatement(query);
                     ps.setString(1, idtextField.getText());
                     ps.executeUpdate();

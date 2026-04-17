@@ -181,9 +181,25 @@ public class EditUndergraduatesGUI extends JFrame{
         deleteButton.addActionListener(e->{
             int confirmMsg = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
             if (confirmMsg==JOptionPane.YES_OPTION){
-                String query = "DELETE FROM USER WHERE User_id=?";
                 try {
                     Connection con = DBConnection.getConnection();
+
+                    //soft delete (archive data)
+                    String archiveQuery = "INSERT INTO DeletedUndergraduate (Ug_id, Name, Email, Nic, Dob, Dpt_name, No, Street, City) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)";
+                    PreparedStatement psArchive = con.prepareStatement(archiveQuery);
+                    psArchive.setString(1, idtextField.getText());
+                    psArchive.setString(2, nametextField.getText());
+                    psArchive.setString(3, emailtextField.getText());
+                    psArchive.setString(4, nictextField.getText());
+                    psArchive.setString(5, dobtextField.getText());
+                    psArchive.setString(6, depttextField.getText());
+                    psArchive.setString(7, notextField.getText());
+                    psArchive.setString(8, streettextField.getText());
+                    psArchive.setString(9, citytextField.getText());
+                    psArchive.executeUpdate();
+
+                    //actual delete
+                    String query = "DELETE FROM USER WHERE User_id=?";
                     PreparedStatement ps = con.prepareStatement(query);
                     ps.setString(1, idtextField.getText());
                     ps.executeUpdate();

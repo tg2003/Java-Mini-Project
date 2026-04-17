@@ -183,9 +183,26 @@ public class EditLecturerGUI extends JFrame {
         deleteButton.addActionListener(e -> {
             int confirmMsg = JOptionPane.showConfirmDialog(null, "Are you sure you want to delete this user?", "Confirm Delete", JOptionPane.YES_NO_OPTION);
             if (confirmMsg == JOptionPane.YES_OPTION) {
-                String query = "DELETE FROM USER WHERE User_id=?";
                 try {
                     Connection con = DBConnection.getConnection();
+
+                    //soft delete (archive data)
+                    String ins = "INSERT INTO DeletedLecturer VALUES (?,?,?,?,?,?,?,?,?,?)";
+                    PreparedStatement ps1 = con.prepareStatement(ins);
+                    ps1.setString(1, idtextField.getText());
+                    ps1.setString(2, nametextField.getText());
+                    ps1.setString(3, emailtextField.getText());
+                    ps1.setString(4, nictextField.getText());
+                    ps1.setString(5, dobtextField.getText());
+                    ps1.setString(6, EduLvlcomboBox.getSelectedItem().toString()); // education level field
+                    ps1.setString(7, depttextField.getText());
+                    ps1.setString(8, notextField.getText());
+                    ps1.setString(9, streettextField.getText());
+                    ps1.setString(10, citytextField.getText());
+                    ps1.executeUpdate();
+
+                    //actual delete
+                    String query = "DELETE FROM USER WHERE User_id=?";
                     PreparedStatement ps = con.prepareStatement(query);
                     ps.setString(1, idtextField.getText());
                     ps.executeUpdate();

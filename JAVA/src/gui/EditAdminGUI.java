@@ -140,6 +140,23 @@ public class EditAdminGUI extends JFrame {
                 String query = "DELETE FROM USER WHERE User_id=?";
                 try {
                     Connection con = DBConnection.getConnection();
+
+                    //soft delete (archive data)
+                    String ins = "INSERT INTO DeletedAdmin VALUES (?,?,?,?,?,?,?,?,?,?)";
+                    PreparedStatement ps1 = con.prepareStatement(ins);
+                    ps1.setString(1, idtextField.getText());
+                    ps1.setString(2, nametextField.getText());
+                    ps1.setString(3, emailtextField.getText());
+                    ps1.setString(4, nictextField.getText());
+                    ps1.setString(5, dobtextField.getText());
+                    ps1.setString(6, depttextField.getText());
+                    ps1.setString(7, contacttextField1.getText());
+                    ps1.setString(8, notextField.getText());
+                    ps1.setString(9, streettextField.getText());
+                    ps1.setString(10, citytextField.getText());
+                    ps1.executeUpdate();
+
+                    //actual delete
                     PreparedStatement ps = con.prepareStatement(query);
                     ps.setString(1, idtextField.getText());
                     ps.executeUpdate();
