@@ -14,7 +14,7 @@ public class DBConnection {
 
     private DBConnection() {}
 
-    //creating a custom getConnection() by method overloading
+    //creating a custom getConnection()
     public static Connection getConnection() throws SQLException {
         if (connection==null || connection.isClosed()){
             connection = DriverManager.getConnection(URL,USER,PASSWORD);
