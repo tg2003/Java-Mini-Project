@@ -1,0 +1,9 @@
+import javax.swing.*;
+
+public class 
+Lecturer_dashboard {
+    private JButton enterMarksButton;
+    private JButton logOutButton;
+    private JButton gradesGPAButton;
+    private JButton CAEligibilityButton1;
+}
