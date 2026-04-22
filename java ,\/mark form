@@ -1,0 +1,15 @@
+import javax.swing.*;
+
+public class Mark_entry_form {
+    private JTextField studentIdTextField;
+    private JTextField textField2;
+    private JTextField textField1;
+    private JTextField textField3;
+    private JTextField textField4;
+    private JButton clearButton;
+    private JButton saveButton;
+
+    private void createUIComponents() {
+        // TODO: place custom component creation code here
+    }
+}
