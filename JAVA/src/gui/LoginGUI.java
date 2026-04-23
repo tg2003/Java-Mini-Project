@@ -39,7 +39,7 @@ public class LoginGUI extends JFrame{
                         //new TechOfficerGUI().setVisible(true);
                         break;
                     case "Undergraduate":
-                        //new UndergraduateGUI().setVisible(true);
+                        //new StudentDashboardUI().setVisible(true);
                         break;
                 }
             }

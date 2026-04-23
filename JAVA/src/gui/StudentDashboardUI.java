@@ -9,7 +9,6 @@ import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 
 public class StudentDashboardUI extends JFrame {
-    private int studentId = 1; // from login
 
     // ── Palette ────────────────────────────────────────────────────────────────
     static final Color C_ESPRESSO   = Color.decode("#291C0E"); // darkest
@@ -646,7 +645,7 @@ public class StudentDashboardUI extends JFrame {
         body.add(avatar);
         body.add(info);
         root.add(body, BorderLayout.CENTER);
-        return new ProfilePanel(studentId);
+        return root;
     }
 
     private JPanel profileRow(String key, String val) {
@@ -737,12 +736,5 @@ public class StudentDashboardUI extends JFrame {
         g2.dispose();
         return new ImageIcon(img);
     }
-
-    // ══════════════════════ ENTRY POINT ══════════════════════════════════════
-    public static void main(String[] args) {
-        try { UIManager.setLookAndFeel(UIManager.getCrossPlatformLookAndFeelClassName()); }
-        catch (Exception ignored) {}
-
-        SwingUtilities.invokeLater(StudentDashboardUI::new);
-    }
+    
 }
