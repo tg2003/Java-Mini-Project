@@ -38,15 +38,15 @@ public class StudentDashboardUI extends JFrame {
 
     // ── Nav items ──────────────────────────────────────────────────────────────
     private static final String[][] NAV = {
-            {"⌂",  "Dashboard"},
-            {"▤",  "Courses"},
-            {"◷",  "Attendance"},
-            {"✎",  "Marks"},
-            {"★",  "GPA"},
-            {"☷",  "Timetable"},
-            {"☰",  "Notice"},
-            {"♥",  "Medical"},
-            {"◉",  "Profile"}
+        {"⌂",  "Dashboard"},
+        {"▤",  "Courses"},
+        {"◷",  "Attendance"},
+        {"✎",  "Marks"},
+        {"★",  "GPA"},
+        {"☷",  "Timetable"},
+        {"☰",  "Notice"},
+        {"♥",  "Medical"},
+        {"◉",  "Profile"}
     };
 
     // ══════════════════════════════════════════════════════════════════════════
@@ -100,7 +100,7 @@ public class StudentDashboardUI extends JFrame {
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(C_ESPRESSO);
                 g2.fillRect(0, 0, getWidth(), getHeight());
                 // subtle bottom line
@@ -140,7 +140,7 @@ public class StudentDashboardUI extends JFrame {
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(bg);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), getHeight(), getHeight());
                 g2.dispose();
@@ -213,7 +213,7 @@ public class StudentDashboardUI extends JFrame {
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
                 if (active) {
                     // active: warm accent strip + fill
                     g2.setColor(new Color(0xA78D78, false));
@@ -284,7 +284,7 @@ public class StudentDashboardUI extends JFrame {
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
                 // gradient fill
                 GradientPaint gp = new GradientPaint(
                         0, 0,             C_ESPRESSO,
@@ -345,7 +345,7 @@ public class StudentDashboardUI extends JFrame {
             @Override protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                        RenderingHints.VALUE_ANTIALIAS_ON);
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(C_WHITE);
                 g2.fillRoundRect(0, 0, getWidth(), getHeight(), 14, 14);
                 // top accent bar
@@ -418,13 +418,13 @@ public class StudentDashboardUI extends JFrame {
     private JPanel buildCourses() {
         String[] col  = {"Course Code", "Course Name", "Credits", "Status"};
         Object[][] data = {
-                {"ICT2122", "Object Oriented Programming",  "3", "Active"},
-                {"ICT2132", "OOP Practicum",                "1", "Active"},
-                {"ICT2142", "Object Oriented Analysis",     "3", "Active"},
-                {"ICT2152", "E-Commerce Technology",        "3", "Active"},
-                {"ENG2122", "English for IT Professionals", "2", "Active"},
-                {"TCS2112", "Business Economics",           "2", "Active"},
-                {"TCS2122", "Soft Skills Development",      "1", "Active"}
+            {"ICT2122", "Object Oriented Programming",  "3", "Active"},
+            {"ICT2132", "OOP Practicum",                "1", "Active"},
+            {"ICT2142", "Object Oriented Analysis",     "3", "Active"},
+            {"ICT2152", "E-Commerce Technology",        "3", "Active"},
+            {"ENG2122", "English for IT Professionals", "2", "Active"},
+            {"TCS2112", "Business Economics",           "2", "Active"},
+            {"TCS2122", "Soft Skills Development",      "1", "Active"}
         };
         return tablePanel("Enrolled Courses", col, data);
     }
@@ -433,11 +433,11 @@ public class StudentDashboardUI extends JFrame {
     private JPanel buildAttendance() {
         String[] col  = {"Date", "Course", "Type", "Time Slot", "Status"};
         Object[][] data = {
-                {"2025-01-06", "OOP",        "Lecture",   "10:00 – 12:00", "Present"},
-                {"2025-01-07", "DB",         "Practical", "13:00 – 15:00", "Absent"},
-                {"2025-01-08", "E-Commerce", "Lecture",   "09:00 – 11:00", "Present"},
-                {"2025-01-09", "OOP",        "Practical", "14:00 – 16:00", "Present"},
-                {"2025-01-10", "Soft Skills","Tutorial",  "11:00 – 12:00", "Absent"}
+            {"2025-01-06", "OOP",        "Lecture",   "10:00 – 12:00", "Present"},
+            {"2025-01-07", "DB",         "Practical", "13:00 – 15:00", "Absent"},
+            {"2025-01-08", "E-Commerce", "Lecture",   "09:00 – 11:00", "Present"},
+            {"2025-01-09", "OOP",        "Practical", "14:00 – 16:00", "Present"},
+            {"2025-01-10", "Soft Skills","Tutorial",  "11:00 – 12:00", "Absent"}
         };
         return tablePanel("Attendance Record", col, data);
     }
@@ -446,11 +446,11 @@ public class StudentDashboardUI extends JFrame {
     private JPanel buildMarks() {
         String[] col  = {"Course", "Assignment", "Mid Exam", "Final Exam", "Total", "Grade"};
         Object[][] data = {
-                {"OOP",        "18/20", "38/40", "78/100", "85", "A"},
-                {"DB",         "15/20", "34/40", "72/100", "78", "B+"},
-                {"E-Commerce", "17/20", "36/40", "74/100", "80", "A-"},
-                {"English",    "19/20", "39/40", "80/100", "88", "A+"},
-                {"Economics",  "14/20", "30/40", "68/100", "72", "B"},
+            {"OOP",        "18/20", "38/40", "78/100", "85", "A"},
+            {"DB",         "15/20", "34/40", "72/100", "78", "B+"},
+            {"E-Commerce", "17/20", "36/40", "74/100", "80", "A-"},
+            {"English",    "19/20", "39/40", "80/100", "88", "A+"},
+            {"Economics",  "14/20", "30/40", "68/100", "72", "B"},
         };
         return tablePanel("Academic Marks", col, data);
     }
@@ -501,12 +501,12 @@ public class StudentDashboardUI extends JFrame {
     private JPanel buildTimetable() {
         String[] col  = {"Day", "Start", "End", "Course", "Room", "Type"};
         Object[][] data = {
-                {"Monday",    "09:00", "11:00", "OOP",         "Lab 04",   "Lecture"},
-                {"Monday",    "13:00", "15:00", "E-Commerce",  "Hall B",   "Lecture"},
-                {"Tuesday",   "10:00", "12:00", "DB",          "Lab 02",   "Practical"},
-                {"Wednesday", "09:00", "11:00", "English",     "Room 201", "Tutorial"},
-                {"Thursday",  "14:00", "16:00", "Soft Skills", "Room 105", "Workshop"},
-                {"Friday",    "11:00", "13:00", "Economics",   "Hall A",   "Lecture"}
+            {"Monday",    "09:00", "11:00", "OOP",         "Lab 04",   "Lecture"},
+            {"Monday",    "13:00", "15:00", "E-Commerce",  "Hall B",   "Lecture"},
+            {"Tuesday",   "10:00", "12:00", "DB",          "Lab 02",   "Practical"},
+            {"Wednesday", "09:00", "11:00", "English",     "Room 201", "Tutorial"},
+            {"Thursday",  "14:00", "16:00", "Soft Skills", "Room 105", "Workshop"},
+            {"Friday",    "11:00", "13:00", "Economics",   "Hall A",   "Lecture"}
         };
         return tablePanel("Class Timetable", col, data);
     }
@@ -515,10 +515,10 @@ public class StudentDashboardUI extends JFrame {
     private JPanel buildNotice() {
         String[] col  = {"#", "Title", "Date Posted", "Category", "Action"};
         Object[][] data = {
-                {"1", "Examination Timetable – Semester II",   "2025-04-15", "Exam",      "Download"},
-                {"2", "Registration Deadline Reminder",        "2025-04-10", "Admin",     "View"},
-                {"3", "ICT Department Sports Day",             "2025-04-05", "Event",     "View"},
-                {"4", "Supplementary Exam Registration Open",  "2025-03-28", "Exam",      "Download"},
+            {"1", "Examination Timetable – Semester II",   "2025-04-15", "Exam",      "Download"},
+            {"2", "Registration Deadline Reminder",        "2025-04-10", "Admin",     "View"},
+            {"3", "ICT Department Sports Day",             "2025-04-05", "Event",     "View"},
+            {"4", "Supplementary Exam Registration Open",  "2025-03-28", "Exam",      "Download"},
         };
         return tablePanel("Notice Board", col, data);
     }
@@ -532,9 +532,9 @@ public class StudentDashboardUI extends JFrame {
 
         String[] col  = {"Date From", "Date To", "Reason", "Status", "Approved By"};
         Object[][] data = {
-                {"2025-02-10", "2025-02-12", "Fever & Flu",       "Approved", "Dr. Perera"},
-                {"2025-03-04", "2025-03-04", "Dental Appointment","Approved", "Dr. Fernando"},
-                {"2025-04-01", "2025-04-02", "Viral Infection",   "Pending",  "—"},
+            {"2025-02-10", "2025-02-12", "Fever & Flu",       "Approved", "Dr. Perera"},
+            {"2025-03-04", "2025-03-04", "Dental Appointment","Approved", "Dr. Fernando"},
+            {"2025-04-01", "2025-04-02", "Viral Infection",   "Pending",  "—"},
         };
 
         JTable table = styledTable(col, data);
@@ -630,14 +630,14 @@ public class StudentDashboardUI extends JFrame {
         fields.setOpaque(false);
 
         String[][] rows = {
-                {"Student ID",   "ICT20211009"},
-                {"Full Name",    "John Doe"},
-                {"Email",        "john@student.rjt.ac.lk"},
-                {"Faculty",      "ICT"},
-                {"Degree",       "BSc (Hons) in IT"},
-                {"Year",         "Year 2"},
-                {"Status",       "Active"},
-                {"Advisor",      "Dr. Nimalka Jayawardena"}
+            {"Student ID",   "ICT20211009"},
+            {"Full Name",    "John Doe"},
+            {"Email",        "john@student.rjt.ac.lk"},
+            {"Faculty",      "ICT"},
+            {"Degree",       "BSc (Hons) in IT"},
+            {"Year",         "Year 2"},
+            {"Status",       "Active"},
+            {"Advisor",      "Dr. Nimalka Jayawardena"}
         };
         for (String[] r : rows) fields.add(profileRow(r[0], r[1]));
         info.add(fields, BorderLayout.CENTER);
