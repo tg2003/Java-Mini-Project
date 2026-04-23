@@ -1,0 +1,16 @@
+--COURSE
+CREATE TABLE COURSE (
+    C_code CHAR(7) PRIMARY KEY,
+    C_name VARCHAR(100),
+    Credit ENUM('1','2','3')
+);
+
+INSERT INTO COURSE (C_code, C_name, Credit) VALUES
+('ICT2113', 'Data Structures and Algorithms', '3'),
+('ICT2122', 'Object Oriented Programming', '2'),
+('ICT2132', 'Object Oriented Programming Practicum', '2'),
+('ICT2142', 'Object Oriented Analysis and Design', '2'),
+('ICT2152', 'E-Commerce', '2'),
+('ENG2122', 'English', '2'),
+('TCS2112', 'Business Economics', '2'),
+('TCS2122', 'Soft Skills', '2');

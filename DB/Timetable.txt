@@ -1,0 +1,35 @@
+
+--TIMETABLE
+CREATE TABLE TIMETABLE (
+    Timetable_id INT AUTO_INCREMENT PRIMARY KEY, 
+    Day CHAR(3),
+    Start_time TIME,
+    End_time TIME,
+    C_code CHAR(7),
+    Type ENUM('Theory','Practical'),
+
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code) ON DELETE CASCADE
+);
+
+
+INSERT INTO TIMETABLE (Day, Start_time, End_time, C_code, Type) VALUES
+
+
+('Mon','09:00:00','11:00:00','ICT2113','Theory'),
+('Mon','11:00:00','13:00:00','ICT2113','Practical'),
+('Mon','15:00:00','16:00:00','TCS2112','Theory'),
+
+
+('Tue','09:00:00','11:00:00','ICT2142','Theory'),
+
+('Wed','08:00:00','10:00:00','TCS2122','Theory'),
+('Wed','11:00:00','13:00:00','ICT2152','Theory'),
+
+
+('Thu','09:00:00','11:00:00','ICT2122','Theory'),
+('Thu','11:00:00','13:00:00','ICT2132','Practical'),
+('Thu','14:00:00','16:00:00','ICT2132','Practical'),
+
+
+('Fri','08:00:00','10:00:00','TCS2112','Theory'),
+('Fri','10:00:00','12:00:00','ENG2122','Theory');

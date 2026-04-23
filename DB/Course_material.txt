@@ -1,0 +1,45 @@
+
+--COURSE_MATERIAL
+CREATE TABLE COURSE_MATERIAL (
+    C_code CHAR(7),
+    Material VARCHAR(255),
+
+    PRIMARY KEY(C_code, Material),
+    FOREIGN KEY (C_code) REFERENCES COURSE(C_code)
+    ON DELETE CASCADE
+);
+
+INSERT INTO COURSE_MATERIAL (C_code, Material) VALUES
+
+('ICT2113','DSA_Lecture01_Introduction.pdf'),
+('ICT2113','DSA_Lecture02_Stacks.pdf'),
+('ICT2113','DSA_Lecture03_Queues.pdf'),
+('ICT2113','DSA_Tutorial01.pdf'),
+
+('ICT2122','OOP_Lecture01_Basics.pdf'),
+('ICT2122','OOP_Lecture02_Inheritance.pdf'),
+('ICT2122','OOP_Lecture03_Polymorphism.pdf'),
+('ICT2122','OOP_Lecture04_Abstraction.pdf'),
+
+('ICT2132','OOP_Practicum_Lab01.pdf'),
+('ICT2132','OOP_Practicum_Lab02.pdf'),
+('ICT2132','OOP_Practicum_Project_Guide.pdf'),
+
+('ICT2142','OOAD_Lecture01_Introduction.pdf'),
+('ICT2142','OOAD_Lecture02_UML_Diagrams.pdf'),
+('ICT2142','OOAD_Lecture03_Design_Patterns.pdf'),
+
+
+('ICT2152','Ecommerce_Lecture01_Introduction.pdf'),
+('ICT2152','Ecommerce_Lecture02_Business_Models.pdf'),
+('ICT2152','Ecommerce_Lecture03_Payment_Systems.pdf'),
+
+('ENG2122','English_Academic_Writing.pdf'),
+('ENG2122','English_Presentation_Skills.pdf'),
+
+('TCS2112','Business_Economics_Lecture01.pdf'),
+('TCS2112','Business_Economics_Lecture02_Demand_Supply.pdf'),
+
+
+('TCS2122','SoftSkills_Communication.pdf'),
+('TCS2122','SoftSkills_Teamwork.pdf');
