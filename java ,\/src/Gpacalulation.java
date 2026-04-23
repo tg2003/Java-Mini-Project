@@ -1,0 +1,29 @@
+import javax.swing.*;
+
+public class Gpacalulation {
+    private JTextField gpamark;
+    private JButton addResultsButton;
+    private JTextField sid;
+
+    public Gpacalulation() {
+
+        addResultsButton.addActionListener(e -> {
+
+            try {
+                int marks = Integer.parseInt(gpamark.getText());
+
+                String[] res = GradeCalculator.calculateGrade(marks);
+
+                JOptionPane.showMessageDialog(null,
+                        "Student: " + sid.getText() +
+                                "\nGrade: " + res[0] +
+                                "\nGPA: " + res[1]);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Invalid marks!");
+            }
+        });
+    }
+
+
+}

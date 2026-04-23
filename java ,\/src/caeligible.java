@@ -1,0 +1,31 @@
+import javax.swing.*;
+
+public class caeligible {
+    private JTextField textField1;
+    private JTextField textField2;
+    private JTextField textField3;
+    private JButton checkButton;
+    private JTextArea textArea1;
+
+
+public caeligible() {
+
+    checkButton.addActionListener(e -> {
+        try {
+            int attendance = Integer.parseInt(textField2.getText());
+            int marks = Integer.parseInt(textField3.getText());
+
+            boolean result = GradeCalculator.checkEligibility(attendance, marks);
+
+            if (result) {
+                textArea1.setText("ELIGIBLE ✔");
+            } else {
+                textArea1.setText("NOT ELIGIBLE ❌");
+            }
+
+        } catch (Exception ex) {
+            textArea1.setText("Invalid Input!");
+        }
+    });
+}
+}

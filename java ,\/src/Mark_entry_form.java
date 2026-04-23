@@ -1,0 +1,42 @@
+import javax.swing.*;
+
+public class Mark_entry_form {
+    private JTextField studentIdTextField;
+    private JTextField textField2;
+    private JTextField textField1;
+    private JTextField textField3;
+    private JTextField textField4;
+    private JButton clearButton;
+    private JButton saveButton;
+
+    public Mark_entry_form() {
+
+        saveButton.addActionListener(e -> {
+
+            try {
+                int a = Integer.parseInt(textField1.getText());
+                int m = Integer.parseInt(textField2.getText());
+                int f = Integer.parseInt(textField3.getText());
+
+                int total = (a + m + f) / 3;
+                textField4.setText(String.valueOf(total));
+
+                String[] res = GradeCalculator.calculateGrade(total);
+
+                JOptionPane.showMessageDialog(null,
+                        "Saved!\nGrade: " + res[0] +
+                                "\nGPA: " + res[1]);
+
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(null, "Invalid Input!");
+            }
+        });
+        clearButton.addActionListener(e -> {
+            studentIdTextField.setText("");
+            textField1.setText("");
+            textField2.setText("");
+            textField3.setText("");
+            textField4.setText("");
+        });
+
+    }
