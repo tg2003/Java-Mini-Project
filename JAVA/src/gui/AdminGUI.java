@@ -33,7 +33,8 @@ public class AdminGUI extends JFrame {
         active.setFont(new Font("Arial", Font.BOLD, 16));
     }
 
-    public AdminGUI (){
+    public AdminGUI (String id){
+        String uid = id;
         setContentPane(mainPanel);
         setTitle("Admin Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,8 +42,6 @@ public class AdminGUI extends JFrame {
         setLocationRelativeTo(null);
 
         //setting the sidePanel
-
-
         //Users
         usersLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
         usersLabel.addMouseListener(new MouseAdapter(){
@@ -117,9 +116,6 @@ public class AdminGUI extends JFrame {
 
 
         }//end of AdminGUI constructor
-
-
-
 }//end of class
 
 
