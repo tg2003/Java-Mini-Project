@@ -33,13 +33,13 @@ public class LoginGUI extends JFrame{
                         new AdminGUI().setVisible(true);
                         break;
                     case "Lecturer":
-                        //new LecturerGUI().setVisible(true);
+                        //new LecturerGUI(id).setVisible(true);
                         break;
                     case "Tech_Officer":
-                        //new TechOfficerGUI().setVisible(true);
+                        new TechOfficerDashboard(id).setVisible(true);
                         break;
                     case "Undergraduate":
-                        //new StudentDashboardUI().setVisible(true);
+                        //new StudentDashboardUI(id).setVisible(true);
                         break;
                 }
             }
