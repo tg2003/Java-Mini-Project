@@ -16,8 +16,8 @@ public class Main {
             e.printStackTrace();
         }
 
-        new LoginGUI().setVisible(true);
-        //new AdminGUI().setVisible(true); //this is a test line.delete after the work done
+        //new LoginGUI().setVisible(true);
+        new AdminGUI("A00001").setVisible(true); //this is a test line.delete after the work done
 
     }//end of main method
 }//end of main cls
