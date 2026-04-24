@@ -30,7 +30,7 @@ public class LoginGUI extends JFrame{
                 this.dispose();
                 switch (role) {
                     case "Admin":
-                        new AdminGUI().setVisible(true);
+                        new AdminGUI(id).setVisible(true);
                         break;
                     case "Lecturer":
                         //new LecturerGUI().setVisible(true);
