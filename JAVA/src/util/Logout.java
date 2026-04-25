@@ -13,3 +13,4 @@ public class Logout {
         new LoginGUI().setVisible(true);
     }
 }
+
