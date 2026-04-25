@@ -1,5 +1,8 @@
 package gui;
 
+import com.mysql.cj.log.Log;
+import util.Logout;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
@@ -33,7 +36,9 @@ public class AdminGUI extends JFrame {
         active.setFont(new Font("Arial", Font.BOLD, 16));
     }
 
-    public AdminGUI (){
+    public AdminGUI (String id){
+        String uid = id;
+        System.out.println("Admin id "+id);//checking the admin ID
         setContentPane(mainPanel);
         setTitle("Admin Dashboard");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -41,7 +46,6 @@ public class AdminGUI extends JFrame {
         setLocationRelativeTo(null);
 
         //setting the sidePanel
-
 
         //Users
         usersLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -105,21 +109,19 @@ public class AdminGUI extends JFrame {
             }
         });
 
+        // logout
+        logoutButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        logoutButton.addMouseListener(new MouseAdapter() {
+            public void mouseClicked(MouseEvent e) {
+                Logout.logout(AdminGUI.this);
+            }
+        });
+
         contentPanel.add(new UsersPanel(), "users");
         contentPanel.add(new CoursesPanel(), "courses");
         contentPanel.add(new NoticePanel(), "notices");
         contentPanel.add(new TimetablePanel(), "timetable");
-        //contentPanel.add(new HomePanel(), "home"); optional
-
-        CardLayout cl = (CardLayout) contentPanel.getLayout();
-        cl.show(contentPanel, "home");
-
-
-
-        }//end of AdminGUI constructor
-
-
-
+                }//end of AdminGUI constructor
 }//end of class
 
 
