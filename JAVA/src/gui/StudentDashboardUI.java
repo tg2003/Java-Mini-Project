@@ -1,209 +1,218 @@
 package gui;
 
 import models.Undergraduate;
-import javax.swing.*;
-import javax.swing.border.*;
-import java.awt.*;
-import java.awt.event.*;
+import service.StudentService;
+import util.Logout;
 
-/**
- * Main application frame for the Student Dashboard.
- * Wires: TopBar + Sidebar (nav) + CardLayout content area.
- * Each nav item maps to a dedicated JPanel built lazily on first click.
- */
+import javax.swing.*;
+import javax.swing.border.EmptyBorder;
+import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.util.LinkedHashMap;
+import java.util.Map;
+
 public class StudentDashboardUI extends JFrame {
 
     private final Undergraduate student;
+    private final StudentService studentService = new StudentService();
 
-    private JPanel    contentPanel;
-    private CardLayout cardLayout;
-    private JLabel    activeNav;
-
-    // Nav icon + card key pairs
-    private static final String[][] NAV = {
-            {"\u2302", "Dashboard"},
-            {"\u25A4", "Courses"},
-            {"\u25F7", "Attendance"},
-            {"\u270E", "Marks"},
-            {"\u2605", "GPA"},
-            {"\u2637", "Timetable"},
-            {"\u2630", "Notice"},
-            {"\u2665", "Medical"},
-            {"\u25C9", "Profile"}
-    };
+    private final Map<String, JButton> navButtons = new LinkedHashMap<>();
+    private final CardLayout cardLayout = new CardLayout();
+    private JPanel contentPanel;
+    private JLabel notificationBadge;
 
     public StudentDashboardUI(Undergraduate student) {
         this.student = student;
 
-        setTitle("Student Portal  \u2013  " + student.getName());
-        setSize(1150, 720);
-        setMinimumSize(new Dimension(950, 620));
+        setTitle("Faculty of Technology Student Portal - " + student.getName());
+        setSize(1260, 820);
+        setMinimumSize(new Dimension(1080, 680));
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setLocationRelativeTo(null);
 
         UITheme.applyGlobalDefaults();
 
         setLayout(new BorderLayout(0, 0));
-        add(buildTopBar(),  BorderLayout.NORTH);
-        add(buildSidebar(), BorderLayout.WEST);
+        add(buildTopShell(), BorderLayout.NORTH);
+        add(buildContent(), BorderLayout.CENTER);
 
-        cardLayout   = new CardLayout();
-        contentPanel = new JPanel(cardLayout);
-        contentPanel.setBackground(UITheme.ALMOND);
-
-        // Add all panels
-        contentPanel.add(new DashboardPanel(student),  "Dashboard");
-        contentPanel.add(new CoursesPanel1(student),    "Courses");
-        contentPanel.add(new AttendancePanel(student), "Attendance");
-        contentPanel.add(new MarksPanel(student),      "Marks");
-        contentPanel.add(new GPAPanel(student),        "GPA");
-        contentPanel.add(new TimetablePanel1(student),  "Timetable");
-        contentPanel.add(new NoticePanel1(),            "Notice");
-        contentPanel.add(new MedicalPanel(student),    "Medical");
-        contentPanel.add(new ProfilePanel(student),    "Profile");
-
-        add(contentPanel, BorderLayout.CENTER);
-        cardLayout.show(contentPanel, "Dashboard");
-
+        showCard("Dashboard");
         setVisible(true);
     }
 
-    // ── Top Bar ───────────────────────────────────────────────────────────────
+    private JPanel buildTopShell() {
+        JPanel shell = new JPanel(new BorderLayout());
+        shell.setBackground(UITheme.ESPRESSO);
+        shell.add(buildTopBar(), BorderLayout.NORTH);
+        shell.add(buildNavBar(), BorderLayout.SOUTH);
+        return shell;
+    }
+
     private JPanel buildTopBar() {
-        JPanel bar = new JPanel(new BorderLayout()) {
-            @Override protected void paintComponent(Graphics g) {
+        JPanel bar = new JPanel(new BorderLayout(16, 0)) {
+            @Override
+            protected void paintComponent(Graphics g) {
                 g.setColor(UITheme.ESPRESSO);
                 g.fillRect(0, 0, getWidth(), getHeight());
                 g.setColor(UITheme.RUSSET);
                 g.fillRect(0, getHeight() - 2, getWidth(), 2);
             }
         };
-        bar.setPreferredSize(new Dimension(1150, 58));
-        bar.setBorder(new EmptyBorder(0, 24, 0, 24));
+        bar.setBorder(new EmptyBorder(16, 20, 14, 20));
 
-        // Left: logo
-        JLabel logo = new JLabel("  STUDENT PORTAL");
-        logo.setFont(new Font("Georgia", Font.BOLD, 16));
-        logo.setForeground(Color.WHITE);
-        logo.setIcon(circleIcon(UITheme.SANDSTONE, 10));
-        logo.setIconTextGap(8);
+        JButton logoutButton = ghostButton("Logout");
+        logoutButton.addActionListener(e -> Logout.logout(this));
 
-        // Right: semester pill + student name pill
-        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
+        JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
+        left.setOpaque(false);
+        left.add(logoutButton);
+
+        JPanel brand = new JPanel();
+        brand.setOpaque(false);
+        brand.setLayout(new BoxLayout(brand, BoxLayout.Y_AXIS));
+
+        JLabel title = new JLabel("Faculty of Technology");
+        title.setFont(new Font("Georgia", Font.BOLD, 22));
+        title.setForeground(Color.WHITE);
+
+        JLabel subtitle = new JLabel("Student Portal");
+        subtitle.setFont(UITheme.F_BODY);
+        subtitle.setForeground(UITheme.PUTTY);
+
+        brand.add(title);
+        brand.add(Box.createVerticalStrut(2));
+        brand.add(subtitle);
+
+        JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
         right.setOpaque(false);
-        right.add(UITheme.pill("Semester I  \u00B7  2025/26", UITheme.RUSSET, UITheme.PUTTY));
-        right.add(UITheme.pill(student.getName() + "  \u25BE", UITheme.SANDSTONE, UITheme.ESPRESSO));
 
-        bar.add(logo,  BorderLayout.WEST);
+        notificationBadge = notificationBadge(studentService.getUnreadNoticeCount());
+        JButton noticeButton = ghostButton("Notifications");
+        noticeButton.addActionListener(e -> showCard("Notice"));
+
+        JButton profileButton = UITheme.primaryButton("My Profile");
+        profileButton.addActionListener(e -> showCard("Profile"));
+
+        right.add(notificationBadge);
+        right.add(noticeButton);
+        right.add(profileButton);
+        right.add(roundAvatar(student.getInitials(), 42));
+
+        JPanel centerWrap = new JPanel(new BorderLayout());
+        centerWrap.setOpaque(false);
+        centerWrap.add(brand, BorderLayout.WEST);
+
+        bar.add(left, BorderLayout.WEST);
+        bar.add(centerWrap, BorderLayout.CENTER);
         bar.add(right, BorderLayout.EAST);
         return bar;
     }
 
-    // ── Sidebar ───────────────────────────────────────────────────────────────
-    private JPanel buildSidebar() {
-        JPanel outer = new JPanel(new BorderLayout()) {
-            @Override protected void paintComponent(Graphics g) {
-                g.setColor(new Color(0x1E1509));
-                g.fillRect(0, 0, getWidth(), getHeight());
-                g.setColor(UITheme.RUSSET);
-                g.fillRect(getWidth() - 1, 0, 1, getHeight());
-            }
-        };
-        outer.setPreferredSize(new Dimension(215, 720));
-
-        JPanel nav = new JPanel();
+    private JPanel buildNavBar() {
+        JPanel nav = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 12));
         nav.setOpaque(false);
-        nav.setLayout(new BoxLayout(nav, BoxLayout.Y_AXIS));
-        nav.setBorder(new EmptyBorder(18, 0, 18, 0));
+        nav.setBorder(new EmptyBorder(0, 18, 12, 18));
 
-        for (String[] item : NAV) {
-            JLabel lbl = buildNavItem(item[0], item[1]);
-            nav.add(lbl);
-            nav.add(Box.createVerticalStrut(2));
-            if (item[1].equals("Dashboard")) {
-                setNavActive(lbl, true);
-                activeNav = lbl;
-            }
-        }
-
-        JLabel ver = new JLabel("LMS  v1.0  \u00B7  ICT Faculty", SwingConstants.CENTER);
-        ver.setFont(UITheme.F_SMALL);
-        ver.setForeground(new Color(0x5A4030));
-        ver.setBorder(new EmptyBorder(12, 0, 12, 0));
-
-        outer.add(nav, BorderLayout.NORTH);
-        outer.add(ver, BorderLayout.SOUTH);
-        return outer;
+        addNavButton(nav, "Dashboard");
+        addNavButton(nav, "Courses");
+        addNavButton(nav, "Notice");
+        addNavButton(nav, "GPA");
+        addNavButton(nav, "Timetable");
+        addNavButton(nav, "Attendance");
+        addNavButton(nav, "Marks");
+        addNavButton(nav, "Medical");
+        return nav;
     }
 
-    private JLabel buildNavItem(String icon, String text) {
-        // Each nav item is a custom-painted JLabel
-        JLabel lbl = new JLabel("  " + icon + "   " + text) {
-            boolean active = false;
-            boolean hover  = false;
+    private JPanel buildContent() {
+        contentPanel = new JPanel(cardLayout);
+        contentPanel.setBackground(UITheme.ALMOND);
+        contentPanel.add(new DashboardPanel(student, this::showCard), "Dashboard");
+        contentPanel.add(new CoursesPanel1(student), "Courses");
+        contentPanel.add(new NoticePanel1(), "Notice");
+        contentPanel.add(new GPAPanel(student), "GPA");
+        contentPanel.add(new TimetablePanel1(student), "Timetable");
+        contentPanel.add(new AttendancePanel(student), "Attendance");
+        contentPanel.add(new MarksPanel(student), "Marks");
+        contentPanel.add(new MedicalPanel(student), "Medical");
+        contentPanel.add(new ProfilePanel(student, this::refreshHeader), "Profile");
+        return contentPanel;
+    }
 
-            @Override protected void paintComponent(Graphics g) {
+    private void addNavButton(JPanel parent, String card) {
+        JButton button = navButton(card);
+        button.addActionListener(e -> showCard(card));
+        navButtons.put(card, button);
+        parent.add(button);
+    }
+
+    private JButton navButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(UITheme.F_BODY_B);
+        button.setForeground(UITheme.PUTTY);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        button.setContentAreaFilled(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return button;
+    }
+
+    private JButton ghostButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(UITheme.F_BODY_B);
+        button.setForeground(Color.WHITE);
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        button.setContentAreaFilled(false);
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(UITheme.SANDSTONE, 1),
+                BorderFactory.createEmptyBorder(8, 14, 8, 14)
+        ));
+        return button;
+    }
+
+    private JLabel notificationBadge(int count) {
+        JLabel label = new JLabel("\uD83D\uDD14 " + count);
+        label.setFont(UITheme.F_BODY_B);
+        label.setForeground(UITheme.ESPRESSO);
+        label.setOpaque(true);
+        label.setBackground(UITheme.SANDSTONE);
+        label.setBorder(new EmptyBorder(8, 12, 8, 12));
+        return label;
+    }
+
+    private JComponent roundAvatar(String initials, int size) {
+        return new JComponent() {
+            @Override
+            public Dimension getPreferredSize() {
+                return new Dimension(size, size);
+            }
+
+            @Override
+            protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                if (active) {
-                    g2.setColor(new Color(167, 141, 120, 30));
-                    g2.fillRect(0, 0, getWidth(), getHeight());
-                    g2.setColor(UITheme.SANDSTONE);
-                    g2.fillRect(0, 8, 3, getHeight() - 16);
-                    setForeground(Color.WHITE);
-                } else if (hover) {
-                    g2.setColor(new Color(167, 141, 120, 18));
-                    g2.fillRect(0, 0, getWidth(), getHeight());
-                    setForeground(UITheme.SANDSTONE);
-                } else {
-                    setForeground(UITheme.PUTTY);
-                }
+                g2.setColor(UITheme.SANDSTONE);
+                g2.fillOval(0, 0, size, size);
+                g2.setColor(Color.WHITE);
+                g2.setFont(new Font("Georgia", Font.BOLD, 15));
+                FontMetrics fm = g2.getFontMetrics();
+                int x = (size - fm.stringWidth(initials)) / 2;
+                int y = ((size - fm.getHeight()) / 2) + fm.getAscent();
+                g2.drawString(initials, x, y);
                 g2.dispose();
-                super.paintComponent(g);
-            }
-
-            { // instance init block
-                setFont(UITheme.F_NAV);
-                setForeground(UITheme.PUTTY);
-                setMaximumSize(new Dimension(215, 44));
-                setPreferredSize(new Dimension(215, 44));
-                setCursor(new Cursor(Cursor.HAND_CURSOR));
-                setHorizontalAlignment(SwingConstants.LEFT);
             }
         };
-
-        lbl.addMouseListener(new MouseAdapter() {
-            @Override public void mouseClicked(MouseEvent e) {
-                if (activeNav != null) setNavActive(activeNav, false);
-                setNavActive(lbl, true);
-                activeNav = lbl;
-                cardLayout.show(contentPanel, text);
-            }
-            @Override public void mouseEntered(MouseEvent e) { setNavHover(lbl, true);  }
-            @Override public void mouseExited (MouseEvent e) { setNavHover(lbl, false); }
-        });
-        return lbl;
     }
 
-    // Reflection-free active/hover toggle using stored booleans via name trick
-    private void setNavActive(JLabel lbl, boolean val) {
-        lbl.putClientProperty("active", val);
-        lbl.repaint();
-    }
-    private void setNavHover(JLabel lbl, boolean val) {
-        lbl.putClientProperty("hover", val);
-        lbl.repaint();
+    private void showCard(String card) {
+        cardLayout.show(contentPanel, card);
+        navButtons.forEach((key, value) -> value.setForeground(key.equals(card) ? Color.WHITE : UITheme.PUTTY));
     }
 
-    // ── Helpers ───────────────────────────────────────────────────────────────
-    private static Icon circleIcon(Color color, int d) {
-        java.awt.image.BufferedImage img =
-                new java.awt.image.BufferedImage(d, d, java.awt.image.BufferedImage.TYPE_INT_ARGB);
-        Graphics2D g2 = img.createGraphics();
-        g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        g2.setColor(color);
-        g2.fillOval(0, 0, d, d);
-        g2.dispose();
-        return new ImageIcon(img);
+    private void refreshHeader() {
+        notificationBadge.setText("\uD83D\uDD14 " + studentService.getUnreadNoticeCount());
+        revalidate();
+        repaint();
     }
 }
