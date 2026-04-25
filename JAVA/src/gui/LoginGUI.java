@@ -33,7 +33,8 @@ public class LoginGUI extends JFrame{
                         new AdminGUI().setVisible(true);
                         break;
                     case "Lecturer":
-                        //new LecturerGUI().setVisible(true);
+                        new  LecturerDashboard(id).setVisible(true);
+                        //new LecturerDashboard().setVisible(true);
                         break;
                     case "Tech_Officer":
                         //new TechOfficerGUI().setVisible(true);

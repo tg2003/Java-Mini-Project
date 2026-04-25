@@ -1,7 +1,8 @@
+import db.DBConnection;
 import gui.AdminGUI;
+import gui.LecturerDashboard;
 import gui.LoginGUI;
 
-import db.DBConnection;
 import java.sql.Connection;
 
 public class Main {
@@ -16,8 +17,12 @@ public class Main {
             e.printStackTrace();
         }
 
-        //new LoginGUI().setVisible(true);
-        new AdminGUI().setVisible(true); //this is a test line.delete after the work done
+        new LoginGUI().setVisible(true);
+        //new AdminGUI().setVisible(true);
+
+        //new LecturerDashboard().setVisible(true);
+        // this is a test line.delete after the work done
+
 
     }//end of main method
 }//end of main cls
