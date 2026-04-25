@@ -5,6 +5,8 @@ import db.DBConnection;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.sql.*;
 
 public class MedicalForm extends JFrame {
@@ -19,7 +21,7 @@ public class MedicalForm extends JFrame {
 
     private JButton btnView;
     private JButton btnLoad;
-    private JButton btnDelete;
+
 
     private JTable pendingTable;
     private JTable allTable;
@@ -80,6 +82,7 @@ public class MedicalForm extends JFrame {
             dispose();
             new TechOfficerDashboard(techOffId);
         });
+
 
         setVisible(true);
     }
