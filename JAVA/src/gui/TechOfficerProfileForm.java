@@ -12,7 +12,6 @@ import java.sql.*;
 
 public class TechOfficerProfileForm extends JFrame {
 
-    private JFormattedTextField TOoffficerProfileFormattedTextField;
     private JTextField tToId;
     private JTextField tName;
     private JTextField tEmail;
@@ -25,12 +24,10 @@ public class TechOfficerProfileForm extends JFrame {
     private JButton btnBack;
     private JButton btnChange;
     private JPanel TOProfilePanel;
-    private JTextField tPhone;
     private JLabel pplabel;
+    private JFormattedTextField newToprofile;
 
     private String techOffId;
-
-    // ✅ store RELATIVE path only (IMPORTANT)
     private String imagePath = null;
 
     public TechOfficerProfileForm(String techOffId) {
@@ -52,7 +49,7 @@ public class TechOfficerProfileForm extends JFrame {
         loadProfileData();
 
         // =========================
-        // CHANGE IMAGE (FIXED VERSION)
+        // CHANGE IMAGE
         // =========================
         btnChange.addActionListener(e -> {
 
@@ -64,13 +61,8 @@ public class TechOfficerProfileForm extends JFrame {
                 File file = fc.getSelectedFile();
 
                 try {
-                    // ✅ destination inside project
-                    String folderPath = "src/resources/userPP/";
-                    File folder = new File(folderPath);
-
-                    if (!folder.exists()) {
-                        folder.mkdirs();
-                    }
+                    File folder = new File("src/resources/userPP/");
+                    if (!folder.exists()) folder.mkdirs();
 
                     File destFile = new File(folder, file.getName());
 
@@ -80,10 +72,8 @@ public class TechOfficerProfileForm extends JFrame {
                             StandardCopyOption.REPLACE_EXISTING
                     );
 
-                    // ✅ SAVE RELATIVE PATH ONLY (IMPORTANT FIX)
                     imagePath = "src/resources/userPP/" + file.getName();
 
-                    // ✅ immediate UI update
                     setProfileImage(imagePath);
 
                     JOptionPane.showMessageDialog(this, "Profile Image Updated!");
@@ -107,12 +97,13 @@ public class TechOfficerProfileForm extends JFrame {
     }
 
     // =====================================
-    // LOAD PROFILE DATA
+    // LOAD PROFILE DATA (FIXED)
     // =====================================
     private void loadProfileData() {
         try {
             Connection con = DBConnection.getConnection();
 
+            // 🔹 Load main details
             String sql1 = "SELECT * FROM tech_officer WHERE Techoff_id=?";
             PreparedStatement pst1 = con.prepareStatement(sql1);
             pst1.setString(1, techOffId);
@@ -125,10 +116,29 @@ public class TechOfficerProfileForm extends JFrame {
                 tEmail.setText(rs1.getString("Email"));
                 tNic.setText(rs1.getString("Nic"));
                 tDob.setText(rs1.getString("Dob"));
-                tAddress.setText(rs1.getString("Street"));
-                tPhone.setText(rs1.getString("No"));
+
+                // ✅ FIX ADDRESS (No + Street + City)
+                String address = rs1.getString("No") + ", "
+                        + rs1.getString("Street") + ", "
+                        + rs1.getString("City");
+
+                tAddress.setText(address);
             }
 
+            // 🔹 Load PHONE from separate table
+            /*String phoneSql = "SELECT phone FROM tech_officer_phone WHERE Techoff_id=?";
+            PreparedStatement pstPhone = con.prepareStatement(phoneSql);
+            pstPhone.setString(1, techOffId);
+
+            ResultSet rsPhone = pstPhone.executeQuery();
+
+            if (rsPhone.next()) {
+                tPhone.setText(rsPhone.getString("phone"));
+            } else {
+                tPhone.setText("");
+            }*/
+
+            // 🔹 Load user table (password + image)
             String sql2 = "SELECT password, profile_pic FROM user WHERE user_id=?";
             PreparedStatement pst2 = con.prepareStatement(sql2);
             pst2.setString(1, techOffId);
@@ -136,10 +146,7 @@ public class TechOfficerProfileForm extends JFrame {
             ResultSet rs2 = pst2.executeQuery();
 
             if (rs2.next()) {
-
                 fPassword.setText(rs2.getString("password"));
-
-                // ✅ IMPORTANT: load relative path
                 imagePath = rs2.getString("profile_pic");
 
                 if (imagePath != null && !imagePath.isEmpty()) {
@@ -153,23 +160,18 @@ public class TechOfficerProfileForm extends JFrame {
     }
 
     // =====================================
-    // IMAGE DISPLAY + FIX SIZE
+    // IMAGE DISPLAY
     // =====================================
     private void setProfileImage(String path) {
         try {
             File file = new File(path);
 
-            if (!file.exists()) {
-                System.out.println("Image not found: " + path);
-                return;
-            }
+            if (!file.exists()) return;
 
             ImageIcon icon = new ImageIcon(path);
 
             Image img = icon.getImage().getScaledInstance(
-                    pplabel.getWidth() > 0 ? pplabel.getWidth() : 120,
-                    pplabel.getHeight() > 0 ? pplabel.getHeight() : 120,
-                    Image.SCALE_SMOOTH
+                    120, 120, Image.SCALE_SMOOTH
             );
 
             pplabel.setIcon(new ImageIcon(img));
@@ -180,30 +182,52 @@ public class TechOfficerProfileForm extends JFrame {
     }
 
     // =====================================
-    // SAVE PROFILE
+    // SAVE PROFILE (FIX PHONE + ADDRESS)
     // =====================================
     private void saveProfile() {
         try {
             Connection con = DBConnection.getConnection();
 
             String name = tName.getText();
-            String address = tAddress.getText();
-            String phone = tPhone.getText();
             String password = new String(fPassword.getPassword());
 
+            // 🔹 Split address back into parts
+            String[] parts = tAddress.getText().split(",");
+
+            String no = parts.length > 0 ? parts[0].trim() : "";
+            String street = parts.length > 1 ? parts[1].trim() : "";
+            String city = parts.length > 2 ? parts[2].trim() : "";
+
+           // String phone = tPhone.getText();
+
+            // UPDATE tech_officer
             String sql1 = """
                 UPDATE tech_officer 
-                SET Name=?, Street=?, No=? 
+                SET Name=?, No=?, Street=?, City=? 
                 WHERE Techoff_id=?
             """;
 
             PreparedStatement pst1 = con.prepareStatement(sql1);
             pst1.setString(1, name);
-            pst1.setString(2, address);
-            pst1.setString(3, phone);
-            pst1.setString(4, techOffId);
+            pst1.setString(2, no);
+            pst1.setString(3, street);
+            pst1.setString(4, city);
+            pst1.setString(5, techOffId);
             pst1.executeUpdate();
 
+            // UPDATE phone table
+            /*String sqlPhone = """
+                UPDATE tech_officer_phone
+                SET phone=?
+                WHERE Techoff_id=?
+            """;
+
+            PreparedStatement pstPhone = con.prepareStatement(sqlPhone);
+            pstPhone.setString(1, phone);
+            pstPhone.setString(2, techOffId);
+            pstPhone.executeUpdate();*/
+
+            // UPDATE user table
             String sql2 = """
                 UPDATE user 
                 SET password=?, profile_pic=? 
@@ -212,7 +236,7 @@ public class TechOfficerProfileForm extends JFrame {
 
             PreparedStatement pst2 = con.prepareStatement(sql2);
             pst2.setString(1, password);
-            pst2.setString(2, imagePath); // ✅ relative path saved
+            pst2.setString(2, imagePath);
             pst2.setString(3, techOffId);
             pst2.executeUpdate();
 
