@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 
 public class TechOfficerDashboard extends JFrame {
     private String techOffId;
-    private JFormattedTextField technicalOfficerDashboardFormattedTextField;
     private JButton btnVerifyMedicals;
     private JButton btnAttendanceReports;
     private JButton btnLogOut;
