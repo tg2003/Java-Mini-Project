@@ -17,9 +17,9 @@ public class Main {
             System.out.println("Connection failed!");
             e.printStackTrace();
         }
-        new LoginGUI().setVisible(true);
+        //new LoginGUI().setVisible(true);
         //new AdminGUI().setVisible(true); //this is a test line.delete after the work done
-        //new TechOfficerDashboard().setVisible(true);
+        new TechOfficerDashboard("TO0002").setVisible(true);
 
     }//end of main method
 }//end of main cls
