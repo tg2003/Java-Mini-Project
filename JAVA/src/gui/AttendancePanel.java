@@ -11,6 +11,8 @@ import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import javax.swing.table.DefaultTableCellRenderer;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -29,6 +31,7 @@ public class AttendancePanel extends JPanel {
     private JLabel detailHeading;
     private JLabel detailSubHeading;
     private JPanel detailStats;
+    private JLabel detailPercentageLabel;
 
     public AttendancePanel(Undergraduate student) {
         this.student = student;
@@ -58,11 +61,11 @@ public class AttendancePanel extends JPanel {
         heroText.setOpaque(false);
         heroText.setLayout(new BoxLayout(heroText, BoxLayout.Y_AXIS));
 
-        JLabel title = new JLabel("Attendance Overview");
+        JLabel title = new JLabel("Attendance Panel");
         title.setFont(new Font("Georgia", Font.BOLD, 24));
         title.setForeground(Color.WHITE);
 
-        JLabel subtitle = new JLabel("See all subject codes and open each course for a full session-by-session attendance breakdown.");
+        JLabel subtitle = new JLabel("Inside this panel, click View to open the selected course attendance details.");
         subtitle.setFont(UITheme.F_BODY);
         subtitle.setForeground(UITheme.PUTTY);
         subtitle.setBorder(new EmptyBorder(8, 0, 0, 0));
@@ -76,26 +79,18 @@ public class AttendancePanel extends JPanel {
         summaryTable.getColumnModel().getColumn(4).setCellRenderer(new PercentageRenderer());
         summaryTable.getColumnModel().getColumn(5).setCellRenderer((table, value, isSelected, hasFocus, row, column) ->
                 actionButton("View"));
-        summaryTable.getColumnModel().getColumn(5).setCellEditor(new DefaultCellEditor(new JCheckBox()) {
-            private final JButton button = actionButton("View");
-
-            {
-                button.addActionListener(e -> {
-                    int row = summaryTable.getSelectedRow();
-                    fireEditingStopped();
-                    if (row >= 0 && row < summaries.size()) {
-                        openCourseDetails(summaries.get(row));
-                    }
-                });
-            }
-
-            @Override
-            public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-                return button;
-            }
-        });
         summaryTable.getColumnModel().getColumn(5).setMinWidth(100);
         summaryTable.getColumnModel().getColumn(5).setMaxWidth(120);
+        summaryTable.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                int row = summaryTable.rowAtPoint(e.getPoint());
+                int col = summaryTable.columnAtPoint(e.getPoint());
+                if (row >= 0 && col == 5 && row < summaries.size()) {
+                    openCourseDetails(summaries.get(row));
+                }
+            }
+        });
 
         JPanel wrapper = new JPanel(new BorderLayout(0, 16));
         wrapper.setOpaque(false);
@@ -108,9 +103,6 @@ public class AttendancePanel extends JPanel {
         JPanel panel = new JPanel(new BorderLayout(0, 18));
         panel.setOpaque(false);
 
-        JPanel top = new JPanel(new BorderLayout(0, 16));
-        top.setOpaque(false);
-
         JPanel titleWrap = new JPanel(new BorderLayout());
         titleWrap.setOpaque(false);
 
@@ -122,11 +114,11 @@ public class AttendancePanel extends JPanel {
         headingWrap.setOpaque(false);
         headingWrap.setLayout(new BoxLayout(headingWrap, BoxLayout.Y_AXIS));
 
-        detailHeading = new JLabel("Course Attendance");
+        detailHeading = new JLabel("Attendance Course");
         detailHeading.setFont(UITheme.F_HEADING);
         detailHeading.setForeground(UITheme.ESPRESSO);
 
-        detailSubHeading = new JLabel("Detailed attendance list");
+        detailSubHeading = new JLabel("Course ID, course name, date, hours, type, start time, and status");
         detailSubHeading.setFont(UITheme.F_BODY);
         detailSubHeading.setForeground(UITheme.RUSSET);
         detailSubHeading.setBorder(new EmptyBorder(6, 0, 0, 0));
@@ -135,18 +127,33 @@ public class AttendancePanel extends JPanel {
         headingWrap.add(detailSubHeading);
         titleWrap.add(headingWrap, BorderLayout.SOUTH);
 
-        detailStats = new JPanel(new GridLayout(1, 3, 16, 0));
+        detailStats = new JPanel(new GridLayout(1, 2, 16, 0));
         detailStats.setOpaque(false);
-
-        top.add(titleWrap, BorderLayout.NORTH);
-        top.add(detailStats, BorderLayout.CENTER);
 
         String[] cols = {"Date", "Hours", "Type", "Start Time", "Status"};
         detailTable = new StyledTable(cols);
         detailTable.getColumnModel().getColumn(4).setCellRenderer(new StatusRenderer());
 
-        panel.add(top, BorderLayout.NORTH);
+        JPanel footer = new JPanel(new BorderLayout(0, 12));
+        footer.setOpaque(false);
+        footer.setBorder(new EmptyBorder(8, 0, 0, 0));
+
+        detailPercentageLabel = new JLabel("Attendance Percentage: 0.0%");
+        detailPercentageLabel.setFont(UITheme.F_BODY_B);
+        detailPercentageLabel.setForeground(UITheme.ESPRESSO);
+        detailPercentageLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
+        JPanel percentagePanel = UITheme.statCard(UITheme.SANDSTONE);
+        percentagePanel.setLayout(new BorderLayout());
+        percentagePanel.setBorder(new EmptyBorder(14, 18, 14, 18));
+        percentagePanel.add(detailPercentageLabel, BorderLayout.CENTER);
+
+        footer.add(detailStats, BorderLayout.NORTH);
+        footer.add(percentagePanel, BorderLayout.CENTER);
+
+        panel.add(titleWrap, BorderLayout.NORTH);
         panel.add(UITheme.scrollPane(detailTable), BorderLayout.CENTER);
+        panel.add(footer, BorderLayout.SOUTH);
         return panel;
     }
 
@@ -167,14 +174,14 @@ public class AttendancePanel extends JPanel {
 
     private void openCourseDetails(AttendanceCourseSummary summary) {
         AttendanceCourseDetails details = svc.getCourseDetails(student.getUgId(), summary.getCourseCode());
-        detailHeading.setText(details.getCourseCode() + "  •  " + details.getCourseName());
-        detailSubHeading.setText("Date, hours, type, start time, and status for each marked session");
+        detailHeading.setText("Attendance Course: " + details.getCourseCode() + " - " + details.getCourseName());
+        detailSubHeading.setText("Date | Hours | Type (Lecture/Practical) | Start Time | Status");
 
         detailStats.removeAll();
         detailStats.add(statCard("Participated Hours", fmtHours(details.getAttendedHours()), UITheme.STATUS_GREEN));
         detailStats.add(statCard("Total Hours", fmtHours(details.getTotalHours()), UITheme.RUSSET));
-        detailStats.add(statCard("Percentage", String.format("%.1f%%", details.getPercentage()),
-                details.getPercentage() >= 80 ? UITheme.STATUS_GREEN : UITheme.STATUS_RED));
+        detailPercentageLabel.setText("Attendance Percentage: " + String.format("%.1f%%", details.getPercentage()));
+        detailPercentageLabel.setForeground(details.getPercentage() >= 80 ? UITheme.STATUS_GREEN : UITheme.STATUS_RED);
 
         detailTable.clearRows();
         for (Attendance session : details.getSessions()) {

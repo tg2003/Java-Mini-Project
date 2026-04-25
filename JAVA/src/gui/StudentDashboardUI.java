@@ -21,15 +21,15 @@ public class StudentDashboardUI extends JFrame {
 
     // Nav icon + card key pairs
     private static final String[][] NAV = {
-        {"\u2302", "Dashboard"},
-        {"\u25A4", "Courses"},
-        {"\u25F7", "Attendance"},
-        {"\u270E", "Marks"},
-        {"\u2605", "GPA"},
-        {"\u2637", "Timetable"},
-        {"\u2630", "Notice"},
-        {"\u2665", "Medical"},
-        {"\u25C9", "Profile"}
+            {"\u2302", "Dashboard"},
+            {"\u25A4", "Courses"},
+            {"\u25F7", "Attendance"},
+            {"\u270E", "Marks"},
+            {"\u2605", "GPA"},
+            {"\u2637", "Timetable"},
+            {"\u2630", "Notice"},
+            {"\u2665", "Medical"},
+            {"\u25C9", "Profile"}
     };
 
     public StudentDashboardUI(Undergraduate student) {
@@ -198,7 +198,7 @@ public class StudentDashboardUI extends JFrame {
     // ── Helpers ───────────────────────────────────────────────────────────────
     private static Icon circleIcon(Color color, int d) {
         java.awt.image.BufferedImage img =
-            new java.awt.image.BufferedImage(d, d, java.awt.image.BufferedImage.TYPE_INT_ARGB);
+                new java.awt.image.BufferedImage(d, d, java.awt.image.BufferedImage.TYPE_INT_ARGB);
         Graphics2D g2 = img.createGraphics();
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         g2.setColor(color);
