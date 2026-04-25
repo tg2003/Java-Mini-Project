@@ -1,0 +1,250 @@
+package gui;
+
+import db.DBConnection;
+
+import javax.swing.*;
+import java.awt.*;
+import java.io.File;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.StandardCopyOption;
+import java.sql.*;
+
+public class TechOfficerProfileForm extends JFrame {
+
+    private JTextField tToId;
+    private JTextField tName;
+    private JTextField tEmail;
+    private JTextField tNic;
+    private JTextField tDob;
+    private JTextField tAddress;
+    private JPasswordField fPassword;
+    private JButton btnClear;
+    private JButton btnSave;
+    private JButton btnBack;
+    private JButton btnChange;
+    private JPanel TOProfilePanel;
+    private JLabel pplabel;
+    private JFormattedTextField newToprofile;
+
+    private String techOffId;
+    private String imagePath = null;
+
+    public TechOfficerProfileForm(String techOffId) {
+
+        this.techOffId = techOffId;
+
+        setTitle("Tech Officer Profile");
+        setContentPane(TOProfilePanel);
+        setMinimumSize(new Dimension(800, 500));
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
+
+        pplabel.setPreferredSize(new Dimension(120, 120));
+
+        tToId.setEditable(false);
+        tEmail.setEditable(false);
+        tNic.setEditable(false);
+        tDob.setEditable(false);
+
+        loadProfileData();
+
+        // =========================
+        // CHANGE IMAGE
+        // =========================
+        btnChange.addActionListener(e -> {
+
+            JFileChooser fc = new JFileChooser();
+            int result = fc.showOpenDialog(this);
+
+            if (result == JFileChooser.APPROVE_OPTION) {
+
+                File file = fc.getSelectedFile();
+
+                try {
+                    File folder = new File("src/resources/userPP/");
+                    if (!folder.exists()) folder.mkdirs();
+
+                    File destFile = new File(folder, file.getName());
+
+                    Files.copy(
+                            file.toPath(),
+                            destFile.toPath(),
+                            StandardCopyOption.REPLACE_EXISTING
+                    );
+
+                    imagePath = "src/resources/userPP/" + file.getName();
+
+                    setProfileImage(imagePath);
+
+                    JOptionPane.showMessageDialog(this, "Profile Image Updated!");
+
+                } catch (IOException ex) {
+                    ex.printStackTrace();
+                    JOptionPane.showMessageDialog(this, "Image upload failed!");
+                }
+            }
+        });
+
+        btnClear.addActionListener(e -> loadProfileData());
+        btnSave.addActionListener(e -> saveProfile());
+
+        btnBack.addActionListener(e -> {
+            dispose();
+            new TechOfficerDashboard(techOffId);
+        });
+
+        setVisible(true);
+    }
+
+    // =====================================
+    // LOAD PROFILE DATA (FIXED)
+    // =====================================
+    private void loadProfileData() {
+        try {
+            Connection con = DBConnection.getConnection();
+
+            // 🔹 Load main details
+            String sql1 = "SELECT * FROM tech_officer WHERE Techoff_id=?";
+            PreparedStatement pst1 = con.prepareStatement(sql1);
+            pst1.setString(1, techOffId);
+
+            ResultSet rs1 = pst1.executeQuery();
+
+            if (rs1.next()) {
+                tToId.setText(rs1.getString("Techoff_id"));
+                tName.setText(rs1.getString("Name"));
+                tEmail.setText(rs1.getString("Email"));
+                tNic.setText(rs1.getString("Nic"));
+                tDob.setText(rs1.getString("Dob"));
+
+                // ✅ FIX ADDRESS (No + Street + City)
+                String address = rs1.getString("No") + ", "
+                        + rs1.getString("Street") + ", "
+                        + rs1.getString("City");
+
+                tAddress.setText(address);
+            }
+
+            // 🔹 Load PHONE from separate table
+            /*String phoneSql = "SELECT phone FROM tech_officer_phone WHERE Techoff_id=?";
+            PreparedStatement pstPhone = con.prepareStatement(phoneSql);
+            pstPhone.setString(1, techOffId);
+
+            ResultSet rsPhone = pstPhone.executeQuery();
+
+            if (rsPhone.next()) {
+                tPhone.setText(rsPhone.getString("phone"));
+            } else {
+                tPhone.setText("");
+            }*/
+
+            // 🔹 Load user table (password + image)
+            String sql2 = "SELECT password, profile_pic FROM user WHERE user_id=?";
+            PreparedStatement pst2 = con.prepareStatement(sql2);
+            pst2.setString(1, techOffId);
+
+            ResultSet rs2 = pst2.executeQuery();
+
+            if (rs2.next()) {
+                fPassword.setText(rs2.getString("password"));
+                imagePath = rs2.getString("profile_pic");
+
+                if (imagePath != null && !imagePath.isEmpty()) {
+                    setProfileImage(imagePath);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // =====================================
+    // IMAGE DISPLAY
+    // =====================================
+    private void setProfileImage(String path) {
+        try {
+            File file = new File(path);
+
+            if (!file.exists()) return;
+
+            ImageIcon icon = new ImageIcon(path);
+
+            Image img = icon.getImage().getScaledInstance(
+                    120, 120, Image.SCALE_SMOOTH
+            );
+
+            pplabel.setIcon(new ImageIcon(img));
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
+
+    // =====================================
+    // SAVE PROFILE (FIX PHONE + ADDRESS)
+    // =====================================
+    private void saveProfile() {
+        try {
+            Connection con = DBConnection.getConnection();
+
+            String name = tName.getText();
+            String password = new String(fPassword.getPassword());
+
+            // 🔹 Split address back into parts
+            String[] parts = tAddress.getText().split(",");
+
+            String no = parts.length > 0 ? parts[0].trim() : "";
+            String street = parts.length > 1 ? parts[1].trim() : "";
+            String city = parts.length > 2 ? parts[2].trim() : "";
+
+           // String phone = tPhone.getText();
+
+            // UPDATE tech_officer
+            String sql1 = """
+                UPDATE tech_officer 
+                SET Name=?, No=?, Street=?, City=? 
+                WHERE Techoff_id=?
+            """;
+
+            PreparedStatement pst1 = con.prepareStatement(sql1);
+            pst1.setString(1, name);
+            pst1.setString(2, no);
+            pst1.setString(3, street);
+            pst1.setString(4, city);
+            pst1.setString(5, techOffId);
+            pst1.executeUpdate();
+
+            // UPDATE phone table
+            /*String sqlPhone = """
+                UPDATE tech_officer_phone
+                SET phone=?
+                WHERE Techoff_id=?
+            """;
+
+            PreparedStatement pstPhone = con.prepareStatement(sqlPhone);
+            pstPhone.setString(1, phone);
+            pstPhone.setString(2, techOffId);
+            pstPhone.executeUpdate();*/
+
+            // UPDATE user table
+            String sql2 = """
+                UPDATE user 
+                SET password=?, profile_pic=? 
+                WHERE user_id=?
+            """;
+
+            PreparedStatement pst2 = con.prepareStatement(sql2);
+            pst2.setString(1, password);
+            pst2.setString(2, imagePath);
+            pst2.setString(3, techOffId);
+            pst2.executeUpdate();
+
+            JOptionPane.showMessageDialog(this, "Profile Updated Successfully!");
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            JOptionPane.showMessageDialog(this, "Error updating profile!");
+        }
+    }
+}

@@ -18,11 +18,5 @@ public class Main {
         }
 
         new LoginGUI().setVisible(true);
-        //new AdminGUI().setVisible(true);
-
-        //new LecturerDashboard().setVisible(true);
-        // this is a test line.delete after the work done
-
-
     }//end of main method
 }//end of main cls
