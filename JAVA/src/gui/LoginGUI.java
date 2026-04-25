@@ -1,6 +1,9 @@
 package gui;
 import javax.swing.*;
+
+import dao.UndergraduateDAO;
 import models.Login;
+import models.Undergraduate;
 
 public class LoginGUI extends JFrame{
     private JTextField usernameTextField;
@@ -39,7 +42,17 @@ public class LoginGUI extends JFrame{
                         new TechOfficerDashboard(id).setVisible(true);
                         break;
                     case "Undergraduate":
-                        //new StudentDashboardUI(id).setVisible(true);
+                        //  fetch the full student object using the ID they typed
+                        Undergraduate student = UndergraduateDAO.getById(id);
+
+                        if (student == null) {
+                            JOptionPane.showMessageDialog(null,
+                                    "Could not load student profile.", "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        } else {
+                            // 2. pass it straight to the dashboard
+                            new gui.StudentDashboardUI(student);
+                        }
                         break;
                 }
             }
