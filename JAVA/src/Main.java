@@ -1,8 +1,7 @@
-import gui.AdminGUI;
-import gui.LoginGUI;
-
 import db.DBConnection;
-import gui.TechOfficerDashboard;
+import gui.AdminGUI;
+import gui.LecturerDashboard;
+import gui.LoginGUI;
 
 import java.sql.Connection;
 
@@ -17,9 +16,7 @@ public class Main {
             System.out.println("Connection failed!");
             e.printStackTrace();
         }
-        new LoginGUI().setVisible(true);
-        //new AdminGUI().setVisible(true); //this is a test line.delete after the work done
-        //new TechOfficerDashboard().setVisible(true);
 
+        new LoginGUI().setVisible(true);
     }//end of main method
 }//end of main cls

@@ -36,7 +36,7 @@ public class LoginGUI extends JFrame{
                         new AdminGUI(id).setVisible(true);
                         break;
                     case "Lecturer":
-                        //new LecturerGUI(id).setVisible(true);
+                        new LecturerDashboard(id).setVisible(true);
                         break;
                     case "Tech_Officer":
                         new TechOfficerDashboard(id).setVisible(true);
