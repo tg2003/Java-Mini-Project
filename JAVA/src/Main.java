@@ -18,11 +18,16 @@ public class Main {
         }
 
         new LoginGUI().setVisible(true);
+<<<<<<< HEAD
+        //new AdminGUI().setVisible(true); //this is a test line.delete after the work done
+        //new TechOfficerDashboard("TO0002").setVisible(true);
+=======
         //new AdminGUI().setVisible(true);
 
         //new LecturerDashboard().setVisible(true);
         // this is a test line.delete after the work done
 
+>>>>>>> 87b52a52f090d60432d7b48c10fce0f637156320
 
     }//end of main method
 }//end of main cls

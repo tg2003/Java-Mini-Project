@@ -6,21 +6,20 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.sql.*;
-import java.util.Date;
 
 public class MarkAttendanceForm extends JFrame {
 
     private JTextField tdate;
     private JButton btnSubmit;
-    private JComboBox<Integer> cTimetable;
+    private JComboBox<String> cCourseCode;
     private JButton btnBack;
     private JPanel AttendancePanel;
     private JButton btnLoad;
-    private JComboBox<Integer> comboBox1;
+    private JComboBox<String> cType;
     private JTable table1;
+    private JComboBox<Integer> cWeekNo;
+    private JScrollPane attScrollPane;
 
-   //add date picker
-    private JSpinner dateSpinner;
     private String techOffId;
 
     public MarkAttendanceForm(String techOffId) {
@@ -30,25 +29,13 @@ public class MarkAttendanceForm extends JFrame {
         setContentPane(AttendancePanel);
         setMinimumSize(new Dimension(800, 600));
 
-
-        dateSpinner = new JSpinner(new SpinnerDateModel());
-        JSpinner.DateEditor editor = new JSpinner.DateEditor(dateSpinner, "yyyy-MM-dd");
-        dateSpinner.setEditor(editor);
-
-        tdate.setLayout(new BorderLayout());
-        tdate.removeAll();
-        tdate.add(dateSpinner, BorderLayout.CENTER);
-
-        loadTimetableIds();
+        loadCourseCodes();
+        loadTypes();
         loadWeekNumbers();
 
-        //load button
         btnLoad.addActionListener(e -> loadStudents());
-
-        //submit button
         btnSubmit.addActionListener(e -> saveAttendance());
 
-        //back button
         btnBack.addActionListener(e -> {
             dispose();
             new TechOfficerDashboard(techOffId);
@@ -57,57 +44,68 @@ public class MarkAttendanceForm extends JFrame {
         setVisible(true);
     }
 
-   //load timetable ids
-    private void loadTimetableIds() {
+    // =============================
+    private void loadCourseCodes() {
         try {
             Connection con = DBConnection.getConnection();
 
-            String query = "SELECT Timetable_id FROM timetable ORDER BY Timetable_id ASC";
-            PreparedStatement pst = con.prepareStatement(query);
+            String sql = "SELECT DISTINCT C_code FROM timetable";
+            PreparedStatement pst = con.prepareStatement(sql);
             ResultSet rs = pst.executeQuery();
 
-            cTimetable.removeAllItems(); // IMPORTANT
-
-            System.out.println("Loading timetable IDs...");
+            cCourseCode.removeAllItems();
 
             while (rs.next()) {
-                int id = rs.getInt("Timetable_id");
-                System.out.println("Adding ID: " + id);
-
-                cTimetable.addItem(id);
+                cCourseCode.addItem(rs.getString("C_code"));
             }
-
-            System.out.println("Timetable loaded successfully!");
 
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    //Load week numbers
+    // =============================
+    private void loadTypes() {
+        cType.removeAllItems();
+        cType.addItem("All");
+        cType.addItem("Theory");
+        cType.addItem("Practical");
+    }
+
+    // =============================
     private void loadWeekNumbers() {
+        cWeekNo.removeAllItems();
         for (int i = 1; i <= 15; i++) {
-            comboBox1.addItem(i);
+            cWeekNo.addItem(i);
         }
     }
 
-    //Load students into table
+    // =============================
     private void loadStudents() {
         try {
-            int timetableId = (int) cTimetable.getSelectedItem();
+            String course = (String) cCourseCode.getSelectedItem();
+            String type = (String) cType.getSelectedItem();
 
             Connection con = DBConnection.getConnection();
 
-            String query = """
-                SELECT u.Ug_id, u.Name
-                FROM UNDERGRADUATE u
-                JOIN ENROLLS_IN e ON u.Ug_id = e.Ug_id
-                JOIN TIMETABLE t ON e.C_code = t.C_code
-                WHERE t.Timetable_id = ?
-            """;
+            StringBuilder sql = new StringBuilder("""
+                SELECT DISTINCT u.Ug_id, u.Name
+                FROM undergraduate u
+                JOIN enrolls_in e ON u.Ug_id = e.Ug_id
+                JOIN timetable t ON e.C_code = t.C_code
+                WHERE t.C_code = ?
+            """);
 
-            PreparedStatement pst = con.prepareStatement(query);
-            pst.setInt(1, timetableId);
+            if (!type.equals("All")) {
+                sql.append(" AND t.Type = ?");
+            }
+
+            PreparedStatement pst = con.prepareStatement(sql.toString());
+            pst.setString(1, course);
+
+            if (!type.equals("All")) {
+                pst.setString(2, type);
+            }
 
             ResultSet rs = pst.executeQuery();
 
@@ -124,7 +122,6 @@ public class MarkAttendanceForm extends JFrame {
 
             table1.setModel(model);
 
-            // ComboBox inside table
             JComboBox<String> combo = new JComboBox<>(new String[]{
                     "Present", "Absent", "MedicalApproved", "MedicalDeclined"
             });
@@ -137,26 +134,52 @@ public class MarkAttendanceForm extends JFrame {
         }
     }
 
-    //Save attendance
+    // =============================
+    private int getTimetableId(String course, String type, Connection con) throws Exception {
+
+        String sql;
+
+        if (type.equals("All")) {
+            sql = "SELECT Timetable_id FROM timetable WHERE C_code=? LIMIT 1";
+        } else {
+            sql = "SELECT Timetable_id FROM timetable WHERE C_code=? AND Type=?";
+        }
+
+        PreparedStatement pst = con.prepareStatement(sql);
+        pst.setString(1, course);
+
+        if (!type.equals("All")) {
+            pst.setString(2, type);
+        }
+
+        ResultSet rs = pst.executeQuery();
+
+        if (rs.next()) {
+            return rs.getInt("Timetable_id");
+        }
+
+        throw new Exception("No timetable found!");
+    }
+
+    // =============================
     private void saveAttendance() {
         try {
-            int timetableId = (int) cTimetable.getSelectedItem();
-            int weekNo = (int) comboBox1.getSelectedItem();
-
-            // Get date from spinner
-            Date selectedDate = (Date) dateSpinner.getValue();
-            java.sql.Date sqlDate = new java.sql.Date(selectedDate.getTime());
+            String course = (String) cCourseCode.getSelectedItem();
+            String type = (String) cType.getSelectedItem();
+            int weekNo = (int) cWeekNo.getSelectedItem();
 
             Connection con = DBConnection.getConnection();
+
+            int timetableId = getTimetableId(course, type, con);
 
             for (int i = 0; i < table1.getRowCount(); i++) {
 
                 String ugId = table1.getValueAt(i, 0).toString();
                 String status = table1.getValueAt(i, 2).toString();
 
-                // check existing record
-                String check = "SELECT * FROM ATTENDANCE WHERE Ug_id=? AND Timetable_id=? AND Week_no=?";
+                String check = "SELECT * FROM attendance WHERE Ug_id=? AND Timetable_id=? AND Week_no=?";
                 PreparedStatement checkPst = con.prepareStatement(check);
+
                 checkPst.setString(1, ugId);
                 checkPst.setInt(2, timetableId);
                 checkPst.setInt(3, weekNo);
@@ -164,30 +187,28 @@ public class MarkAttendanceForm extends JFrame {
                 ResultSet rs = checkPst.executeQuery();
 
                 if (rs.next()) {
-                    // UPDATE
-                    String update = "UPDATE ATTENDANCE SET Status=?, Date=?, Techoff_id=? WHERE Ug_id=? AND Timetable_id=? AND Week_no=?";
+
+                    String update = "UPDATE attendance SET Status=?, Techoff_id=? WHERE Ug_id=? AND Timetable_id=? AND Week_no=?";
                     PreparedStatement pst = con.prepareStatement(update);
 
                     pst.setString(1, status);
-                    pst.setDate(2, sqlDate);
-                    pst.setString(3,techOffId);
-                    pst.setString(4, ugId);
-                    pst.setInt(5, timetableId);
-                    pst.setInt(6, weekNo);
+                    pst.setString(2, techOffId);
+                    pst.setString(3, ugId);
+                    pst.setInt(4, timetableId);
+                    pst.setInt(5, weekNo);
 
                     pst.executeUpdate();
 
                 } else {
-                    // INSERT
-                    String insert = "INSERT INTO ATTENDANCE VALUES (?, ?, ?, ?, ?, ?)";
+
+                    String insert = "INSERT INTO attendance (Week_no, Ug_id, Timetable_id, Techoff_id, Status) VALUES (?, ?, ?, ?, ?)";
                     PreparedStatement pst = con.prepareStatement(insert);
 
                     pst.setInt(1, weekNo);
                     pst.setString(2, ugId);
                     pst.setInt(3, timetableId);
-                    pst.setDate(4, sqlDate);
-                    pst.setString(5,techOffId);
-                    pst.setString(6, status);
+                    pst.setString(4, techOffId);
+                    pst.setString(5, status);
 
                     pst.executeUpdate();
                 }
@@ -199,5 +220,4 @@ public class MarkAttendanceForm extends JFrame {
             e.printStackTrace();
         }
     }
-
 }
