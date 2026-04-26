@@ -1,10 +1,12 @@
 package gui;
 
-import models.*;
-import service.*;
-import util.*;
+import models.Marks;
+import models.Undergraduate;
+import service.MarksService;
+import util.GPACalculator;
+
 import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.geom.RoundRectangle2D;
 import java.util.List;
@@ -12,7 +14,7 @@ import java.util.List;
 public class GPAPanel extends JPanel {
 
     private final Undergraduate student;
-    private final MarksService  svc = new MarksService();
+    private final MarksService svc = new MarksService();
 
     public GPAPanel(Undergraduate student) {
         this.student = student;
@@ -27,7 +29,7 @@ public class GPAPanel extends JPanel {
 
         JPanel body = new JPanel(new BorderLayout(24, 0));
         body.setOpaque(false);
-        body.add(buildGPACard(),        BorderLayout.WEST);
+        body.add(buildGPACard(), BorderLayout.WEST);
         body.add(buildBreakdownTable(), BorderLayout.CENTER);
         add(body, BorderLayout.CENTER);
     }
@@ -37,7 +39,8 @@ public class GPAPanel extends JPanel {
         String cls = GPACalculator.classify(gpa);
 
         JPanel card = new JPanel(new GridBagLayout()) {
-            @Override protected void paintComponent(Graphics g) {
+            @Override
+            protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 GradientPaint gp = new GradientPaint(0, 0, UITheme.ESPRESSO, 0, getHeight(), UITheme.RUSSET);
@@ -47,47 +50,51 @@ public class GPAPanel extends JPanel {
             }
         };
         card.setOpaque(false);
-        card.setPreferredSize(new Dimension(260, 280));
+        card.setPreferredSize(new Dimension(280, 300));
 
         JPanel inner = new JPanel();
         inner.setOpaque(false);
         inner.setLayout(new BoxLayout(inner, BoxLayout.Y_AXIS));
 
-        JLabel title = centred("Cumulative GPA", UITheme.F_SUBHEAD, UITheme.PUTTY);
-        JLabel val   = centred(String.format("%.2f", gpa), UITheme.F_HUGE, Color.WHITE);
-        JLabel scale = centred("/ 4.00", UITheme.F_BODY,  UITheme.PUTTY);
-        JLabel clsL  = centred(cls, UITheme.F_BODY_B, UITheme.SANDSTONE);
-        clsL.setBorder(new EmptyBorder(10, 0, 0, 0));
+        JLabel title = centered("Weighted GPA", UITheme.F_SUBHEAD, UITheme.PUTTY);
+        JLabel value = centered(String.format("%.2f", gpa), UITheme.F_HUGE, Color.WHITE);
+        JLabel scale = centered("/ 4.00", UITheme.F_BODY, UITheme.PUTTY);
+        JLabel classStanding = centered(cls, UITheme.F_BODY_B, UITheme.SANDSTONE);
+        classStanding.setBorder(new EmptyBorder(10, 0, 0, 0));
 
         inner.add(title);
         inner.add(Box.createVerticalStrut(8));
-        inner.add(val);
+        inner.add(value);
         inner.add(scale);
-        inner.add(clsL);
+        inner.add(classStanding);
         card.add(inner);
         return card;
     }
 
     private JScrollPane buildBreakdownTable() {
         List<Marks> list = svc.getMarks(student.getUgId());
-        String[] cols = {"Course", "Total Marks", "Grade Points", "Letter"};
-        StyledTable t = new StyledTable(cols);
-        for (Marks m : list) {
-            double total = m.getTotal();
-            t.addRow(new Object[]{
-                m.getCName(),
-                String.format("%.1f", total),
-                String.format("%.1f", GPACalculator.toGradePoint(total)),
-                GPACalculator.letterGrade(total)
+        String[] cols = {"Course", "Credits", "CA / 40", "End / 60", "Total / 100", "GPV", "Grade"};
+        StyledTable table = new StyledTable(cols);
+        for (Marks marks : list) {
+            double total = marks.getTotal();
+            table.addRow(new Object[]{
+                    marks.getCName(),
+                    marks.getCredit(),
+                    String.format("%.1f", marks.getCaTotal()),
+                    String.format("%.1f", marks.getEndTotal()),
+                    String.format("%.1f", total),
+                    String.format("%.1f", GPACalculator.toGradePoint(total)),
+                    GPACalculator.letterGrade(total)
             });
         }
-        return UITheme.scrollPane(t);
+        return UITheme.scrollPane(table);
     }
 
-    private JLabel centred(String text, Font f, Color fg) {
-        JLabel l = new JLabel(text);
-        l.setFont(f); l.setForeground(fg);
-        l.setAlignmentX(Component.CENTER_ALIGNMENT);
-        return l;
+    private JLabel centered(String text, Font font, Color fg) {
+        JLabel label = new JLabel(text);
+        label.setFont(font);
+        label.setForeground(fg);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return label;
     }
 }
