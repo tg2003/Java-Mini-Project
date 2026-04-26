@@ -2,16 +2,9 @@ package models;
 
 import java.sql.Date;
 
-/**
- * Merged Medical model.
- * Combines fields from both the original models.Medical
- * (fromDate/toDate as String, techOffId, cCode)
- * and the richer model.Medical
- * (fromDate/toDate as Date, officerName added).
- */
+
 public class Medical {
 
-    // ── Core fields (present in both versions) ─────────────────────────────
     private int    medicalId;
     private String ugId;
     private Date   fromDate;
@@ -21,10 +14,9 @@ public class Medical {
     private String techoffId;       // unified spelling: techoffId
     private String cCode;
 
-    // ── Extra field (from model.Medical only) ──────────────────────────────
+
     private String officerName;     // display name of the tech officer
 
-    // ── Constructor 1: Full constructor (all fields, Date types) ───────────
     public Medical(int medicalId, String ugId, Date fromDate, Date toDate,
                    String status, String sessionType,
                    String techoffId, String officerName, String cCode) {
@@ -39,7 +31,7 @@ public class Medical {
         this.cCode       = cCode;
     }
 
-    // ── Constructor 2: Legacy constructor (String dates, no officerName) ───
+
     // Matches original models.Medical signature exactly.
     public Medical(int medicalId, String ugId, String fromDate, String toDate,
                    String status, String sessionType,
@@ -54,7 +46,7 @@ public class Medical {
         this.cCode       = cCode;
     }
 
-    // ── Getters ────────────────────────────────────────────────────────────
+
     public int    getMedicalId()   { return medicalId;   }
     public String getUgId()        { return ugId;        }
     public Date   getFromDate()    { return fromDate;    }
@@ -65,7 +57,7 @@ public class Medical {
     public String getOfficerName() { return officerName != null ? officerName : "—"; }
     public String getCCode()       { return cCode       != null ? cCode       : "—"; }
 
-    // ── Setters ────────────────────────────────────────────────────────────
+
     public void setFromDate(String fromDate)   { this.fromDate    = fromDate != null ? Date.valueOf(fromDate) : null; }
     public void setFromDate(Date fromDate)     { this.fromDate    = fromDate;    }
     public void setToDate(String toDate)       { this.toDate      = toDate   != null ? Date.valueOf(toDate)   : null; }
