@@ -135,7 +135,7 @@ public class StudentDashboardUI extends JFrame {
         contentPanel.add(new AttendancePanel(student), "Attendance");
         contentPanel.add(new MarksPanel(student), "Marks");
         contentPanel.add(new MedicalPanel(student), "Medical");
-        contentPanel.add(new ProfilePanel(student, this::refreshHeader), "Profile");
+        contentPanel.add(new ProfilePanel(student), "Profile");
         return contentPanel;
     }
 

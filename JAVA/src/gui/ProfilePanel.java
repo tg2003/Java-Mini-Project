@@ -2,259 +2,282 @@ package gui;
 
 import models.Undergraduate;
 import service.StudentService;
-import util.DataValidator;
 import util.DateFormatter;
+import gui.UITheme;
 
 import javax.swing.*;
-import javax.swing.border.EmptyBorder;
+import javax.swing.border.*;
 import java.awt.*;
-import java.sql.Date;
-import java.util.ArrayList;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.geom.RoundRectangle2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.List;
+import javax.imageio.ImageIO;
 
 public class ProfilePanel extends JPanel {
 
-    private final Undergraduate student;
-    private final Runnable onProfileSaved;
+    private final Undergraduate  student;
     private final StudentService svc = new StudentService();
 
-    private JTextField nameField;
-    private JTextField emailField;
-    private JTextField nicField;
-    private JTextField dobField;
-    private JTextField houseNoField;
-    private JTextField streetField;
-    private JTextField cityField;
-    private JTextField phone1Field;
-    private JTextField phone2Field;
+    // Avatar panel reference so we can repaint it after photo change
+    private JPanel avatarCard;
 
-    public ProfilePanel(Undergraduate student, Runnable onProfileSaved) {
+    // Currently loaded photo (null = show initials)
+    private BufferedImage profileImage = null;
+
+    public ProfilePanel(Undergraduate student) {
         this.student = student;
-        this.onProfileSaved = onProfileSaved;
         setBackground(UITheme.ALMOND);
         setLayout(new BorderLayout(0, 0));
         setBorder(new EmptyBorder(28, 30, 28, 30));
+
+        // Load photo from disk if a path is stored
+        loadProfileImage();
+
         build();
     }
 
+    // ── Build UI ──────────────────────────────────────────────────────────────
     private void build() {
         add(UITheme.sectionHeader("My Profile"), BorderLayout.NORTH);
 
-        JPanel body = new JPanel(new BorderLayout(24, 0));
+        JPanel body = new JPanel(new FlowLayout(FlowLayout.LEFT, 24, 0));
         body.setOpaque(false);
-        body.add(buildAvatarCard(), BorderLayout.EAST);
-        body.add(buildEditableCard(), BorderLayout.CENTER);
+
+        avatarCard = buildAvatarCard();
+        body.add(avatarCard);
+        body.add(buildInfoCard());
         add(body, BorderLayout.CENTER);
     }
 
+    // ── Avatar Card ───────────────────────────────────────────────────────────
     private JPanel buildAvatarCard() {
-        JPanel card = new JPanel(new BorderLayout(0, 16)) {
+        String initials = student.getInitials();
+
+        JPanel card = new JPanel(null) {
             @Override
             protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setColor(UITheme.CARD_BG);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 18, 18);
-                g2.dispose();
-            }
-        };
-        card.setOpaque(false);
-        card.setPreferredSize(new Dimension(280, 0));
-        card.setBorder(new EmptyBorder(24, 20, 24, 20));
-
-        JComponent avatar = new JComponent() {
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(140, 140);
-            }
-
-            @Override
-            protected void paintComponent(Graphics g) {
-                int size = 140;
+                super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                g2.setColor(UITheme.RUSSET);
-                g2.fillOval(0, 0, size, size);
+
+                // Card background
+                g2.setColor(UITheme.CARD_BG);
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 18, 18));
+
+                // Top gradient banner
+                GradientPaint gp = new GradientPaint(0, 0, UITheme.ESPRESSO, 0, 110, UITheme.RUSSET);
+                g2.setPaint(gp);
+                g2.fillRoundRect(0, 0, getWidth(), 110, 18, 18);
+                g2.fillRect(0, 90, getWidth(), 20);
+
+                // Avatar circle position
+                int cx = getWidth() / 2;
+                int cy = 110;
+                int r  = 40; // radius
+
+                if (profileImage != null) {
+                    // Clip to circle and draw photo
+                    Shape clip = new Ellipse2D.Float(cx - r, cy - r, r * 2, r * 2);
+                    g2.setClip(clip);
+                    g2.drawImage(profileImage, cx - r, cy - r, r * 2, r * 2, null);
+                    g2.setClip(null);
+
+                    // Thin ring around photo
+                    g2.setColor(UITheme.SANDSTONE);
+                    g2.setStroke(new BasicStroke(2f));
+                    g2.drawOval(cx - r, cy - r, r * 2, r * 2);
+                } else {
+                    // Default: filled circle with initials
+                    g2.setColor(UITheme.SANDSTONE);
+                    g2.fillOval(cx - r, cy - r, r * 2, r * 2);
+
+                    g2.setColor(Color.WHITE);
+                    g2.setFont(new Font("Georgia", Font.BOLD, 26));
+                    FontMetrics fm = g2.getFontMetrics();
+                    g2.drawString(initials,
+                            cx - fm.stringWidth(initials) / 2,
+                            cy + fm.getAscent() / 2 - 2);
+                }
+
+                // Camera icon hint at bottom-right of circle
+                g2.setColor(new Color(0, 0, 0, 120));
+                g2.fillOval(cx + r - 16, cy + r - 16, 22, 22);
                 g2.setColor(Color.WHITE);
-                g2.setFont(new Font("Georgia", Font.BOLD, 42));
-                String initials = student.getInitials();
-                FontMetrics fm = g2.getFontMetrics();
-                int x = (size - fm.stringWidth(initials)) / 2;
-                int y = ((size - fm.getHeight()) / 2) + fm.getAscent();
-                g2.drawString(initials, x, y);
+                g2.setFont(new Font("Dialog", Font.PLAIN, 12));
+                g2.drawString("\uD83D\uDCF7", cx + r - 12, cy + r - 1);
+
                 g2.dispose();
             }
+
+            @Override
+            public Dimension getPreferredSize() { return new Dimension(200, 300); }
         };
+        card.setOpaque(false);
 
-        JPanel top = new JPanel();
-        top.setOpaque(false);
-        top.add(avatar);
+        // Name label
+        JLabel nameL = new JLabel(student.getName(), SwingConstants.CENTER);
+        nameL.setFont(UITheme.F_DISPLAY);
+        nameL.setForeground(UITheme.ESPRESSO);
+        nameL.setBounds(0, 180, 200, 24);
 
-        JPanel meta = new JPanel();
-        meta.setOpaque(false);
-        meta.setLayout(new BoxLayout(meta, BoxLayout.Y_AXIS));
+        // Role label
+        JLabel roleL = new JLabel("Undergraduate", SwingConstants.CENTER);
+        roleL.setFont(UITheme.F_SMALL);
+        roleL.setForeground(UITheme.SANDSTONE);
+        roleL.setBounds(0, 205, 200, 20);
 
-        JLabel name = centerLabel(student.getName(), new Font("Georgia", Font.BOLD, 18), UITheme.ESPRESSO);
-        JLabel id = centerLabel(student.getUgId(), UITheme.F_BODY_B, UITheme.RUSSET);
-        JLabel dept = centerLabel(student.getDptName(), UITheme.F_BODY, UITheme.PUTTY);
-        JLabel faculty = centerLabel("Faculty of Technology", UITheme.F_SMALL_B, UITheme.SANDSTONE);
+        // Department label
+        JLabel deptL = new JLabel(student.getDptName() + " Faculty", SwingConstants.CENTER);
+        deptL.setFont(UITheme.F_SMALL);
+        deptL.setForeground(UITheme.PUTTY);
+        deptL.setBounds(0, 225, 200, 20);
 
-        meta.add(name);
-        meta.add(Box.createVerticalStrut(6));
-        meta.add(id);
-        meta.add(Box.createVerticalStrut(6));
-        meta.add(dept);
-        meta.add(Box.createVerticalStrut(4));
-        meta.add(faculty);
+        // Change photo button
+        JLabel changeBtn = new JLabel("Change Photo", SwingConstants.CENTER);
+        changeBtn.setFont(UITheme.F_SMALL);
+        changeBtn.setForeground(UITheme.RUSSET);
+        changeBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        changeBtn.setBounds(25, 255, 150, 22);
+        changeBtn.setBorder(BorderFactory.createLineBorder(UITheme.RUSSET, 1, true));
 
-        card.add(top, BorderLayout.NORTH);
-        card.add(meta, BorderLayout.CENTER);
+        // Hover effect on button
+        changeBtn.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                changeBtn.setBackground(UITheme.RUSSET);
+                changeBtn.setOpaque(true);
+                changeBtn.setForeground(Color.WHITE);
+            }
+            @Override
+            public void mouseExited(MouseEvent e) {
+                changeBtn.setOpaque(false);
+                changeBtn.setForeground(UITheme.RUSSET);
+            }
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                handleChangePhoto();
+            }
+        });
+
+        card.add(nameL);
+        card.add(roleL);
+        card.add(deptL);
+        card.add(changeBtn);
         return card;
     }
 
-    private JPanel buildEditableCard() {
-        List<String> phones = svc.getPhones(student.getUgId());
+    // ── Change Photo Logic ────────────────────────────────────────────────────
+    private void handleChangePhoto() {
+        JFileChooser chooser = new JFileChooser();
+        chooser.setDialogTitle("Select Profile Photo");
+        chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
+                "Image files (JPG, PNG, JPEG)", "jpg", "jpeg", "png"));
 
-        JPanel card = new JPanel(new BorderLayout(0, 18)) {
+        int result = chooser.showOpenDialog(this);
+        if (result != JFileChooser.APPROVE_OPTION) return;
+
+        File chosen = chooser.getSelectedFile();
+
+        // Save via service (copies file + updates DB)
+        boolean success = svc.changeProfilePic(student, chosen);
+
+        if (success) {
+            // Reload image into memory and repaint avatar
+            loadProfileImage();
+            avatarCard.repaint();
+            JOptionPane.showMessageDialog(this,
+                    "Profile photo updated successfully!",
+                    "Success", JOptionPane.INFORMATION_MESSAGE);
+        } else {
+            JOptionPane.showMessageDialog(this,
+                    "Failed to update profile photo.\nPlease try again.",
+                    "Error", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // ── Load Image from Disk ──────────────────────────────────────────────────
+    private void loadProfileImage() {
+        profileImage = null;
+        String path = student.getProfilePic();
+        if (path == null || path.isBlank()) return;
+
+        try {
+            File f = new File(path);
+            if (f.exists()) {
+                profileImage = ImageIO.read(f);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Fall back to initials silently
+        }
+    }
+
+    // ── Info Card ─────────────────────────────────────────────────────────────
+    private JPanel buildInfoCard() {
+        List<String> phones = svc.getPhones(student.getUgId());
+        String phoneStr = phones.isEmpty() ? "—" : String.join(", ", phones);
+
+        JPanel card = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
                 Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(UITheme.CARD_BG);
-                g2.fillRoundRect(0, 0, getWidth(), getHeight(), 18, 18);
+                g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 18, 18));
                 g2.dispose();
             }
         };
         card.setOpaque(false);
-        card.setBorder(new EmptyBorder(24, 24, 24, 24));
+        card.setPreferredSize(new Dimension(420, 300));
+        card.setBorder(new EmptyBorder(24, 28, 24, 28));
+        card.setLayout(new BoxLayout(card, BoxLayout.Y_AXIS));
 
-        JPanel form = new JPanel(new GridLayout(0, 2, 16, 14));
-        form.setOpaque(false);
+        JLabel secTitle = new JLabel("Personal Information");
+        secTitle.setFont(UITheme.F_BODY_B);
+        secTitle.setForeground(UITheme.RUSSET);
+        secTitle.setBorder(new EmptyBorder(0, 0, 12, 0));
+        card.add(secTitle);
 
-        nameField = makeField(student.getName());
-        emailField = makeField(student.getEmail());
-        nicField = makeField(student.getNic());
-        dobField = makeField(DateFormatter.shortFormat(student.getDob()));
-        houseNoField = makeField(student.getHouseNo());
-        streetField = makeField(student.getStreet());
-        cityField = makeField(student.getCity());
-        phone1Field = makeField(phones.size() > 0 ? phones.get(0) : "");
-        phone2Field = makeField(phones.size() > 1 ? phones.get(1) : "");
+        String[][] rows = {
+                {"Student ID",    student.getUgId()},
+                {"Full Name",     student.getName()},
+                {"Email",         student.getEmail()},
+                {"NIC",           student.getNic()},
+                {"Date of Birth", DateFormatter.format(student.getDob())},
+                {"Department",    student.getDptName()},
+                {"Address",       student.getAddress()},
+                {"Phone(s)",      phoneStr}
+        };
 
-        form.add(labeledField("Full Name", nameField));
-        form.add(labeledField("Email", emailField));
-        form.add(labeledField("NIC", nicField));
-        form.add(labeledField("Date of Birth", dobField));
-        form.add(labeledField("House No", houseNoField));
-        form.add(labeledField("Street", streetField));
-        form.add(labeledField("City", cityField));
-        form.add(labeledField("Department", readOnlyField(student.getDptName())));
-        form.add(labeledField("Phone 1", phone1Field));
-        form.add(labeledField("Phone 2", phone2Field));
-
-        JPanel buttons = new JPanel(new FlowLayout(FlowLayout.RIGHT, 10, 0));
-        buttons.setOpaque(false);
-        JButton reset = ghostButton("Reset");
-        reset.addActionListener(e -> rebuild());
-        JButton save = UITheme.primaryButton("Save Profile");
-        save.addActionListener(e -> saveProfile());
-        buttons.add(reset);
-        buttons.add(save);
-
-        card.add(form, BorderLayout.CENTER);
-        card.add(buttons, BorderLayout.SOUTH);
+        for (String[] row : rows) {
+            card.add(profileRow(row[0], row[1]));
+            card.add(Box.createVerticalStrut(2));
+        }
         return card;
     }
 
-    private JPanel labeledField(String label, JComponent field) {
-        JPanel panel = new JPanel(new BorderLayout(0, 6));
-        panel.setOpaque(false);
-        JLabel title = new JLabel(label);
-        title.setFont(UITheme.F_SMALL_B);
-        title.setForeground(UITheme.RUSSET);
-        panel.add(title, BorderLayout.NORTH);
-        panel.add(field, BorderLayout.CENTER);
-        return panel;
-    }
+    // ── Row Helper ────────────────────────────────────────────────────────────
+    private JPanel profileRow(String key, String val) {
+        JPanel p = new JPanel(new BorderLayout());
+        p.setOpaque(false);
+        p.setBorder(new MatteBorder(0, 0, 1, 0, UITheme.ALMOND));
+        p.setMaximumSize(new Dimension(Integer.MAX_VALUE, 32));
 
-    private JTextField makeField(String value) {
-        JTextField field = UITheme.inputField(20);
-        field.setText(value == null ? "" : value);
-        return field;
-    }
+        JLabel k = new JLabel(key);
+        k.setFont(UITheme.F_SMALL);
+        k.setForeground(UITheme.PUTTY);
+        k.setPreferredSize(new Dimension(120, 28));
 
-    private JTextField readOnlyField(String value) {
-        JTextField field = makeField(value);
-        field.setEditable(false);
-        return field;
-    }
+        JLabel v = new JLabel(val);
+        v.setFont(UITheme.F_BODY);
+        v.setForeground(UITheme.DARK_TEXT);
 
-    private JButton ghostButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(UITheme.F_BODY_B);
-        button.setForeground(UITheme.ESPRESSO);
-        button.setFocusPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setContentAreaFilled(false);
-        button.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(UITheme.SANDSTONE, 1),
-                BorderFactory.createEmptyBorder(10, 16, 10, 16)
-        ));
-        return button;
-    }
-
-    private JLabel centerLabel(String text, Font font, Color color) {
-        JLabel label = new JLabel(text, SwingConstants.CENTER);
-        label.setFont(font);
-        label.setForeground(color);
-        label.setAlignmentX(Component.CENTER_ALIGNMENT);
-        return label;
-    }
-
-    private void saveProfile() {
-        String emailError = DataValidator.validateEmail(emailField.getText().trim());
-        String nicError = DataValidator.validateNic(nicField.getText().trim());
-        String dobError = DataValidator.validateDob(dobField.getText().trim());
-        String phone1Error = phone1Field.getText().isBlank() ? null : DataValidator.validatePhone(phone1Field.getText().trim());
-        String phone2Error = phone2Field.getText().isBlank() ? null : DataValidator.validatePhone(phone2Field.getText().trim());
-
-        String error = firstError(emailError, nicError, dobError, phone1Error, phone2Error);
-        if (error != null) {
-            JOptionPane.showMessageDialog(this, error, "Validation Error", JOptionPane.WARNING_MESSAGE);
-            return;
-        }
-
-        student.setName(nameField.getText().trim());
-        student.setEmail(emailField.getText().trim());
-        student.setNic(nicField.getText().trim());
-        student.setDob(Date.valueOf(dobField.getText().trim()));
-        student.setHouseNo(houseNoField.getText().trim());
-        student.setStreet(streetField.getText().trim());
-        student.setCity(cityField.getText().trim());
-
-        List<String> phones = new ArrayList<>();
-        if (!phone1Field.getText().isBlank()) phones.add(phone1Field.getText().trim());
-        if (!phone2Field.getText().isBlank()) phones.add(phone2Field.getText().trim());
-
-        boolean saved = svc.updateProfile(student, phones);
-        if (saved) {
-            JOptionPane.showMessageDialog(this, "Profile updated successfully.", "Success", JOptionPane.INFORMATION_MESSAGE);
-            if (onProfileSaved != null) onProfileSaved.run();
-            rebuild();
-        } else {
-            JOptionPane.showMessageDialog(this, "Could not save profile.", "Error", JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    private String firstError(String... errors) {
-        for (String error : errors) {
-            if (error != null) return error;
-        }
-        return null;
-    }
-
-    private void rebuild() {
-        removeAll();
-        build();
-        revalidate();
-        repaint();
+        p.add(k, BorderLayout.WEST);
+        p.add(v, BorderLayout.CENTER);
+        return p;
     }
 }
