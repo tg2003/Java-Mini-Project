@@ -2,18 +2,22 @@ package dao;
 
 import db.DBConnection;
 import models.Undergraduate;
-
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * Data Access Object for UNDERGRADUATE table.
+ * All queries are parameterised (PreparedStatement) to prevent SQL injection.
+ */
 public class StudentDAO {
 
+    // ── Authentication ────────────────────────────────────────────────────────
+    /**
+     * Returns true and loads the Undergraduate if credentials match USER table.
+     */
     public Undergraduate login(String userId, String password) {
-        String sql = "SELECT u.User_id, u.Password, u.Role, " +
+        String sql = "SELECT u.User_id, u.Password, u.Role, u.Profile_pic, " +
                 "ug.Name, ug.Email, ug.Nic, ug.Dob, ug.Dpt_name, " +
                 "ug.No, ug.Street, ug.City " +
                 "FROM USER u " +
@@ -32,8 +36,9 @@ public class StudentDAO {
         return null;
     }
 
+    // ── Profile ────────────────────────────────────────────────────────────────
     public Undergraduate getById(String ugId) {
-        String sql = "SELECT u.User_id, u.Password, u.Role, " +
+        String sql = "SELECT u.User_id, u.Password, u.Role, u.Profile_pic, " +
                 "ug.Name, ug.Email, ug.Nic, ug.Dob, ug.Dpt_name, " +
                 "ug.No, ug.Street, ug.City " +
                 "FROM USER u JOIN UNDERGRADUATE ug ON u.User_id = ug.Ug_id " +
@@ -48,6 +53,42 @@ public class StudentDAO {
         return null;
     }
 
+    // ── Profile Picture ────────────────────────────────────────────────────────
+    /**
+     * Updates the Profile_pic path in the USER table for the given userId.
+     * @param userId  the user's ID (e.g. "TG1701")
+     * @param picPath the file path to store (e.g. "resources/userPP/TG1701.png")
+     * @return true if the update succeeded
+     */
+    public boolean updateProfilePic(String userId, String picPath) {
+        String sql = "UPDATE USER SET Profile_pic = ? WHERE User_id = ?";
+        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
+            ps.setString(1, picPath);
+            ps.setString(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Retrieves the stored Profile_pic path for the given userId.
+     * Returns null if no picture is set.
+     */
+    public String getProfilePic(String userId) {
+        String sql = "SELECT Profile_pic FROM USER WHERE User_id = ?";
+        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getString("Profile_pic");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // ── Phone numbers ──────────────────────────────────────────────────────────
     public List<String> getPhones(String ugId) {
         List<String> phones = new ArrayList<>();
         String sql = "SELECT Phone FROM UNDERGRADUATE_PHONE WHERE Ug_id = ?";
@@ -61,6 +102,7 @@ public class StudentDAO {
         return phones;
     }
 
+    // ── Dashboard summary counts ───────────────────────────────────────────────
     public int getCourseCount(String ugId) {
         String sql = "SELECT COUNT(*) FROM ENROLLS_IN WHERE Ug_id = ?";
         return scalarInt(sql, ugId);
@@ -68,8 +110,8 @@ public class StudentDAO {
 
     public int getUnreadNoticeCount() {
         String sql = "SELECT COUNT(*) FROM NOTICE";
-        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql);
-             ResultSet rs = ps.executeQuery()) {
+        try (Statement st = DBConnection.getConnection().createStatement();
+             ResultSet rs = st.executeQuery(sql)) {
             if (rs.next()) return Math.min(rs.getInt(1), 99);
         } catch (SQLException e) {
             e.printStackTrace();
@@ -77,60 +119,9 @@ public class StudentDAO {
         return 0;
     }
 
-    public boolean updateProfile(Undergraduate student, List<String> phones) {
-        String updateStudent = "UPDATE UNDERGRADUATE SET Name=?, Email=?, Nic=?, Dob=?, No=?, Street=?, City=? WHERE Ug_id=?";
-        String deletePhones = "DELETE FROM UNDERGRADUATE_PHONE WHERE Ug_id=?";
-        String insertPhone = "INSERT INTO UNDERGRADUATE_PHONE (Ug_id, Phone) VALUES (?, ?)";
-
-        Connection con = null;
-        try {
-            con = DBConnection.getConnection();
-            con.setAutoCommit(false);
-
-            try (PreparedStatement ps = con.prepareStatement(updateStudent)) {
-                ps.setString(1, student.getName());
-                ps.setString(2, student.getEmail());
-                ps.setString(3, student.getNic());
-                ps.setDate(4, student.getDob());
-                ps.setString(5, student.getHouseNo());
-                ps.setString(6, student.getStreet());
-                ps.setString(7, student.getCity());
-                ps.setString(8, student.getUgId());
-                ps.executeUpdate();
-            }
-
-            try (PreparedStatement ps = con.prepareStatement(deletePhones)) {
-                ps.setString(1, student.getUgId());
-                ps.executeUpdate();
-            }
-
-            try (PreparedStatement ps = con.prepareStatement(insertPhone)) {
-                for (String phone : phones) {
-                    if (phone == null || phone.isBlank()) continue;
-                    ps.setString(1, student.getUgId());
-                    ps.setString(2, phone.trim());
-                    ps.executeUpdate();
-                }
-            }
-
-            con.commit();
-            con.setAutoCommit(true);
-            return true;
-        } catch (SQLException e) {
-            e.printStackTrace();
-            if (con != null) {
-                try {
-                    con.rollback();
-                    con.setAutoCommit(true);
-                } catch (SQLException ignored) {
-                }
-            }
-            return false;
-        }
-    }
-
+    // ── Helper ────────────────────────────────────────────────────────────────
     private Undergraduate mapRow(ResultSet rs) throws SQLException {
-        return new Undergraduate(
+        Undergraduate ug = new Undergraduate(
                 rs.getString("User_id"),
                 rs.getString("Name"),
                 rs.getString("Email"),
@@ -141,6 +132,8 @@ public class StudentDAO {
                 rs.getString("Street"),
                 rs.getString("City")
         );
+        ug.setProfilePic(rs.getString("Profile_pic"));
+        return ug;
     }
 
     private int scalarInt(String sql, String param) {
