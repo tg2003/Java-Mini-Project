@@ -4,10 +4,13 @@ import models.Undergraduate;
 import service.StudentService;
 import util.Logout;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
+import java.awt.geom.Ellipse2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -20,6 +23,9 @@ public class StudentDashboardUI extends JFrame {
     private final CardLayout cardLayout = new CardLayout();
     private JPanel contentPanel;
     private JLabel notificationBadge;
+
+    // Top-bar avatar — updated whenever photo changes
+    private AvatarComponent topAvatar;
 
     public StudentDashboardUI(Undergraduate student) {
         this.student = student;
@@ -40,6 +46,7 @@ public class StudentDashboardUI extends JFrame {
         setVisible(true);
     }
 
+    // ── Top Shell (TopBar + NavBar) ───────────────────────────────────────────
     private JPanel buildTopShell() {
         JPanel shell = new JPanel(new BorderLayout());
         shell.setBackground(UITheme.ESPRESSO);
@@ -60,29 +67,31 @@ public class StudentDashboardUI extends JFrame {
         };
         bar.setBorder(new EmptyBorder(16, 20, 14, 20));
 
+        // Left: logout
         JButton logoutButton = ghostButton("Logout");
         logoutButton.addActionListener(e -> Logout.logout(this));
-
         JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 12, 0));
         left.setOpaque(false);
         left.add(logoutButton);
 
+        // Center: brand
         JPanel brand = new JPanel();
         brand.setOpaque(false);
         brand.setLayout(new BoxLayout(brand, BoxLayout.Y_AXIS));
-
         JLabel title = new JLabel("Faculty of Technology");
         title.setFont(new Font("Georgia", Font.BOLD, 22));
         title.setForeground(Color.WHITE);
-
         JLabel subtitle = new JLabel("Student Portal");
         subtitle.setFont(UITheme.F_BODY);
         subtitle.setForeground(UITheme.PUTTY);
-
         brand.add(title);
         brand.add(Box.createVerticalStrut(2));
         brand.add(subtitle);
+        JPanel centerWrap = new JPanel(new BorderLayout());
+        centerWrap.setOpaque(false);
+        centerWrap.add(brand, BorderLayout.WEST);
 
+        // Right: notifications + profile button + PHOTO AVATAR
         JPanel right = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
         right.setOpaque(false);
 
@@ -93,14 +102,13 @@ public class StudentDashboardUI extends JFrame {
         JButton profileButton = UITheme.primaryButton("My Profile");
         profileButton.addActionListener(e -> showCard("Profile"));
 
+        // AvatarComponent: shows photo if set, otherwise initials
+        topAvatar = new AvatarComponent(student, 42);
+
         right.add(notificationBadge);
         right.add(noticeButton);
         right.add(profileButton);
-        right.add(roundAvatar(student.getInitials(), 42));
-
-        JPanel centerWrap = new JPanel(new BorderLayout());
-        centerWrap.setOpaque(false);
-        centerWrap.add(brand, BorderLayout.WEST);
+        right.add(topAvatar);
 
         bar.add(left, BorderLayout.WEST);
         bar.add(centerWrap, BorderLayout.CENTER);
@@ -112,7 +120,6 @@ public class StudentDashboardUI extends JFrame {
         JPanel nav = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 12));
         nav.setOpaque(false);
         nav.setBorder(new EmptyBorder(0, 18, 12, 18));
-
         addNavButton(nav, "Dashboard");
         addNavButton(nav, "Courses");
         addNavButton(nav, "Notice");
@@ -124,21 +131,32 @@ public class StudentDashboardUI extends JFrame {
         return nav;
     }
 
+    // ── Content (CardLayout) ──────────────────────────────────────────────────
     private JPanel buildContent() {
         contentPanel = new JPanel(cardLayout);
         contentPanel.setBackground(UITheme.ALMOND);
-        contentPanel.add(new DashboardPanel(student, this::showCard), "Dashboard");
-        contentPanel.add(new CoursesPanel1(student), "Courses");
-        contentPanel.add(new NoticePanel1(), "Notice");
-        contentPanel.add(new GPAPanel(student), "GPA");
-        contentPanel.add(new TimetablePanel1(student), "Timetable");
-        contentPanel.add(new AttendancePanel(student), "Attendance");
-        contentPanel.add(new MarksPanel(student), "Marks");
-        contentPanel.add(new MedicalPanel(student), "Medical");
-        contentPanel.add(new ProfilePanel(student), "Profile");
+
+        // ProfilePanel receives this::refreshTopAvatar so the top-bar avatar
+        // updates immediately when the user changes their photo.
+        contentPanel.add(new DashboardPanel(student, this::showCard),       "Dashboard");
+        contentPanel.add(new CoursesPanel1(student),                        "Courses");
+        contentPanel.add(new NoticePanel1(),                                "Notice");
+        contentPanel.add(new GPAPanel(student),                             "GPA");
+        contentPanel.add(new TimetablePanel1(student),                      "Timetable");
+        contentPanel.add(new AttendancePanel(student),                      "Attendance");
+        contentPanel.add(new MarksPanel(student),                           "Marks");
+        contentPanel.add(new MedicalPanel(student),                         "Medical");
+        contentPanel.add(new ProfilePanel(student, this::refreshTopAvatar), "Profile");
         return contentPanel;
     }
 
+    // ── Called by ProfilePanel after successful photo change ──────────────────
+    public void refreshTopAvatar() {
+        topAvatar.reload();          // re-read photo from student.getProfilePic()
+        topAvatar.repaint();
+    }
+
+    // ── Nav helpers ───────────────────────────────────────────────────────────
     private void addNavButton(JPanel parent, String card) {
         JButton button = navButton(card);
         button.addActionListener(e -> showCard(card));
@@ -146,29 +164,35 @@ public class StudentDashboardUI extends JFrame {
         parent.add(button);
     }
 
+    private void showCard(String card) {
+        cardLayout.show(contentPanel, card);
+        navButtons.forEach((key, btn) ->
+                btn.setForeground(key.equals(card) ? Color.WHITE : UITheme.PUTTY));
+    }
+
+    // ── Button factories ──────────────────────────────────────────────────────
     private JButton navButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(UITheme.F_BODY_B);
-        button.setForeground(UITheme.PUTTY);
-        button.setFocusPainted(false);
-        button.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
-        button.setContentAreaFilled(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        return button;
+        JButton b = new JButton(text);
+        b.setFont(UITheme.F_BODY_B);
+        b.setForeground(UITheme.PUTTY);
+        b.setFocusPainted(false);
+        b.setBorder(BorderFactory.createEmptyBorder(8, 16, 8, 16));
+        b.setContentAreaFilled(false);
+        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        return b;
     }
 
     private JButton ghostButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(UITheme.F_BODY_B);
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        button.setContentAreaFilled(false);
-        button.setBorder(BorderFactory.createCompoundBorder(
+        JButton b = new JButton(text);
+        b.setFont(UITheme.F_BODY_B);
+        b.setForeground(Color.WHITE);
+        b.setFocusPainted(false);
+        b.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        b.setContentAreaFilled(false);
+        b.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(UITheme.SANDSTONE, 1),
-                BorderFactory.createEmptyBorder(8, 14, 8, 14)
-        ));
-        return button;
+                BorderFactory.createEmptyBorder(8, 14, 8, 14)));
+        return b;
     }
 
     private JLabel notificationBadge(int count) {
@@ -181,38 +205,66 @@ public class StudentDashboardUI extends JFrame {
         return label;
     }
 
-    private JComponent roundAvatar(String initials, int size) {
-        return new JComponent() {
-            @Override
-            public Dimension getPreferredSize() {
-                return new Dimension(size, size);
-            }
+    // ── Inner class: AvatarComponent ─────────────────────────────────────────
+    /**
+     * Shows the student's profile photo cropped to a circle.
+     * Falls back to initials if no photo is set or the file can't be read.
+     * Call reload() + repaint() to refresh after a photo change.
+     */
+    private static class AvatarComponent extends JComponent {
+        private final Undergraduate student;
+        private final int size;
+        private BufferedImage image;
 
-            @Override
-            protected void paintComponent(Graphics g) {
-                Graphics2D g2 = (Graphics2D) g.create();
-                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        AvatarComponent(Undergraduate student, int size) {
+            this.student = student;
+            this.size = size;
+            setPreferredSize(new Dimension(size, size));
+            reload();
+        }
+
+        /** Re-reads the image from disk using the path in student.getProfilePic(). */
+        void reload() {
+            image = null;
+            String path = student.getProfilePic();
+            if (path == null || path.isBlank()) return;
+            try {
+                File f = new File(path);
+                if (f.exists()) image = ImageIO.read(f);
+            } catch (Exception ignored) {}
+        }
+
+        @Override
+        protected void paintComponent(Graphics g) {
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            // Clip to circle
+            Shape circle = new Ellipse2D.Float(0, 0, size, size);
+            g2.setClip(circle);
+
+            if (image != null) {
+                g2.drawImage(image, 0, 0, size, size, null);
+            } else {
+                // Fallback: coloured circle with initials
                 g2.setColor(UITheme.SANDSTONE);
                 g2.fillOval(0, 0, size, size);
+                g2.setClip(null);
                 g2.setColor(Color.WHITE);
-                g2.setFont(new Font("Georgia", Font.BOLD, 15));
+                g2.setFont(new Font("Georgia", Font.BOLD, size / 3));
                 FontMetrics fm = g2.getFontMetrics();
+                String initials = student.getInitials();
                 int x = (size - fm.stringWidth(initials)) / 2;
                 int y = ((size - fm.getHeight()) / 2) + fm.getAscent();
                 g2.drawString(initials, x, y);
-                g2.dispose();
             }
-        };
-    }
 
-    private void showCard(String card) {
-        cardLayout.show(contentPanel, card);
-        navButtons.forEach((key, value) -> value.setForeground(key.equals(card) ? Color.WHITE : UITheme.PUTTY));
-    }
-
-    private void refreshHeader() {
-        notificationBadge.setText("\uD83D\uDD14 " + studentService.getUnreadNoticeCount());
-        revalidate();
-        repaint();
+            g2.setClip(null);
+            // Thin border ring
+            g2.setColor(UITheme.SANDSTONE);
+            g2.setStroke(new BasicStroke(1.5f));
+            g2.drawOval(1, 1, size - 2, size - 2);
+            g2.dispose();
+        }
     }
 }
