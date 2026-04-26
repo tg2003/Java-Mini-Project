@@ -161,6 +161,24 @@
           <text value="Profile"/>
         </properties>
       </component>
+      <component id="75ed7" class="javax.swing.JButton" binding="btnTimetable">
+        <constraints>
+          <grid row="4" column="3" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Droid Sans" size="16" style="1"/>
+          <text value="TimeTable"/>
+        </properties>
+      </component>
+      <component id="b67ed" class="javax.swing.JButton" binding="btnNotice">
+        <constraints>
+          <grid row="4" column="1" row-span="1" col-span="1" vsize-policy="0" hsize-policy="3" anchor="0" fill="0" indent="0" use-parent-layout="false"/>
+        </constraints>
+        <properties>
+          <font name="Droid Sans" size="16" style="1"/>
+          <text value="Notices"/>
+        </properties>
+      </component>
     </children>
   </grid>
 </form>

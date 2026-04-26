@@ -19,6 +19,9 @@ public class TechOfficerDashboard extends JFrame {
     private JPanel DashboardPanel;
     private JButton btnProfile;
     private JLabel jprofile;
+    private JButton btnTimetable;
+    private JButton btnNotice;
+
 
     public TechOfficerDashboard(String techOffId) {
         this.techOffId = techOffId;
@@ -30,7 +33,8 @@ public class TechOfficerDashboard extends JFrame {
         setMinimumSize(new Dimension(800, 500));
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        // 🔥 LOAD IMAGE EVERY TIME DASHBOARD OPENS
+
+        //load image every time  dashboard opens
         loadProfileImage();
 
         btnLogOut.addActionListener(e -> Logout.logout(TechOfficerDashboard.this));
@@ -56,11 +60,24 @@ public class TechOfficerDashboard extends JFrame {
         });
 
         setVisible(true);
+        btnNotice.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new NoticeView(techOffId, true).setVisible(true);
+            }
+        });
+        btnTimetable.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                dispose();
+                new TimetableView(techOffId, true).setVisible(true);
+
+            }
+        });
     }
 
-    // =========================================
-    // ✅ FIX: ALWAYS RELOAD FROM DATABASE
-    // =========================================
+    //load from database
     private void loadProfileImage() {
         try {
             Connection con = db.DBConnection.getConnection();
@@ -76,6 +93,11 @@ public class TechOfficerDashboard extends JFrame {
                 String path = rs.getString("profile_pic");
 
                 if (path != null && !path.isEmpty()) {
+
+                    // Handle relative paths
+                    if (path.startsWith("src/")) {
+                        path = System.getProperty("user.dir") + "/" + path;
+                    }
 
                     File file = new File(path);
 

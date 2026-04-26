@@ -2,23 +2,17 @@ package models;
 
 import java.sql.Date;
 
-/**
- * Merged Attendance model.
- * Combines fields from both the original models.Attendance
- * (weekNo, ugId, timetableId, date[String], techOffId, status)
- * and the richer model.Attendance
- * (date[Date], day, startTime, endTime, cCode, cName, sessionType).
- */
+
 public class Attendance {
 
-    // ── Core identity fields (from models.Attendance) ──────────────────────
+
     private int    weekNo;
     private String ugId;
     private int    timetableId;
     private String techOffId;       // officer who marked attendance
     private String status;          // Present / Absent / MedicalApproved / MedicalDeclined
 
-    // ── Rich schedule fields (from model.Attendance) ───────────────────────
+
     private Date   date;
     private String day;
     private String startTime;
@@ -27,7 +21,7 @@ public class Attendance {
     private String cName;
     private String sessionType;     // Theory / Practical
 
-    // ── Constructor 1: Full constructor (all fields) ───────────────────────
+
     public Attendance(int weekNo, String ugId, int timetableId, Date date,
                       String techOffId, String status,
                       String day, String startTime, String endTime,
@@ -46,7 +40,7 @@ public class Attendance {
         this.sessionType = sessionType;
     }
 
-    // ── Constructor 2: Without schedule details (legacy models.Attendance) ─
+
     public Attendance(int weekNo, String ugId, int timetableId,
                       String date, String techOffId, String status) {
         this.weekNo      = weekNo;
@@ -57,7 +51,7 @@ public class Attendance {
         this.status      = status;
     }
 
-    // ── Constructor 3: Without techOffId (query/display use case) ──────────
+
     public Attendance(int weekNo, String ugId, int timetableId, Date date,
                       String status, String day, String startTime, String endTime,
                       String cCode, String cName, String sessionType) {
@@ -74,7 +68,7 @@ public class Attendance {
         this.sessionType = sessionType;
     }
 
-    // ── Getters ────────────────────────────────────────────────────────────
+    // getters
     public int    getWeekNo()      { return weekNo;      }
     public String getUgId()        { return ugId;        }
     public int    getTimetableId() { return timetableId; }
@@ -88,11 +82,10 @@ public class Attendance {
     public String getCName()       { return cName;       }
     public String getSessionType() { return sessionType; }
 
-    // ── Setter ─────────────────────────────────────────────────────────────
+    //setters
     public void setStatus(String status) { this.status = status; }
 
-    // ── Utility ────────────────────────────────────────────────────────────
-    /** Returns a formatted time slot string, e.g. "08:00 – 10:00" */
+
     public String getTimeSlot() {
         return (startTime != null ? startTime : "?") + " – " + (endTime != null ? endTime : "?");
     }

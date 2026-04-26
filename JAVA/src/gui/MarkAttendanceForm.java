@@ -44,7 +44,7 @@ public class MarkAttendanceForm extends JFrame {
         setVisible(true);
     }
 
-    // =============================
+    //load course codes
     private void loadCourseCodes() {
         try {
             Connection con = DBConnection.getConnection();
@@ -64,7 +64,7 @@ public class MarkAttendanceForm extends JFrame {
         }
     }
 
-    // =============================
+    // load types
     private void loadTypes() {
         cType.removeAllItems();
         cType.addItem("All");
@@ -72,7 +72,7 @@ public class MarkAttendanceForm extends JFrame {
         cType.addItem("Practical");
     }
 
-    // =============================
+    //load week numbers
     private void loadWeekNumbers() {
         cWeekNo.removeAllItems();
         for (int i = 1; i <= 15; i++) {
@@ -80,7 +80,7 @@ public class MarkAttendanceForm extends JFrame {
         }
     }
 
-    // =============================
+
     private void loadStudents() {
         try {
             String course = (String) cCourseCode.getSelectedItem();
@@ -134,7 +134,7 @@ public class MarkAttendanceForm extends JFrame {
         }
     }
 
-    // =============================
+
     private int getTimetableId(String course, String type, Connection con) throws Exception {
 
         String sql;
@@ -161,7 +161,7 @@ public class MarkAttendanceForm extends JFrame {
         throw new Exception("No timetable found!");
     }
 
-    // =============================
+
     private void saveAttendance() {
         try {
             String course = (String) cCourseCode.getSelectedItem();
