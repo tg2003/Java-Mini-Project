@@ -3,8 +3,8 @@ package gui;
 import models.Undergraduate;
 import service.StudentService;
 import util.DateFormatter;
-import gui.UITheme;
 
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
@@ -15,28 +15,25 @@ import java.awt.geom.RoundRectangle2D;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.util.List;
-import javax.imageio.ImageIO;
 
 public class ProfilePanel extends JPanel {
 
     private final Undergraduate  student;
+    private final Runnable       onPhotoChanged;   // notifies dashboard to refresh top avatar
     private final StudentService svc = new StudentService();
 
-    // Avatar panel reference so we can repaint it after photo change
-    private JPanel avatarCard;
-
-    // Currently loaded photo (null = show initials)
+    private JPanel        avatarCard;
     private BufferedImage profileImage = null;
 
-    public ProfilePanel(Undergraduate student) {
-        this.student = student;
+    public ProfilePanel(Undergraduate student, Runnable onPhotoChanged) {
+        this.student        = student;
+        this.onPhotoChanged = onPhotoChanged;
+
         setBackground(UITheme.ALMOND);
         setLayout(new BorderLayout(0, 0));
         setBorder(new EmptyBorder(28, 30, 28, 30));
 
-        // Load photo from disk if a path is stored
         loadProfileImage();
-
         build();
     }
 
@@ -55,8 +52,6 @@ public class ProfilePanel extends JPanel {
 
     // ── Avatar Card ───────────────────────────────────────────────────────────
     private JPanel buildAvatarCard() {
-        String initials = student.getInitials();
-
         JPanel card = new JPanel(null) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -68,42 +63,37 @@ public class ProfilePanel extends JPanel {
                 g2.setColor(UITheme.CARD_BG);
                 g2.fill(new RoundRectangle2D.Float(0, 0, getWidth(), getHeight(), 18, 18));
 
-                // Top gradient banner
+                // Top banner
                 GradientPaint gp = new GradientPaint(0, 0, UITheme.ESPRESSO, 0, 110, UITheme.RUSSET);
                 g2.setPaint(gp);
                 g2.fillRoundRect(0, 0, getWidth(), 110, 18, 18);
                 g2.fillRect(0, 90, getWidth(), 20);
 
-                // Avatar circle position
                 int cx = getWidth() / 2;
                 int cy = 110;
-                int r  = 40; // radius
+                int r  = 40;
 
                 if (profileImage != null) {
-                    // Clip to circle and draw photo
                     Shape clip = new Ellipse2D.Float(cx - r, cy - r, r * 2, r * 2);
                     g2.setClip(clip);
                     g2.drawImage(profileImage, cx - r, cy - r, r * 2, r * 2, null);
                     g2.setClip(null);
-
-                    // Thin ring around photo
                     g2.setColor(UITheme.SANDSTONE);
                     g2.setStroke(new BasicStroke(2f));
                     g2.drawOval(cx - r, cy - r, r * 2, r * 2);
                 } else {
-                    // Default: filled circle with initials
                     g2.setColor(UITheme.SANDSTONE);
                     g2.fillOval(cx - r, cy - r, r * 2, r * 2);
-
                     g2.setColor(Color.WHITE);
                     g2.setFont(new Font("Georgia", Font.BOLD, 26));
                     FontMetrics fm = g2.getFontMetrics();
+                    String initials = student.getInitials();
                     g2.drawString(initials,
                             cx - fm.stringWidth(initials) / 2,
                             cy + fm.getAscent() / 2 - 2);
                 }
 
-                // Camera icon hint at bottom-right of circle
+                // Camera icon hint
                 g2.setColor(new Color(0, 0, 0, 120));
                 g2.fillOval(cx + r - 16, cy + r - 16, 22, 22);
                 g2.setColor(Color.WHITE);
@@ -118,25 +108,21 @@ public class ProfilePanel extends JPanel {
         };
         card.setOpaque(false);
 
-        // Name label
         JLabel nameL = new JLabel(student.getName(), SwingConstants.CENTER);
         nameL.setFont(UITheme.F_DISPLAY);
         nameL.setForeground(UITheme.ESPRESSO);
         nameL.setBounds(0, 180, 200, 24);
 
-        // Role label
         JLabel roleL = new JLabel("Undergraduate", SwingConstants.CENTER);
         roleL.setFont(UITheme.F_SMALL);
         roleL.setForeground(UITheme.SANDSTONE);
         roleL.setBounds(0, 205, 200, 20);
 
-        // Department label
         JLabel deptL = new JLabel(student.getDptName() + " Faculty", SwingConstants.CENTER);
         deptL.setFont(UITheme.F_SMALL);
         deptL.setForeground(UITheme.PUTTY);
         deptL.setBounds(0, 225, 200, 20);
 
-        // Change photo button
         JLabel changeBtn = new JLabel("Change Photo", SwingConstants.CENTER);
         changeBtn.setFont(UITheme.F_SMALL);
         changeBtn.setForeground(UITheme.RUSSET);
@@ -144,21 +130,17 @@ public class ProfilePanel extends JPanel {
         changeBtn.setBounds(25, 255, 150, 22);
         changeBtn.setBorder(BorderFactory.createLineBorder(UITheme.RUSSET, 1, true));
 
-        // Hover effect on button
         changeBtn.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                changeBtn.setBackground(UITheme.RUSSET);
+            @Override public void mouseEntered(MouseEvent e) {
                 changeBtn.setOpaque(true);
+                changeBtn.setBackground(UITheme.RUSSET);
                 changeBtn.setForeground(Color.WHITE);
             }
-            @Override
-            public void mouseExited(MouseEvent e) {
+            @Override public void mouseExited(MouseEvent e) {
                 changeBtn.setOpaque(false);
                 changeBtn.setForeground(UITheme.RUSSET);
             }
-            @Override
-            public void mouseClicked(MouseEvent e) {
+            @Override public void mouseClicked(MouseEvent e) {
                 handleChangePhoto();
             }
         });
@@ -170,25 +152,23 @@ public class ProfilePanel extends JPanel {
         return card;
     }
 
-    // ── Change Photo Logic ────────────────────────────────────────────────────
+    // ── Change Photo ──────────────────────────────────────────────────────────
     private void handleChangePhoto() {
         JFileChooser chooser = new JFileChooser();
         chooser.setDialogTitle("Select Profile Photo");
         chooser.setFileFilter(new javax.swing.filechooser.FileNameExtensionFilter(
                 "Image files (JPG, PNG, JPEG)", "jpg", "jpeg", "png"));
 
-        int result = chooser.showOpenDialog(this);
-        if (result != JFileChooser.APPROVE_OPTION) return;
+        if (chooser.showOpenDialog(this) != JFileChooser.APPROVE_OPTION) return;
 
         File chosen = chooser.getSelectedFile();
-
-        // Save via service (copies file + updates DB)
         boolean success = svc.changeProfilePic(student, chosen);
 
         if (success) {
-            // Reload image into memory and repaint avatar
-            loadProfileImage();
-            avatarCard.repaint();
+            loadProfileImage();          // reload image in ProfilePanel
+            avatarCard.repaint();        // redraw avatar here
+            if (onPhotoChanged != null)
+                onPhotoChanged.run();    // tell dashboard to refresh top-bar avatar
             JOptionPane.showMessageDialog(this,
                     "Profile photo updated successfully!",
                     "Success", JOptionPane.INFORMATION_MESSAGE);
@@ -199,20 +179,16 @@ public class ProfilePanel extends JPanel {
         }
     }
 
-    // ── Load Image from Disk ──────────────────────────────────────────────────
+    // ── Load Image from student.getProfilePic() path ──────────────────────────
     private void loadProfileImage() {
         profileImage = null;
         String path = student.getProfilePic();
         if (path == null || path.isBlank()) return;
-
         try {
             File f = new File(path);
-            if (f.exists()) {
-                profileImage = ImageIO.read(f);
-            }
+            if (f.exists()) profileImage = ImageIO.read(f);
         } catch (Exception e) {
             e.printStackTrace();
-            // Fall back to initials silently
         }
     }
 
@@ -252,7 +228,6 @@ public class ProfilePanel extends JPanel {
                 {"Address",       student.getAddress()},
                 {"Phone(s)",      phoneStr}
         };
-
         for (String[] row : rows) {
             card.add(profileRow(row[0], row[1]));
             card.add(Box.createVerticalStrut(2));
@@ -260,7 +235,6 @@ public class ProfilePanel extends JPanel {
         return card;
     }
 
-    // ── Row Helper ────────────────────────────────────────────────────────────
     private JPanel profileRow(String key, String val) {
         JPanel p = new JPanel(new BorderLayout());
         p.setOpaque(false);
