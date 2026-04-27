@@ -5,7 +5,9 @@ import java.sql.Date;
 /**
  * Merged Undergraduate model.
  * Both models.Undergraduate and model.Undergraduate were identical in fields.
- * Canonical package is model. This single file replaces both.
+ * Canonical package is models. This single file replaces both.
+ *
+ * Now includes profilePic to support profile photo change feature.
  */
 public class Undergraduate {
 
@@ -18,32 +20,40 @@ public class Undergraduate {
     private String houseNo;
     private String street;
     private String city;
+    private String profilePic;   // path stored in USER.Profile_pic
 
     // ── Constructor ────────────────────────────────────────────────────────
     public Undergraduate(String ugId, String name, String email,
                          String nic, Date dob, String dptName,
                          String houseNo, String street, String city) {
-        this.ugId    = ugId;
-        this.name    = name;
-        this.email   = email;
-        this.nic     = nic;
-        this.dob     = dob;
-        this.dptName = dptName;
-        this.houseNo = houseNo;
-        this.street  = street;
-        this.city    = city;
+        this.ugId       = ugId;
+        this.name       = name;
+        this.email      = email;
+        this.nic        = nic;
+        this.dob        = dob;
+        this.dptName    = dptName;
+        this.houseNo    = houseNo;
+        this.street     = street;
+        this.city       = city;
+        this.profilePic = null;
     }
 
     // ── Getters ────────────────────────────────────────────────────────────
-    public String getUgId()    { return ugId;    }
-    public String getName()    { return name;    }
-    public String getEmail()   { return email;   }
-    public String getNic()     { return nic;     }
-    public Date   getDob()     { return dob;     }
-    public String getDptName() { return dptName; }
-    public String getHouseNo() { return houseNo; }
-    public String getStreet()  { return street;  }
-    public String getCity()    { return city;    }
+    public String getUgId()      { return ugId;       }
+    public String getName()      { return name;       }
+    public String getEmail()     { return email;      }
+    public String getNic()       { return nic;        }
+    public Date   getDob()       { return dob;        }
+    public String getDptName()   { return dptName;    }
+    public String getHouseNo()   { return houseNo;    }
+    public String getStreet()    { return street;     }
+    public String getCity()      { return city;       }
+    public String getProfilePic(){ return profilePic; }
+
+    // ── Setter (profile pic only — other fields set at login) ──────────────
+    public void setProfilePic(String profilePic) {
+        this.profilePic = profilePic;
+    }
 
     // ── Utility ────────────────────────────────────────────────────────────
     /** Returns initials for avatar circle (e.g. "KP" from "Kamal Perera"). */

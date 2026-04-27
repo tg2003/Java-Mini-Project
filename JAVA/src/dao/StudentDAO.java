@@ -17,12 +17,12 @@ public class StudentDAO {
      * Returns true and loads the Undergraduate if credentials match USER table.
      */
     public Undergraduate login(String userId, String password) {
-        String sql = "SELECT u.User_id, u.Password, u.Role, " +
-                     "ug.Name, ug.Email, ug.Nic, ug.Dob, ug.Dpt_name, " +
-                     "ug.No, ug.Street, ug.City " +
-                     "FROM USER u " +
-                     "JOIN UNDERGRADUATE ug ON u.User_id = ug.Ug_id " +
-                     "WHERE u.User_id = ? AND u.Password = ? AND u.Role = 'Undergraduate'";
+        String sql = "SELECT u.User_id, u.Password, u.Role, u.Profile_pic, " +
+                "ug.Name, ug.Email, ug.Nic, ug.Dob, ug.Dpt_name, " +
+                "ug.No, ug.Street, ug.City " +
+                "FROM USER u " +
+                "JOIN UNDERGRADUATE ug ON u.User_id = ug.Ug_id " +
+                "WHERE u.User_id = ? AND u.Password = ? AND u.Role = 'Undergraduate'";
         try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, userId);
             ps.setString(2, password);
@@ -38,15 +38,50 @@ public class StudentDAO {
 
     // ── Profile ────────────────────────────────────────────────────────────────
     public Undergraduate getById(String ugId) {
-        String sql = "SELECT u.User_id, u.Password, u.Role, " +
-                     "ug.Name, ug.Email, ug.Nic, ug.Dob, ug.Dpt_name, " +
-                     "ug.No, ug.Street, ug.City " +
-                     "FROM USER u JOIN UNDERGRADUATE ug ON u.User_id = ug.Ug_id " +
-                     "WHERE ug.Ug_id = ?";
+        String sql = "SELECT u.User_id, u.Password, u.Role, u.Profile_pic, " +
+                "ug.Name, ug.Email, ug.Nic, ug.Dob, ug.Dpt_name, " +
+                "ug.No, ug.Street, ug.City " +
+                "FROM USER u JOIN UNDERGRADUATE ug ON u.User_id = ug.Ug_id " +
+                "WHERE ug.Ug_id = ?";
         try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, ugId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) return mapRow(rs);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // ── Profile Picture ────────────────────────────────────────────────────────
+    /**
+     * Updates the Profile_pic path in the USER table for the given userId.
+     * @param userId  the user's ID (e.g. "TG1701")
+     * @param picPath the file path to store (e.g. "resources/userPP/TG1701.png")
+     * @return true if the update succeeded
+     */
+    public boolean updateProfilePic(String userId, String picPath) {
+        String sql = "UPDATE USER SET Profile_pic = ? WHERE User_id = ?";
+        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
+            ps.setString(1, picPath);
+            ps.setString(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+
+    /**
+     * Retrieves the stored Profile_pic path for the given userId.
+     * Returns null if no picture is set.
+     */
+    public String getProfilePic(String userId) {
+        String sql = "SELECT Profile_pic FROM USER WHERE User_id = ?";
+        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
+            ps.setString(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) return rs.getString("Profile_pic");
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -74,7 +109,6 @@ public class StudentDAO {
     }
 
     public int getUnreadNoticeCount() {
-        // In this schema all notices are "unread"; count the 3 most recent.
         String sql = "SELECT COUNT(*) FROM NOTICE";
         try (Statement st = DBConnection.getConnection().createStatement();
              ResultSet rs = st.executeQuery(sql)) {
@@ -87,17 +121,19 @@ public class StudentDAO {
 
     // ── Helper ────────────────────────────────────────────────────────────────
     private Undergraduate mapRow(ResultSet rs) throws SQLException {
-        return new Undergraduate(
-            rs.getString("User_id"),
-            rs.getString("Name"),
-            rs.getString("Email"),
-            rs.getString("Nic"),
-            rs.getDate("Dob"),
-            rs.getString("Dpt_name"),
-            rs.getString("No"),
-            rs.getString("Street"),
-            rs.getString("City")
+        Undergraduate ug = new Undergraduate(
+                rs.getString("User_id"),
+                rs.getString("Name"),
+                rs.getString("Email"),
+                rs.getString("Nic"),
+                rs.getDate("Dob"),
+                rs.getString("Dpt_name"),
+                rs.getString("No"),
+                rs.getString("Street"),
+                rs.getString("City")
         );
+        ug.setProfilePic(rs.getString("Profile_pic"));
+        return ug;
     }
 
     private int scalarInt(String sql, String param) {

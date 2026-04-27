@@ -1,22 +1,24 @@
 package util;
 
 import models.Marks;
+
 import java.util.List;
 
-/**
- * Calculates GPA from a list of Marks using a 4.0 scale.
- */
 public class GPACalculator {
 
     public static double calculate(List<Marks> marksList) {
         if (marksList == null || marksList.isEmpty()) return 0.0;
-        double totalPoints = 0;
-        int    count       = 0;
-        for (Marks m : marksList) {
-            totalPoints += toGradePoint(m.getTotal());
-            count++;
+        double totalWeightedPoints = 0.0;
+        double totalCredits = 0.0;
+
+        for (Marks marks : marksList) {
+            double credits = marks.getCreditValue();
+            if (credits <= 0.0) continue;
+            totalWeightedPoints += toGradePoint(marks.getTotal()) * credits;
+            totalCredits += credits;
         }
-        return count == 0 ? 0.0 : totalPoints / count;
+
+        return totalCredits == 0.0 ? 0.0 : totalWeightedPoints / totalCredits;
     }
 
     public static double toGradePoint(double total) {
@@ -29,15 +31,16 @@ public class GPACalculator {
         if (total >= 50) return 2.3;
         if (total >= 45) return 2.0;
         if (total >= 40) return 1.7;
+        if (total >= 35) return 1.3;
         return 0.0;
     }
 
     public static String classify(double gpa) {
-        if (gpa >= 3.70) return "First Class Honours";
-        if (gpa >= 3.30) return "Second Class Upper";
-        if (gpa >= 3.00) return "Second Class Lower";
-        if (gpa >= 2.00) return "Pass";
-        return "Fail";
+        if (gpa >= 3.70) return "First Class";
+        if (gpa >= 3.30) return "Second Class (Upper Division)";
+        if (gpa >= 3.00) return "Second Class (Lower Division)";
+        if (gpa >= 2.00) return "General Degree";
+        return "Below Graduation Requirement";
     }
 
     public static String letterGrade(double total) {
@@ -50,6 +53,7 @@ public class GPACalculator {
         if (total >= 50) return "C+";
         if (total >= 45) return "C";
         if (total >= 40) return "C-";
-        return "F";
+        if (total >= 35) return "D";
+        return "E";
     }
 }
