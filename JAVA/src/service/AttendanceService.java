@@ -4,6 +4,11 @@ import dao.AttendanceDAO;
 import models.Attendance;
 import models.AttendanceCourseDetails;
 import models.AttendanceCourseSummary;
+
+import java.sql.Date;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
+import java.util.Collections;
 import java.util.List;
 
 public class AttendanceService {
@@ -13,7 +18,6 @@ public class AttendanceService {
         return dao.getByStudent(ugId);
     }
 
-    /** Returns formatted percentage string, e.g. "91.3%" */
     public String getAttendancePercentStr(String ugId) {
         double pct = dao.getAttendancePercentage(ugId);
         return String.format("%.1f%%", pct);
@@ -29,5 +33,18 @@ public class AttendanceService {
 
     public AttendanceCourseDetails getCourseDetails(String ugId, String cCode) {
         return dao.getCourseDetails(ugId, cCode);
+    }
+
+    /**
+     * Returns Absent sessions within [fromDate, toDate].
+     * Validates that the range is at most 14 days.
+     * Returns empty list if range is invalid or > 14 days.
+     */
+    public List<Attendance> getAbsentSessionsInRange(String ugId, LocalDate from, LocalDate to) {
+        if (from == null || to == null) return Collections.emptyList();
+        if (to.isBefore(from)) return Collections.emptyList();
+        long days = ChronoUnit.DAYS.between(from, to);
+        if (days > 13) return Collections.emptyList(); // max 14 days span (0..13 = 14 days inclusive)
+        return dao.getAbsentSessionsInRange(ugId, Date.valueOf(from), Date.valueOf(to));
     }
 }

@@ -3,15 +3,12 @@ package dao;
 import db.DBConnection;
 import models.Medical;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class MedicalDAO {
+
     public List<Medical> getByStudent(String ugId) {
         List<Medical> list = new ArrayList<>();
         String sql = "SELECT m.*, t.Name AS OfficerName " +
@@ -39,26 +36,73 @@ public class MedicalDAO {
         return list;
     }
 
-    public int createMedical(String ugId, java.sql.Date fromDate, java.sql.Date toDate,
-                             String sessionType, String cCode) {
+    /**
+     * Inserts ONE MEDICAL row for a single absent session.
+     */
+    public int createMedicalForSession(String ugId, java.sql.Date sessionDate,
+                                       String timetableType, String cCode) {
+        String sessionType = mapToMedicalSessionType(timetableType);
+
         String sql = "INSERT INTO MEDICAL (Ug_id, From_date, To_date, Status, Session_type, C_code) " +
                 "VALUES (?, ?, ?, 'Pending', ?, ?)";
-        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+        try (PreparedStatement ps = DBConnection.getConnection()
+                .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             ps.setString(1, ugId);
-            ps.setDate(2, fromDate);
-            ps.setDate(3, toDate);
-            ps.setString(4, sessionType);
+            ps.setDate(2, sessionDate);
+            ps.setDate(3, sessionDate);   // From_date = To_date = session date
+            ps.setString(4, sessionType); // mapped value: 'Lecture' or 'Exam'
             if (cCode == null || cCode.isBlank()) {
-                ps.setNull(5, java.sql.Types.CHAR);
+                ps.setNull(5, Types.CHAR);
             } else {
                 ps.setString(5, cCode);
             }
             ps.executeUpdate();
-
             ResultSet keys = ps.getGeneratedKeys();
-            if (keys.next()) {
-                return keys.getInt(1);
+            if (keys.next()) return keys.getInt(1);
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return -1;
+    }
+
+    /**
+     * Maps TIMETABLE.Type values to MEDICAL.Session_type ENUM values.
+     *
+     * TIMETABLE.Type  →  MEDICAL.Session_type ENUM('Lecture','Exam')
+     *   "Theory"      →  "Lecture"
+     *   "Practical"   →  "Lecture" note
+     *   "Exam"        →  "Exam"
+     *   anything else →  "Lecture"  (safe default) note
+     */
+    private String mapToMedicalSessionType(String timetableType) {
+        if (timetableType == null) return "Lecture";
+        switch (timetableType.trim()) {
+            case "Exam":  return "Exam";
+            default:      return "Lecture";  // Theory, Practical, Tutorial → Lecture
+        }
+    }
+
+    /** Legacy single-row insert (used by edit flow). */
+    public int createMedical(String ugId, java.sql.Date fromDate, java.sql.Date toDate,
+                             String sessionType, String cCode) {
+        // Ensure the value is safe for the ENUM
+        String safeSessionType = mapToMedicalSessionType(sessionType);
+        String sql = "INSERT INTO MEDICAL (Ug_id, From_date, To_date, Status, Session_type, C_code) " +
+                "VALUES (?, ?, ?, 'Pending', ?, ?)";
+        try (PreparedStatement ps = DBConnection.getConnection()
+                .prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+            ps.setString(1, ugId);
+            ps.setDate(2, fromDate);
+            ps.setDate(3, toDate);
+            ps.setString(4, safeSessionType);
+            if (cCode == null || cCode.isBlank()) {
+                ps.setNull(5, Types.CHAR);
+            } else {
+                ps.setString(5, cCode);
             }
+            ps.executeUpdate();
+            ResultSet keys = ps.getGeneratedKeys();
+            if (keys.next()) return keys.getInt(1);
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -67,14 +111,15 @@ public class MedicalDAO {
 
     public boolean updatePendingMedical(int medicalId, java.sql.Date fromDate, java.sql.Date toDate,
                                         String sessionType, String cCode) {
+        String safeSessionType = mapToMedicalSessionType(sessionType);
         String sql = "UPDATE MEDICAL SET From_date=?, To_date=?, Session_type=?, C_code=? " +
                 "WHERE Medical_id=? AND Status='Pending'";
         try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
             ps.setDate(1, fromDate);
             ps.setDate(2, toDate);
-            ps.setString(3, sessionType);
+            ps.setString(3, safeSessionType);
             if (cCode == null || cCode.isBlank()) {
-                ps.setNull(4, java.sql.Types.CHAR);
+                ps.setNull(4, Types.CHAR);
             } else {
                 ps.setString(4, cCode);
             }

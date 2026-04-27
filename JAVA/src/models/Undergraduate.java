@@ -2,13 +2,6 @@ package models;
 
 import java.sql.Date;
 
-/**
- * Merged Undergraduate model.
- * Both models.Undergraduate and model.Undergraduate were identical in fields.
- * Canonical package is models. This single file replaces both.
- *
- * Now includes profilePic to support profile photo change feature.
- */
 public class Undergraduate {
 
     private String ugId;

@@ -2,12 +2,7 @@ package models;
 
 /**
  * This class stores student course details.
- * It links a student to a course.
- *
- * Includes:
- * - status (Proper / Repeat / Batchmissed)
- * - semester, batch year, level
- *
+
  * Used to check student info and enrollment.
  */
 public class EnrollsIn {

@@ -2,35 +2,7 @@ package models;
 
 import java.util.Arrays;
 
-/**
- * GradeCalculator — course-specific CA formulas ported from MarkDAOImpl logic.
- *
- * This project's MARKS table stores all components out of 100.
- * Each component is scaled to its actual weight per course formula.
- *
- * Course formulas (same as MarkDAOImpl.calculateDerivedMarks):
- *
- * ┌──────────┬─────────────────────────────────────────┬────────┬──────────┐
- * │ Course   │ CA Formula                              │ CA Max │ End Wt   │
- * ├──────────┼─────────────────────────────────────────┼────────┼──────────┤
- * │ ICT2132  │ Project(20%) + Mid(20%)                 │ 40%    │ 60%      │
- * │ ICT2122  │ Best2Quiz(10%) + Mid(20%)               │ 30%    │ 70%      │
- * │ ICT2142  │ Best2Quiz(10%) + Assignment1(20%)       │ 30%    │ 70%      │
- * │ ICT2152  │ Project(20%) + Mid(20%)                 │ 40%    │ 60%(P)   │
- * │ ICT2113  │ Best2Quiz(10%) + Mid(30%)               │ 40%    │ 60%      │
- * │ TCS2112  │ Best2Quiz(10%) + Mid(20%)               │ 30%    │ 70%      │
- * │ ENG2122  │ Assignment1(10%) + Mid(20%)             │ 30%    │ 70%      │
- * │ TCS2122  │ Assignment1(30%) + Project(70%)         │ 30%    │ 70%      │
- * │ default  │ Best2Quiz(10%) + Mid(20%)               │ 30%    │ 70%      │
- * └──────────┴─────────────────────────────────────────┴────────┴──────────┘
- *
- * Mid = MidT + MidP combined (both scaled /100 → actual weight split equally)
- *
- * CA eligibility : CA >= 40% of CA max weight portion
- * End eligibility: raw finalT mark >= 40 (TCS2122: project >= 40)
- * Grade boundaries (UGC 2024):
- *   A+>=75, A>=70, A->=65, B+>=60, B>=55, B->=50, C+>=45, C>=40, C->=35, D>=30, F<30
- */
+
 public class GradeCalculator {
 
     private final Mark mark;

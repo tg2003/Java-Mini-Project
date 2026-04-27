@@ -207,10 +207,7 @@ public class StudentDashboardUI extends JFrame {
 
     // ── Inner class: AvatarComponent ─────────────────────────────────────────
     /**
-     * Shows the student's profile photo cropped to a circle.
-     * Falls back to initials if no photo is set or the file can't be read.
-     * Call reload() + repaint() to refresh after a photo change.
-     */
+     * Shows the student's profile photo*/
     private static class AvatarComponent extends JComponent {
         private final Undergraduate student;
         private final int size;

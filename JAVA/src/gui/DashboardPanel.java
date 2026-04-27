@@ -61,11 +61,11 @@ public class DashboardPanel extends JPanel {
         left.setOpaque(false);
         left.setLayout(new BoxLayout(left, BoxLayout.Y_AXIS));
 
-        JLabel name = new JLabel("\uD83D\uDC64 " + student.getName() + "  •  " + student.getUgId());
+        JLabel name = new JLabel( student.getName() + "   " + student.getUgId());
         name.setFont(new Font("Georgia", Font.BOLD, 24));
         name.setForeground(Color.WHITE);
 
-        JLabel faculty = new JLabel("Faculty of Technology  •  " + student.getDptName());
+        JLabel faculty = new JLabel("Faculty of Technology    " + student.getDptName());
         faculty.setFont(UITheme.F_BODY);
         faculty.setForeground(UITheme.PUTTY);
         faculty.setBorder(new EmptyBorder(8, 0, 0, 0));

@@ -65,13 +65,9 @@ public class AttendancePanel extends JPanel {
         title.setFont(new Font("Georgia", Font.BOLD, 24));
         title.setForeground(Color.WHITE);
 
-        JLabel subtitle = new JLabel("Inside this panel, click View to open the selected course attendance details.");
-        subtitle.setFont(UITheme.F_BODY);
-        subtitle.setForeground(UITheme.PUTTY);
-        subtitle.setBorder(new EmptyBorder(8, 0, 0, 0));
 
         heroText.add(title);
-        heroText.add(subtitle);
+        //heroText.add(subtitle);
         hero.add(heroText, BorderLayout.CENTER);
 
         String[] cols = {"Course Code", "Course Name", "Participated Hours", "Total Hours", "Percentage", "Action"};

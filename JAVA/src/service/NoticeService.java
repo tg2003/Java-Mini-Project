@@ -9,8 +9,3 @@ public class NoticeService {
     public List<Notice> getAll() { return dao.getAll(); }
 }
 
-// ─── MedicalService.java ─────────────────────────────────────────────────────
-// (put in its own file in production — combined here for brevity)
-// package service;
-// import model.Medical; import java.util.List;
-// public class MedicalService { ... }

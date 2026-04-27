@@ -9,9 +9,6 @@ import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Data Access Object for ATTENDANCE table.
- */
 public class AttendanceDAO {
 
     /** Full attendance history for a student, newest first. */
@@ -28,6 +25,57 @@ public class AttendanceDAO {
                 "ORDER BY a.Date DESC, a.Timetable_id";
         try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
             ps.setString(1, ugId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Attendance(
+                        rs.getInt("Week_no"),
+                        rs.getString("Ug_id"),
+                        rs.getInt("Timetable_id"),
+                        rs.getDate("Date"),
+                        rs.getString("Status"),
+                        rs.getString("Day"),
+                        rs.getString("Start_time"),
+                        rs.getString("End_time"),
+                        rs.getString("C_code"),
+                        rs.getString("C_name"),
+                        rs.getString("Type")
+                ));
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return list;
+    }
+
+    /**
+     * Returns Absent sessions for a student within a date range (max 14 days).
+     * Only returns sessions where Status = 'Absent' and no MEDICAL record
+     * already exists for that same session date + course.
+     * This drives the checkbox table in MedicalSubmissionDialog.
+     */
+    public List<Attendance> getAbsentSessionsInRange(String ugId, Date fromDate, Date toDate) {
+        List<Attendance> list = new ArrayList<>();
+        String sql =
+                "SELECT a.Week_no, a.Ug_id, a.Timetable_id, a.Date, " +
+                        "a.Status, t.Day, t.Start_time, t.End_time, t.C_code, t.Type, c.C_name " +
+                        "FROM ATTENDANCE a " +
+                        "JOIN TIMETABLE t ON a.Timetable_id = t.Timetable_id " +
+                        "JOIN COURSE c ON t.C_code = c.C_code " +
+                        "WHERE a.Ug_id = ? " +
+                        "AND a.Status = 'Absent' " +
+                        "AND a.Date BETWEEN ? AND ? " +
+                        // exclude sessions that already have a MEDICAL record submitted
+                        "AND NOT EXISTS (" +
+                        "  SELECT 1 FROM MEDICAL m " +
+                        "  WHERE m.Ug_id = a.Ug_id " +
+                        "  AND m.C_code = t.C_code " +
+                        "  AND a.Date BETWEEN m.From_date AND m.To_date" +
+                        ") " +
+                        "ORDER BY a.Date ASC, t.Start_time";
+        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
+            ps.setString(1, ugId);
+            ps.setDate(2, fromDate);
+            ps.setDate(3, toDate);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
                 list.add(new Attendance(
@@ -89,9 +137,9 @@ public class AttendanceDAO {
             ps.setString(1, ugId);
             ResultSet rs = ps.executeQuery();
             while (rs.next()) {
-                double totalHours = rs.getDouble("total_hours");
+                double totalHours    = rs.getDouble("total_hours");
                 double attendedHours = rs.getDouble("attended_hours");
-                double percentage = totalHours == 0 ? 0.0 : (attendedHours * 100.0) / totalHours;
+                double percentage    = totalHours == 0 ? 0.0 : (attendedHours * 100.0) / totalHours;
                 list.add(new AttendanceCourseSummary(
                         rs.getString("C_code"),
                         rs.getString("C_name"),
@@ -140,16 +188,13 @@ public class AttendanceDAO {
             e.printStackTrace();
         }
 
-        double totalHours = 0.0;
-        double attendedHours = 0.0;
-        for (Attendance session : sessions) {
-            double hours = session.getDurationHours();
-            totalHours += hours;
-            if ("Present".equals(session.getStatus()) || "MedicalApproved".equals(session.getStatus())) {
-                attendedHours += hours;
-            }
+        double totalHours = 0.0, attendedHours = 0.0;
+        for (Attendance s : sessions) {
+            double h = s.getDurationHours();
+            totalHours += h;
+            if ("Present".equals(s.getStatus()) || "MedicalApproved".equals(s.getStatus()))
+                attendedHours += h;
         }
-
         double percentage = totalHours == 0 ? 0.0 : (attendedHours * 100.0) / totalHours;
         return new AttendanceCourseDetails(cCode, courseName, sessions, attendedHours, totalHours, percentage);
     }
