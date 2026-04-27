@@ -14,10 +14,10 @@ import java.util.Vector;
 public class MarkEntryForm extends JFrame {
 
 
-    private static final Color BG_DARK      = new Color(20,  14,  10);
+    private static final Color BG_DARK      = new Color(245,  210,  195);
     private static final Color BG_CARD      = new Color(92, 64, 51);
-    private static final Color BG_CARD2     = new Color(62,  39,  35);
-    private static final Color BG_INPUT     = new Color(30,  20,  15);
+    private static final Color BG_CARD2     = new Color(129, 68, 44);
+    private static final Color BG_INPUT     = new Color(159, 113, 87);
     private static final Color ACCENT       = new Color(205, 133, 63);   // green for marks
     private static final Color ACCENT_HOVER = new Color(160, 82,  45);
     private static final Color TEXT_PRIMARY = new Color(245, 235, 220);
@@ -56,7 +56,7 @@ public class MarkEntryForm extends JFrame {
     private String lecturerId;
     private String selectedCourse = null;
 
-    // ─────────────────────────────────────────────────────
+
     public MarkEntryForm(String lecturerId) {
         this.lecturerId = lecturerId;
         initUI();
@@ -64,7 +64,7 @@ public class MarkEntryForm extends JFrame {
         setVisible(true);
     }
 
-    // ─── Build UI ─────────────────────────────────────────
+
     private void initUI() {
         setTitle("Mark Entry Form");
         setSize(1200, 660);
@@ -103,7 +103,7 @@ public class MarkEntryForm extends JFrame {
         title.setFont(FONT_TITLE);
         title.setForeground(TEXT_PRIMARY);
 
-        JLabel sub = new JLabel("Enter or update student marks. Changes are saved to the database.");
+        JLabel sub = new JLabel("");
         sub.setFont(FONT_BODY);
         sub.setForeground(TEXT_MUTED);
 
@@ -169,7 +169,7 @@ public class MarkEntryForm extends JFrame {
             public Component prepareRenderer(TableCellRenderer renderer, int row, int col) {
                 Component c = super.prepareRenderer(renderer, row, col);
                 if (isRowSelected(row)) {
-                    c.setBackground(new Color(38, 58, 90));
+                    c.setBackground(new Color(190, 190, 180));
                     c.setForeground(TEXT_PRIMARY);
                 } else {
                     c.setBackground(row % 2 == 0 ? BG_CARD : ROW_ALT);

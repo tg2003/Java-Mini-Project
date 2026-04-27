@@ -1,6 +1,8 @@
 package gui;
 
 import db.DBConnection;
+import util.Logout;
+
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
@@ -73,7 +75,9 @@ public class LecturerDashboard extends JFrame {
 
         panel.add(makeSideBtn("Logout", () -> {
             DBConnection.closeConnection();
+            new Logout().logout(this);
             dispose();
+
         }));
 
         return panel;

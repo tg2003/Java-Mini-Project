@@ -1,31 +1,11 @@
 package models;
 
-/**
- * Mark model class.
- * Maps exactly to the MARKS table in LMS_DB.
- *
- * DB columns mapped:
- *   Mark_id      -> markId        (AUTO_INCREMENT, set after DB insert)
- *   Ug_id        -> ugId          (FK → UNDERGRADUATE)
- *   C_code       -> cCode         (FK → COURSE)
- *   Quiz01       -> quiz01
- *   Quiz02       -> quiz02
- *   Quiz03       -> quiz03
- *   Assignment1  -> assignment1
- *   Assignment2  -> assignment2
- *   Project      -> project
- *   Mid_T        -> midT
- *   Mid_P        -> midP
- *   Final_T      -> finalT
- *   Final_P      -> finalP
- *   Attempt_type -> attemptType   (ENUM: "Proper" | "Repeat" | "MedicalRepeat")
- */
+
 public class Mark {
 
-    // ── Primary key (set by DB, 0 means not yet saved) ─────────────────────
     private int markId;
 
-    // ── Foreign keys ───────────────────────────────────────────────────────
+
     private String ugId;
     private String cCode;
 
@@ -36,10 +16,10 @@ public class Mark {
     private double assignment1;
     private double assignment2;
     private double project;
-    private double midT;           // Mid-term Theory
-    private double midP;           // Mid-term Practical
-    private double finalT;         // Final Theory
-    private double finalP;         // Final Practical
+    private double midT;
+    private double midP;
+    private double finalT;
+    private double finalP;
 
     // ── Attempt type ───────────────────────────────────────────────────────
     private String attemptType;    // ENUM: "Proper" | "Repeat" | "MedicalRepeat"
