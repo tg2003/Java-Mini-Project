@@ -140,7 +140,7 @@ public class StudentDashboardUI extends JFrame {
         // updates immediately when the user changes their photo.
         contentPanel.add(new DashboardPanel(student, this::showCard),       "Dashboard");
         contentPanel.add(new CoursesPanel1(student),                        "Courses");
-        contentPanel.add(new NoticePanel1(),                                "Notice");
+        contentPanel.add(new NoticeView().getMainPanel(),                   "Notice");
         contentPanel.add(new GPAPanel(student),                             "GPA");
         contentPanel.add(new TimetablePanel1(student),                      "Timetable");
         contentPanel.add(new AttendancePanel(student),                      "Attendance");
