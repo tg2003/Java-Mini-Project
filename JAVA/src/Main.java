@@ -1,6 +1,4 @@
 import db.DBConnection;
-import gui.AdminGUI;
-import gui.LecturerDashboard;
 import gui.LoginGUI;
 
 import java.sql.Connection;

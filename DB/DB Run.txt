@@ -663,32 +663,24 @@ INSERT INTO NOTICE (Title, Date_time, Download_link) VALUES
 
 INSERT INTO MEDICAL (
     Medical_id, Ug_id, From_date, To_date,
-    Status, Session_type, Techoff_id
+    Status, Session_type, Techoff_id, C_code
 ) VALUES
 
+-- LECTURE MEDICAL (Approved)
+(1, 'TG1712', '2026-03-13', '2026-03-16', 'MedicalApproved', 'Lecture', 'TO0001', 'ICT2113'),
+(2, 'TG1713', '2026-03-02', '2026-03-05', 'MedicalApproved', 'Lecture', 'TO0001', 'ICT2122'),
+(3, 'TG1714', '2026-03-02', '2026-03-02', 'MedicalApproved', 'Lecture', 'TO0001', 'ICT2132'),
+(4, 'TG1715', '2026-03-05', '2026-03-07', 'MedicalApproved', 'Lecture', 'TO0004', 'ICT2142'),
 
--- LECTURE MEDICAL
+-- LECTURE MEDICAL (Declined)
+(5, 'TG1711', '2026-04-13', '2026-04-13', 'MedicalDeclined', 'Lecture', 'TO0001', 'ICT2152'),
+(6, 'TG1715', '2026-04-13', '2026-04-14', 'MedicalDeclined', 'Lecture', 'TO0001', 'ICT2113'),
 
-
--- Approved Lecture
-(1, 'TG1712', '2026-03-13', '2026-03-16', 'MedicalApproved', 'Lecture', 'TO0001'),
-(2, 'TG1713', '2026-03-02', '2026-03-05', 'MedicalApproved', 'Lecture', 'TO0001'),
-(3, 'TG1714', '2026-03-02', '2026-03-02', 'MedicalApproved', 'Lecture', 'TO0001'),
-(4, 'TG1715', '2026-03-05', '2026-03-07', 'MedicalApproved', 'Lecture', 'TO0004'),
-
--- Declined Lecture
-(5, 'TG1711', '2026-04-13', '2026-04-13', 'MedicalDeclined', 'Lecture', 'TO0001'),
-(6, 'TG1715', '2026-04-13', '2026-04-14', 'MedicalDeclined', 'Lecture', 'TO0001'),
-
-
--- EXAM MEDICAL (LAST WEEk)
-
-
-(7,  'TG1713', '2026-07-20', '2026-07-20', 'MedicalApproved', 'Exam', 'TO0001'),
-(8,  'TG1714', '2026-07-20', '2026-07-20', 'MedicalApproved', 'Exam', 'TO0001'),
-(9,  'TG1715', '2026-07-14', '2026-07-20', 'MedicalApproved', 'Exam', 'TO0001'),
-(10, 'TG1716', '2026-07-20', '2026-07-20', 'MedicalDeclined', 'Exam', 'TO0001');
-
+-- EXAM MEDICAL
+(7,  'TG1713', '2026-07-20', '2026-07-20', 'MedicalApproved', 'Exam', 'TO0001', 'ICT2122'),
+(8,  'TG1714', '2026-07-20', '2026-07-20', 'MedicalApproved', 'Exam', 'TO0001', 'ICT2132'),
+(9,  'TG1715', '2026-07-14', '2026-07-20', 'MedicalApproved', 'Exam', 'TO0001', 'ICT2142'),
+(10, 'TG1716', '2026-07-20', '2026-07-20', 'MedicalDeclined', 'Exam', 'TO0001', 'ICT2152');
 
 
 -- DATA INSERTION BY Aasik

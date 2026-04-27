@@ -49,7 +49,7 @@ public class AttendanceReportForm extends JFrame {
     }
 
 
-    // LOAD COURSE CODES
+    //load course codes
 
     private void loadCourseCodes() {
         try {
@@ -71,7 +71,7 @@ public class AttendanceReportForm extends JFrame {
     }
 
 
-    // LOAD UG IDS
+    //load ugId
 
     private void loadUgIds() {
         try {
@@ -94,7 +94,7 @@ public class AttendanceReportForm extends JFrame {
     }
 
 
-    // FIXED TYPE COMBO BOX
+
 
     private void loadTypes() {
 
@@ -108,7 +108,7 @@ public class AttendanceReportForm extends JFrame {
     }
 
 
-    // REPORT GENERATION
+    //generate reports
 
     private void loadReport() {
 
@@ -216,7 +216,7 @@ public class AttendanceReportForm extends JFrame {
         }
     }
 
-    // GET STUDENT NAME
+
 
     private String getStudentName(String ugId, Connection con) {
         try {

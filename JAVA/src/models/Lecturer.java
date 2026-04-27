@@ -3,44 +3,23 @@ package models;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Lecturer model class.
- * Maps to: LECTURER table + LECTURER_PHONE table (multi-valued phones).
- * Inherits: userId, password, role, profilePic from User.
- *
- * DB columns mapped:
- *   Lec_id       -> userId     (from User)
- *   Password     -> password   (from User)
- *   Role         -> role       (from User, always "Lecturer")
- *   Profile_pic  -> profilePic (from User)
- *   Name         -> name
- *   Email        -> email
- *   Nic          -> nic
- *   Dob          -> dob
- *   Education_lvl-> educationLvl
- *   Dpt_name     -> dptName
- *   No           -> houseNo
- *   Street       -> street
- *   City         -> city
- *   phones       -> List<String> from LECTURER_PHONE table
- */
 public class Lecturer extends User {
 
-    // ── DB fields from LECTURER table ──────────────────────────────────────
+
     private String name;
     private String email;
     private String nic;
-    private String dob;            // Stored as "YYYY-MM-DD" string
-    private String educationLvl;   // ENUM: "Bachelor" | "Master" | "Phd"
+    private String dob;
+    private String educationLvl;
     private String dptName;
-    private String houseNo;        // Maps to column "No"
+    private String houseNo;
     private String street;
     private String city;
 
-    // ── Multi-valued attribute from LECTURER_PHONE table ───────────────────
+
     private List<String> phones;
 
-    // ── Constructor (without profilePic — uses default) ────────────────────
+    // Constructor
     public Lecturer(String lecId, String password,
                     String name, String email, String nic, String dob,
                     String educationLvl, String dptName,
@@ -58,7 +37,6 @@ public class Lecturer extends User {
         this.phones      = new ArrayList<>();
     }
 
-    // ── Constructor (with profilePic) ──────────────────────────────────────
     public Lecturer(String lecId, String password, String profilePic,
                     String name, String email, String nic, String dob,
                     String educationLvl, String dptName,
@@ -76,7 +54,7 @@ public class Lecturer extends User {
         this.phones      = new ArrayList<>();
     }
 
-    // ── Abstract method implementation ─────────────────────────────────────
+    // lec dash board
     @Override
     public void displayDashboard() {
         System.out.println("=== Lecturer Dashboard ===");
@@ -84,7 +62,7 @@ public class Lecturer extends User {
         System.out.println("Department: " + dptName);
     }
 
-    // ── Phone management (LECTURER_PHONE table) ────────────────────────────
+    // phone num
     public void addPhone(String phone) {
         if (phone != null && !phone.isBlank() && !phones.contains(phone)) {
             phones.add(phone);
@@ -99,7 +77,7 @@ public class Lecturer extends User {
         return new ArrayList<>(phones);   // return a copy (encapsulation)
     }
 
-    // ── Getters ────────────────────────────────────────────────────────────
+
     public String getName()         { return name; }
     public String getEmail()        { return email; }
     public String getNic()          { return nic; }
@@ -110,7 +88,7 @@ public class Lecturer extends User {
     public String getStreet()       { return street; }
     public String getCity()         { return city; }
 
-    // ── Setters (for profile editing) ──────────────────────────────────────
+
     public void setName(String name)               { this.name = name; }
     public void setEmail(String email)             { this.email = email; }
     public void setNic(String nic)                 { this.nic = nic; }
@@ -121,7 +99,7 @@ public class Lecturer extends User {
     public void setStreet(String street)           { this.street = street; }
     public void setCity(String city)               { this.city = city; }
 
-    // ── toString (useful for debugging) ────────────────────────────────────
+
     @Override
     public String toString() {
         return "Lecturer{id=" + getUserId() + ", name=" + name +

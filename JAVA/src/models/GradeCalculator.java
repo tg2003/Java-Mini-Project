@@ -1,198 +1,202 @@
 package models;
 
+import java.util.Arrays;
+
 /**
- * GradeCalculator — pure logic class (no DB table).
+ * GradeCalculator — course-specific CA formulas ported from MarkDAOImpl logic.
  *
- * Takes a Mark object and calculates:
- *   - CA Total          (Quiz + Assignment + Project + Mid)
- *   - Final Exam Total  (FinalT + FinalP)
- *   - Overall Total     (CA + Final)
- *   - Letter Grade      (A+ down to F)
- *   - GPA value         (4.0 scale)
- *   - CA Eligibility    (student needs >= 50% of CA marks to sit final)
+ * This project's MARKS table stores all components out of 100.
+ * Each component is scaled to its actual weight per course formula.
  *
- * Mark distribution assumed (adjust if your system differs):
- * ┌─────────────────┬────────────┐
- * │ Component        │ Max Marks  │
- * ├─────────────────┼────────────┤
- * │ Quiz 01          │    10      │
- * │ Quiz 02          │    10      │
- * │ Quiz 03          │    10      │
- * │ Assignment 1     │    10      │
- * │ Assignment 2     │    10      │
- * │ Project          │    10      │
- * │ Mid Theory       │    15      │
- * │ Mid Practical    │    15      │
- * │ ── CA Total ──   │   (90)     │
- * ├─────────────────┼────────────┤
- * │ Final Theory     │    50      │
- * │ Final Practical  │    50      │
- * │ ── Final Total ──│  (100)     │
- * ├─────────────────┼────────────┤
- * │ OVERALL TOTAL    │  (190)     │
- * └─────────────────┴────────────┘
+ * Course formulas (same as MarkDAOImpl.calculateDerivedMarks):
  *
- * NOTE: CA eligibility = caTotal >= CA_ELIGIBILITY_MINIMUM (default 45 out of 90 = 50%)
+ * ┌──────────┬─────────────────────────────────────────┬────────┬──────────┐
+ * │ Course   │ CA Formula                              │ CA Max │ End Wt   │
+ * ├──────────┼─────────────────────────────────────────┼────────┼──────────┤
+ * │ ICT2132  │ Project(20%) + Mid(20%)                 │ 40%    │ 60%      │
+ * │ ICT2122  │ Best2Quiz(10%) + Mid(20%)               │ 30%    │ 70%      │
+ * │ ICT2142  │ Best2Quiz(10%) + Assignment1(20%)       │ 30%    │ 70%      │
+ * │ ICT2152  │ Project(20%) + Mid(20%)                 │ 40%    │ 60%(P)   │
+ * │ ICT2113  │ Best2Quiz(10%) + Mid(30%)               │ 40%    │ 60%      │
+ * │ TCS2112  │ Best2Quiz(10%) + Mid(20%)               │ 30%    │ 70%      │
+ * │ ENG2122  │ Assignment1(10%) + Mid(20%)             │ 30%    │ 70%      │
+ * │ TCS2122  │ Assignment1(30%) + Project(70%)         │ 30%    │ 70%      │
+ * │ default  │ Best2Quiz(10%) + Mid(20%)               │ 30%    │ 70%      │
+ * └──────────┴─────────────────────────────────────────┴────────┴──────────┘
+ *
+ * Mid = MidT + MidP combined (both scaled /100 → actual weight split equally)
+ *
+ * CA eligibility : CA >= 40% of CA max weight portion
+ * End eligibility: raw finalT mark >= 40 (TCS2122: project >= 40)
+ * Grade boundaries (UGC 2024):
+ *   A+>=75, A>=70, A->=65, B+>=60, B>=55, B->=50, C+>=45, C>=40, C->=35, D>=30, F<30
  */
 public class GradeCalculator {
 
-    // ── The Mark object this calculator works on ───────────────────────────
-    private Mark mark;
+    private final Mark mark;
 
-    // ── CA eligibility threshold: student must score at least this much in CA ──
-    // 45 out of 90 = 50%
-    private static final double CA_ELIGIBILITY_MINIMUM = 45.0;
+    public GradeCalculator(Mark mark) { this.mark = mark; }
 
-    // ── Max possible marks (useful for % calculations) ─────────────────────
-    public static final double MAX_CA    = 90.0;
-    public static final double MAX_FINAL = 100.0;
-    public static final double MAX_TOTAL = 190.0;
-
-    // ── Constructor ────────────────────────────────────────────────────────
-    public GradeCalculator(Mark mark) {
-        this.mark = mark;
+    // ── Best 2 of 3 quiz average (each quiz stored /100) ──────────────────
+    public double getBest2QuizAvg() {
+        double[] q = { mark.getQuiz01(), mark.getQuiz02(), mark.getQuiz03() };
+        Arrays.sort(q);               // ascending
+        return (q[1] + q[2]) / 2.0;  // average of top two (0–100 scale)
     }
 
-    // ── CA Total (Quiz + Assignment + Project + Mid) ───────────────────────
-    /**
-     * Returns the raw CA total (out of 90).
-     */
+    // ── Combined Mid (MidT + MidP scaled to half each) ───────────────────
+    // MidT and MidP are each /100 — combined mid weight is split equally
+    private double combinedMid(double midWeight) {
+        // midT and midP each contribute half of the total mid weight
+        return (mark.getMidT() * (midWeight / 2.0))
+                + (mark.getMidP() * (midWeight / 2.0));
+    }
+
+    // ── CA Total (course-specific formula) ───────────────────────────────
     public double getCATotal() {
-        return mark.getQuiz01()
-                + mark.getQuiz02()
-                + mark.getQuiz03()
-                + mark.getAssignment1()
-                + mark.getAssignment2()
-                + mark.getProject()
-                + mark.getMidT()
-                + mark.getMidP();
-    }
+        String code = mark.getCCode();
+        double best2 = getBest2QuizAvg();
+        double ass   = mark.getAssignment1();
+        double prj   = mark.getProject();
 
-    // ── Final Exam Total ───────────────────────────────────────────────────
-    /**
-     * Returns the raw Final total (out of 100).
-     */
-    public double getFinalTotal() {
-        return mark.getFinalT() + mark.getFinalP();
-    }
+        return switch (code) {
+            // CA = Project(20%) + Mid(20%) → max 40
+            case "ICT2132", "ICT2152" ->
+                    (prj * 0.20) + combinedMid(0.20);
 
-    // ── Overall Total ──────────────────────────────────────────────────────
-    /**
-     * Returns overall total (out of 190).
-     */
-    public double getOverallTotal() {
-        return getCATotal() + getFinalTotal();
-    }
+            // CA = Best2Quiz(10%) + Mid(20%) → max 30
+            case "ICT2122", "TCS2112" ->
+                    (best2 * 0.10) + combinedMid(0.20);
 
-    // ── CA as percentage ───────────────────────────────────────────────────
-    /**
-     * Returns CA as a percentage out of 100.
-     * Useful to display "CA: 72.5%"
-     */
-    public double getCАPercentage() {
-        return (getCATotal() / MAX_CA) * 100.0;
-    }
+            // CA = Best2Quiz(10%) + Assignment(20%) → max 30
+            case "ICT2142" ->
+                    (best2 * 0.10) + (ass * 0.20);
 
-    // ── Overall as percentage ──────────────────────────────────────────────
-    /**
-     * Returns overall marks as a percentage out of 100.
-     */
-    public double getOverallPercentage() {
-        return (getOverallTotal() / MAX_TOTAL) * 100.0;
-    }
+            // CA = Best2Quiz(10%) + Mid(30%) → max 40
+            case "ICT2113" ->
+                    (best2 * 0.10) + combinedMid(0.30);
 
-    // ── CA Eligibility ─────────────────────────────────────────────────────
-    /**
-     * Returns true if the student has enough CA marks to sit the final exam.
-     * Threshold: caTotal >= 45 (50% of 90).
-     */
-    public boolean isCAEligible() {
-        return getCATotal() >= CA_ELIGIBILITY_MINIMUM;
-    }
+            // CA = Assignment(10%) + Mid(20%) → max 30
+            case "ENG2122" ->
+                    (ass * 0.10) + combinedMid(0.20);
 
-    // ── Letter Grade ───────────────────────────────────────────────────────
-    /**
-     * Returns a letter grade based on the OVERALL PERCENTAGE.
-     *
-     * Grade scale (standard Sri Lankan university scale):
-     *   A+  >= 75%
-     *   A   >= 70%
-     *   A-  >= 65%
-     *   B+  >= 60%
-     *   B   >= 55%
-     *   B-  >= 50%
-     *   C+  >= 45%
-     *   C   >= 40%
-     *   C-  >= 35%
-     *   D   >= 30%
-     *   F   < 30%
-     */
-    public String getLetterGrade() {
-        // If student didn't pass CA eligibility, they cannot pass the course
-        if (!isCAEligible()) return "F";
+            // CA = Assignment(30%), End = Project(70%) → max 30
+            case "TCS2122" ->
+                    (ass * 0.30);
 
-        double pct = getOverallPercentage();
-
-        if      (pct >= 75) return "A+";
-        else if (pct >= 70) return "A";
-        else if (pct >= 65) return "A-";
-        else if (pct >= 60) return "B+";
-        else if (pct >= 55) return "B";
-        else if (pct >= 50) return "B-";
-        else if (pct >= 45) return "C+";
-        else if (pct >= 40) return "C";
-        else if (pct >= 35) return "C-";
-        else if (pct >= 30) return "D";
-        else                return "F";
-    }
-
-    // ── GPA Value ──────────────────────────────────────────────────────────
-    /**
-     * Returns the GPA value (4.0 scale) based on letter grade.
-     */
-    public double getGPA() {
-        return switch (getLetterGrade()) {
-            case "A+"  -> 4.0;
-            case "A"   -> 4.0;
-            case "A-"  -> 3.7;
-            case "B+"  -> 3.3;
-            case "B"   -> 3.0;
-            case "B-"  -> 2.7;
-            case "C+"  -> 2.3;
-            case "C"   -> 2.0;
-            case "C-"  -> 1.7;
-            case "D"   -> 1.0;
-            default    -> 0.0;   // F
+            // Default: Best2Quiz(10%) + Mid(20%) → max 30
+            default ->
+                    (best2 * 0.10) + combinedMid(0.20);
         };
     }
 
-    // ── Summary String (useful for reports / debugging) ────────────────────
-    /**
-     * Returns a formatted summary of the student's results.
-     */
-    public String getSummary() {
-        return String.format(
-                "Student: %-8s | Course: %-7s | CA: %5.1f/90 | Final: %5.1f/100 | " +
-                        "Total: %6.1f/190 (%5.1f%%) | Grade: %-2s | GPA: %.1f | CA Eligible: %s",
-                mark.getUgId(),
-                mark.getCCode(),
-                getCATotal(),
-                getFinalTotal(),
-                getOverallTotal(),
-                getOverallPercentage(),
-                getLetterGrade(),
-                getGPA(),
-                isCAEligible() ? "YES" : "NO"
-        );
+    // ── CA max weight as a fraction (used for eligibility check) ────────
+    public double getCAMaxWeight() {
+        return switch (mark.getCCode()) {
+            case "ICT2132", "ICT2152", "ICT2113" -> 0.40;
+            default                               -> 0.30;
+        };
     }
 
-    // ── Getter for the Mark object ─────────────────────────────────────────
-    public Mark getMark() {
-        return mark;
+    // ── CA max actual mark (0–100 scale) — used for % calculation ────────
+    // e.g. weight 0.40 means CA can contribute max 40 marks out of 100
+    public double getCAMaxMark() {
+        return getCAMaxWeight() * 100.0;   // 0.40 → 40,  0.30 → 30
     }
 
-    // ── Setter (if you need to reuse the same calculator) ─────────────────
-    public void setMark(Mark mark) {
-        this.mark = mark;
+    // ── End weight (fraction of final mark) ──────────────────────────────
+    public double getEndWeight() {
+        return switch (mark.getCCode()) {
+            case "ICT2132", "ICT2113" -> 0.60;
+            // ICT2152: P type → 0.60, T type → 0.70
+            case "ICT2152" -> 0.60;   // this project has no C_type so treat as P
+            default        -> 0.70;
+        };
     }
+
+    // ── Weighted end mark ─────────────────────────────────────────────────
+    public double getEndWeighted() {
+        switch (mark.getCCode()) {
+            // TCS2122: end component is Project (70%)
+            case "TCS2122" -> { return mark.getProject() * 0.70; }
+            // ICT2132: Practicum course — end component is FinalP (60%)
+            case "ICT2132" -> { return mark.getFinalP() * 0.60; }
+            // All other courses use FinalT
+            default        -> { return mark.getFinalT() * getEndWeight(); }
+        }
+    }
+
+    // ── CA as % of the CA portion (0–100) ────────────────────────────────
+    // e.g. CA=19.80, CAMax=40 → 19.80/40*100 = 49.5%
+    public double getCAPercentage() {
+        double caMax = getCAMaxMark();
+        return caMax > 0 ? (getCATotal() / caMax) * 100.0 : 0.0;
+    }
+
+    // ── Final overall mark (CA + End weighted) out of 100 ────────────────
+    public double getFinalMark() {
+        return getCATotal() + getEndWeighted();
+    }
+
+    // ── Overall percentage = final mark (already 0–100) ──────────────────
+    public double getOverallPercentage() { return getFinalMark(); }
+
+    // ── CA eligibility: CA >= 40% of the CA portion ───────────────────────
+    public boolean isCAEligible() {
+        double caMax = getCAMaxWeight();
+        return caMax > 0 && (getCATotal() / caMax) * 100.0 >= 40.0;
+    }
+
+    // ── End eligibility: raw end mark >= 40 ──────────────────────────────
+    public boolean isEndEligible() {
+        switch (mark.getCCode()) {
+            case "TCS2122" -> { return mark.getProject()  >= 40.0; }
+            case "ICT2132" -> { return mark.getFinalP()   >= 40.0; }  // Practicum end = FinalP
+            default        -> { return mark.getFinalT()   >= 40.0; }
+        }
+    }
+
+    // ── Letter grade from final mark (0–100, UGC 2024 boundaries) ────────
+    public String getLetterGrade() {
+        if (!isCAEligible() || !isEndEligible()) return "F";
+        double pct = getOverallPercentage();
+        if (pct >= 75) return "A+";
+        if (pct >= 70) return "A";
+        if (pct >= 65) return "A-";
+        if (pct >= 60) return "B+";
+        if (pct >= 55) return "B";
+        if (pct >= 50) return "B-";
+        if (pct >= 45) return "C+";
+        if (pct >= 40) return "C";
+        if (pct >= 35) return "C-";
+        if (pct >= 30) return "D";
+        return "F";
+    }
+
+    // ── GPA point (4.0 scale, UGC 2024) ──────────────────────────────────
+    public double getGPA() {
+        return switch (getLetterGrade()) {
+            case "A+", "A" -> 4.0;
+            case "A-"      -> 3.7;
+            case "B+"      -> 3.3;
+            case "B"       -> 3.0;
+            case "B-"      -> 2.7;
+            case "C+"      -> 2.3;
+            case "C"       -> 2.0;
+            case "C-"      -> 1.7;
+            case "D"       -> 1.3;
+            default        -> 0.0;
+        };
+    }
+
+    // ── GPA classification label ──────────────────────────────────────────
+    public static String classify(double gpa) {
+        if (gpa >= 3.7) return "First Class";
+        if (gpa >= 3.0) return "Second Class (Upper)";
+        if (gpa >= 2.0) return "Second Class (Lower)";
+        if (gpa >= 1.0) return "Pass";
+        return "Fail";
+    }
+
+    public Mark getMark() { return mark; }
 }

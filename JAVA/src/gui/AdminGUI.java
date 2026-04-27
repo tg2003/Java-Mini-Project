@@ -119,7 +119,7 @@ public class AdminGUI extends JFrame {
 
         contentPanel.add(new UsersPanel(), "users");
         contentPanel.add(new CoursesPanel(), "courses");
-        contentPanel.add(new NoticePanel1(), "notices");
+        contentPanel.add(new NoticePanel(), "notices");
         contentPanel.add(new TimetablePanel(), "timetable");
                 }//end of AdminGUI constructor
 }//end of class
