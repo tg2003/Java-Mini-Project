@@ -51,6 +51,9 @@ public class NoticeView extends JFrame{
         setLocationRelativeTo(null);
         loadNotices();
     }
+    public JPanel getMainPanel() {
+        return mainPanel;
+    }
 
     void loadNotices(){
         String[] columns;
