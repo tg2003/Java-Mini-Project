@@ -15,6 +15,8 @@ public class NoticeView extends JFrame{
     private JTable table;
     private String role;
 
+    private String techOffId;
+
     // Admin - with edit button
     public NoticeView(String role) {
         this.role = role;
@@ -25,6 +27,20 @@ public class NoticeView extends JFrame{
     public NoticeView() {
         this.role = "Viewer";
         init();
+    }
+
+    // Tech Officer - with back navigation
+    public NoticeView(String techOffId, boolean isTechOfficer) {
+        this.techOffId = techOffId;
+        this.role = "Viewer";
+        init();
+
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                new TechOfficerDashboard(techOffId).setVisible(true);
+            }
+        });
     }
 
     private void init() {
@@ -164,5 +180,6 @@ public class NoticeView extends JFrame{
             JOptionPane.showMessageDialog(null, "Error loading notices!", "Error", JOptionPane.ERROR_MESSAGE);
         }
 
-        }//end of loadnotices()
+        }
+        //end of loadnotices()
 }

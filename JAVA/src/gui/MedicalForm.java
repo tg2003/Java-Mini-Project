@@ -40,9 +40,8 @@ public class MedicalForm extends JFrame {
         setMinimumSize(new Dimension(800,600));
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
-        // =============================
-        // PENDING TABLE
-        // =============================
+
+        //pending table
         pendingModel = new DefaultTableModel();
         pendingModel.setColumnIdentifiers(new String[]{
                 "Medical ID", "UG ID", "Course", "Date", "Session Type", "Status"
@@ -53,9 +52,9 @@ public class MedicalForm extends JFrame {
 
         medScrollPane.setViewportView(pendingTable);
 
-        // =============================
-        // ALL MEDICAL TABLE
-        // =============================
+
+        //all medical table
+
         allModel = new DefaultTableModel();
         allModel.setColumnIdentifiers(new String[]{
                 "Medical ID", "UG ID", "Course", "Date", "Session Type", "Status"
@@ -64,14 +63,10 @@ public class MedicalForm extends JFrame {
         allTable = new JTable(allModel);
         allMedicalScrollPane.setViewportView(allTable);
 
-        // =============================
-        // DEFAULT LOAD (Pending)
-        // =============================
+
         loadPendingMedicals();
 
-        // =============================
-        // BUTTONS
-        // =============================
+       //buttons
         btnApprove.addActionListener(e -> updateMedicalStatus("MedicalApproved"));
         btnReject.addActionListener(e -> updateMedicalStatus("MedicalDeclined"));
 
@@ -87,8 +82,8 @@ public class MedicalForm extends JFrame {
         setVisible(true);
     }
 
-    // =====================================
-    // LOAD PENDING MEDICALS
+
+    //load pending medicals
     private void loadPendingMedicals() {
         try {
             Connection con = DBConnection.getConnection();
@@ -120,8 +115,7 @@ public class MedicalForm extends JFrame {
         }
     }
 
-    // =====================================
-    // LOAD ALL MEDICALS
+    //load all medicals
     private void loadAllMedicals() {
         try {
             Connection con = DBConnection.getConnection();
@@ -152,8 +146,8 @@ public class MedicalForm extends JFrame {
         }
     }
 
-    // =====================================
-    // UPDATE STATUS (ONLY FROM PENDING TABLE)
+
+
     private void updateMedicalStatus(String newStatus) {
 
         int[] selectedRows = pendingTable.getSelectedRows();
@@ -185,6 +179,7 @@ public class MedicalForm extends JFrame {
             // Refresh both tables
             loadPendingMedicals();
             loadAllMedicals();
+
 
         } catch (Exception e) {
             e.printStackTrace();

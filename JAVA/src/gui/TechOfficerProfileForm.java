@@ -48,9 +48,9 @@ public class TechOfficerProfileForm extends JFrame {
 
         loadProfileData();
 
-        // =========================
-        // CHANGE IMAGE
-        // =========================
+
+        //change image
+
         btnChange.addActionListener(e -> {
 
             JFileChooser fc = new JFileChooser();
@@ -72,7 +72,7 @@ public class TechOfficerProfileForm extends JFrame {
                             StandardCopyOption.REPLACE_EXISTING
                     );
 
-                    imagePath = "src/resources/userPP/" + file.getName();
+                    imagePath = System.getProperty("user.dir") + "/src/resources/userPP/" + file.getName();
 
                     setProfileImage(imagePath);
 
@@ -90,20 +90,18 @@ public class TechOfficerProfileForm extends JFrame {
 
         btnBack.addActionListener(e -> {
             dispose();
-            new TechOfficerDashboard(techOffId);
+            new TechOfficerDashboard(techOffId).setVisible(true);
         });
 
         setVisible(true);
     }
 
-    // =====================================
-    // LOAD PROFILE DATA (FIXED)
-    // =====================================
+    //load profile data
     private void loadProfileData() {
         try {
             Connection con = DBConnection.getConnection();
 
-            // 🔹 Load main details
+            //Load main details
             String sql1 = "SELECT * FROM tech_officer WHERE Techoff_id=?";
             PreparedStatement pst1 = con.prepareStatement(sql1);
             pst1.setString(1, techOffId);
@@ -117,7 +115,7 @@ public class TechOfficerProfileForm extends JFrame {
                 tNic.setText(rs1.getString("Nic"));
                 tDob.setText(rs1.getString("Dob"));
 
-                // ✅ FIX ADDRESS (No + Street + City)
+
                 String address = rs1.getString("No") + ", "
                         + rs1.getString("Street") + ", "
                         + rs1.getString("City");
@@ -125,20 +123,9 @@ public class TechOfficerProfileForm extends JFrame {
                 tAddress.setText(address);
             }
 
-            // 🔹 Load PHONE from separate table
-            /*String phoneSql = "SELECT phone FROM tech_officer_phone WHERE Techoff_id=?";
-            PreparedStatement pstPhone = con.prepareStatement(phoneSql);
-            pstPhone.setString(1, techOffId);
 
-            ResultSet rsPhone = pstPhone.executeQuery();
 
-            if (rsPhone.next()) {
-                tPhone.setText(rsPhone.getString("phone"));
-            } else {
-                tPhone.setText("");
-            }*/
-
-            // 🔹 Load user table (password + image)
+            //load user table
             String sql2 = "SELECT password, profile_pic FROM user WHERE user_id=?";
             PreparedStatement pst2 = con.prepareStatement(sql2);
             pst2.setString(1, techOffId);
@@ -159,11 +146,14 @@ public class TechOfficerProfileForm extends JFrame {
         }
     }
 
-    // =====================================
-    // IMAGE DISPLAY
-    // =====================================
+    //display image
     private void setProfileImage(String path) {
         try {
+            // Handle relative paths
+            if (path.startsWith("src/")) {
+                path = System.getProperty("user.dir") + "/" + path;
+            }
+
             File file = new File(path);
 
             if (!file.exists()) return;
@@ -181,9 +171,7 @@ public class TechOfficerProfileForm extends JFrame {
         }
     }
 
-    // =====================================
-    // SAVE PROFILE (FIX PHONE + ADDRESS)
-    // =====================================
+    //save profile
     private void saveProfile() {
         try {
             Connection con = DBConnection.getConnection();
@@ -191,14 +179,14 @@ public class TechOfficerProfileForm extends JFrame {
             String name = tName.getText();
             String password = new String(fPassword.getPassword());
 
-            // 🔹 Split address back into parts
+            // Split address back into parts
             String[] parts = tAddress.getText().split(",");
 
             String no = parts.length > 0 ? parts[0].trim() : "";
             String street = parts.length > 1 ? parts[1].trim() : "";
             String city = parts.length > 2 ? parts[2].trim() : "";
 
-           // String phone = tPhone.getText();
+
 
             // UPDATE tech_officer
             String sql1 = """
@@ -215,17 +203,6 @@ public class TechOfficerProfileForm extends JFrame {
             pst1.setString(5, techOffId);
             pst1.executeUpdate();
 
-            // UPDATE phone table
-            /*String sqlPhone = """
-                UPDATE tech_officer_phone
-                SET phone=?
-                WHERE Techoff_id=?
-            """;
-
-            PreparedStatement pstPhone = con.prepareStatement(sqlPhone);
-            pstPhone.setString(1, phone);
-            pstPhone.setString(2, techOffId);
-            pstPhone.executeUpdate();*/
 
             // UPDATE user table
             String sql2 = """
