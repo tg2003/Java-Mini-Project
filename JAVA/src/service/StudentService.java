@@ -31,14 +31,7 @@ public class StudentService {
     }
 
     // ── Profile Picture ────────────────────────────────────────────────────
-    /**
-     * Copies the chosen image file into src/resources/userPP/<userId>.<ext>,
-     * updates the USER table, and updates the in-memory student object.
-     *
-     * @param student   the logged-in Undergraduate (updated in place)
-     * @param chosenFile the image file the user selected via JFileChooser
-     * @return true on success, false on any failure
-     */
+
     public boolean changeProfilePic(Undergraduate student, File chosenFile) {
         if (student == null || chosenFile == null || !chosenFile.exists()) return false;
 
@@ -82,4 +75,22 @@ public class StudentService {
     // ── Dashboard counts ───────────────────────────────────────────────────
     public int getCourseCount(String ugId)   { return dao.getCourseCount(ugId); }
     public int getUnreadNoticeCount()        { return dao.getUnreadNoticeCount(); }
+
+    public boolean updateContactDetails(String ugId, String email,
+                                        String houseNo, String street, String city) {
+        if (email == null || email.isBlank()) return false;
+        return dao.updateContactDetails(ugId, email, houseNo, street, city);
+    }
+
+    public boolean addPhone(String ugId, String phone) {
+        if (phone == null || phone.isBlank()) return false;
+        if (!phone.matches("\\d{10}")) return false;
+        return dao.addPhone(ugId, phone);
+    }
+
+    public boolean deletePhone(String ugId, String phone) {
+        return dao.deletePhone(ugId, phone);
+    }
+
+
 }

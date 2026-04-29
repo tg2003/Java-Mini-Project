@@ -170,6 +170,7 @@ public class StudentDashboardUI extends JFrame {
                 btn.setForeground(key.equals(card) ? Color.WHITE : UITheme.PUTTY));
     }
 
+
     // ── Button factories ──────────────────────────────────────────────────────
     private JButton navButton(String text) {
         JButton b = new JButton(text);
@@ -263,5 +264,7 @@ public class StudentDashboardUI extends JFrame {
             g2.drawOval(1, 1, size - 2, size - 2);
             g2.dispose();
         }
+
     }
+
 }

@@ -13,9 +13,7 @@ import java.util.List;
 public class StudentDAO {
 
     // ── Authentication ────────────────────────────────────────────────────────
-    /**
-     * Returns true and loads the Undergraduate if credentials match USER table.
-     */
+
     public Undergraduate login(String userId, String password) {
         String sql = "SELECT u.User_id, u.Password, u.Role, u.Profile_pic, " +
                 "ug.Name, ug.Email, ug.Nic, ug.Dob, ug.Dpt_name, " +
@@ -145,5 +143,45 @@ public class StudentDAO {
             e.printStackTrace();
         }
         return 0;
+    }
+
+    public boolean updateContactDetails(String ugId, String email,
+                                        String houseNo, String street, String city) {
+        String sql = "UPDATE UNDERGRADUATE SET Email=?, No=?, Street=?, City=? WHERE Ug_id=?";
+        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
+            ps.setString(1, email);
+            ps.setString(2, houseNo);
+            ps.setString(3, street);
+            ps.setString(4, city);
+            ps.setString(5, ugId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean addPhone(String ugId, String phone) {
+        String sql = "INSERT IGNORE INTO UNDERGRADUATE_PHONE (Ug_id, Phone) VALUES (?, ?)";
+        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
+            ps.setString(1, ugId);
+            ps.setString(2, phone);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deletePhone(String ugId, String phone) {
+        String sql = "DELETE FROM UNDERGRADUATE_PHONE WHERE Ug_id=? AND Phone=?";
+        try (PreparedStatement ps = DBConnection.getConnection().prepareStatement(sql)) {
+            ps.setString(1, ugId);
+            ps.setString(2, phone);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
     }
 }
