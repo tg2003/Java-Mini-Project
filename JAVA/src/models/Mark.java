@@ -9,7 +9,6 @@ public class Mark {
     private String ugId;
     private String cCode;
 
-    // ── Mark components (all DECIMAL 5,2 in DB) ───────────────────────────
     private double quiz01;
     private double quiz02;
     private double quiz03;
@@ -21,10 +20,10 @@ public class Mark {
     private double finalT;
     private double finalP;
 
-    // ── Attempt type ───────────────────────────────────────────────────────
-    private String attemptType;    // ENUM: "Proper" | "Repeat" | "MedicalRepeat"
 
-    // ── Full constructor (used when loading from DB, markId is known) ───────
+    private String attemptType;
+
+    // constructor
     public Mark(int markId, String ugId, String cCode,
                 double quiz01, double quiz02, double quiz03,
                 double assignment1, double assignment2, double project,
@@ -47,7 +46,7 @@ public class Mark {
         this.attemptType = attemptType;
     }
 
-    // ── Insert constructor (markId not known yet — DB will assign it) ───────
+
     public Mark(String ugId, String cCode,
                 double quiz01, double quiz02, double quiz03,
                 double assignment1, double assignment2, double project,
@@ -60,7 +59,7 @@ public class Mark {
                 midT, midP, finalT, finalP, attemptType);
     }
 
-    // ── Getters ────────────────────────────────────────────────────────────
+
     public int    getMarkId()      { return markId; }
     public String getUgId()        { return ugId; }
     public String getCCode()       { return cCode; }
@@ -76,7 +75,7 @@ public class Mark {
     public double getFinalP()      { return finalP; }
     public String getAttemptType() { return attemptType; }
 
-    // ── Setters (used when updating marks) ─────────────────────────────────
+
     public void setMarkId(int markId)           { this.markId = markId; }
     public void setQuiz01(double quiz01)        { this.quiz01 = quiz01; }
     public void setQuiz02(double quiz02)        { this.quiz02 = quiz02; }
@@ -90,7 +89,7 @@ public class Mark {
     public void setFinalP(double finalP)        { this.finalP = finalP; }
     public void setAttemptType(String type)     { this.attemptType = type; }
 
-    // ── toString (useful for debugging / printing in tables) ───────────────
+
     @Override
     public String toString() {
         return "Mark{id=" + markId + ", ugId=" + ugId + ", course=" + cCode +

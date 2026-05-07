@@ -4,7 +4,7 @@ public class Course {
     private String code;
     private String name;
     private String credit;
-    private String enrollStatus;  // Proper / Repeat / Batchmissed
+    private String enrollStatus;
     private int    sem;
     private int    batchYear;
     private int    level;

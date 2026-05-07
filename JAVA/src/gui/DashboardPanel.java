@@ -154,7 +154,7 @@ public class DashboardPanel extends JPanel {
         List<Timetable> all = timetableSvc.getTimetable(student.getUgId());
         int count = 0;
         for (Timetable timetable : all) {
-            if (timetable.getDay().equalsIgnoreCase(todayCode)) {
+            if (timetable.getDay().equals(todayCode)) {
                 list.add(scheduleRow(timetable));
                 count++;
             }

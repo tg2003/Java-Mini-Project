@@ -138,8 +138,7 @@ public class StudentDashboardUI extends JFrame {
 
         // ProfilePanel receives this::refreshTopAvatar so the top-bar avatar
         // updates immediately when the user changes their photo.
-        DashboardPanel dashboardPanel = new DashboardPanel(student, this::showCard);
-        contentPanel.add(dashboardPanel, "Dashboard");
+        contentPanel.add(new DashboardPanel(student, this::showCard),       "Dashboard");
         contentPanel.add(new CoursesPanel1(student),                        "Courses");
         contentPanel.add(new NoticeView().getMainPanel(),                   "Notice");
         contentPanel.add(new GPAPanel(student),                             "GPA");
@@ -166,12 +165,9 @@ public class StudentDashboardUI extends JFrame {
     }
 
     private void showCard(String card) {
-        if (card.equals("Dashboard")) {
-            contentPanel.remove(0);
-            contentPanel.add(new DashboardPanel(student, this::showCard), "Dashboard", 0);
-        }
         cardLayout.show(contentPanel, card);
-        navButtons.forEach((key, value) -> value.setForeground(key.equals(card) ? Color.WHITE : UITheme.PUTTY));
+        navButtons.forEach((key, btn) ->
+                btn.setForeground(key.equals(card) ? Color.WHITE : UITheme.PUTTY));
     }
 
 
