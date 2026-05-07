@@ -11,7 +11,7 @@ import java.util.List;
 
 public class AttendanceDAO {
 
-    /** Full attendance history for a student, newest first. */
+    /** Full attendance history for a student*/
     public List<Attendance> getByStudent(String ugId) {
         List<Attendance> list = new ArrayList<>();
         String sql = "SELECT a.Week_no, a.Ug_id, a.Timetable_id, a.Date, " +
@@ -47,12 +47,7 @@ public class AttendanceDAO {
         return list;
     }
 
-    /**
-     * Returns Absent sessions for a student within a date range (max 14 days).
-     * Only returns sessions where Status = 'Absent' and no MEDICAL record
-     * already exists for that same session date + course.
-     * This drives the checkbox table in MedicalSubmissionDialog.
-     */
+
     public List<Attendance> getAbsentSessionsInRange(String ugId, Date fromDate, Date toDate) {
         List<Attendance> list = new ArrayList<>();
         String sql =
