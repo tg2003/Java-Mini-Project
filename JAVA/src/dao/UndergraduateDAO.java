@@ -8,15 +8,12 @@ public class UndergraduateDAO {
 
     public static Undergraduate getById(String ugId) {
 
-        // ── FIX: JOIN USER table to fetch Profile_pic ──────────────────────
-        // Old query only read UNDERGRADUATE table so Profile_pic was ALWAYS
-        // null after login — even though the path was saved in the DB.
-        // ───────────────────────────────────────────────────────────────────
+        // JOIN USER table to fetch Profile_pic
         String sql = "SELECT ug.Ug_id, ug.Name, ug.Email, ug.Nic, ug.Dob, " +
                 "ug.Dpt_name, ug.No, ug.Street, ug.City, " +
-                "u.Profile_pic " +                          // ← added
+                "u.Profile_pic " +
                 "FROM UNDERGRADUATE ug " +
-                "JOIN USER u ON u.User_id = ug.Ug_id " +   // ← added
+                "JOIN USER u ON u.User_id = ug.Ug_id " +
                 "WHERE ug.Ug_id = ?";
 
         try {
@@ -36,9 +33,8 @@ public class UndergraduateDAO {
                         rs.getString("Street"),
                         rs.getString("City")
                 );
-                // ── FIX: set profile pic from DB ───────────────────────────
-                ug.setProfilePic(rs.getString("Profile_pic"));  // ← added
-                // ──────────────────────────────────────────────────────────
+                // set profile pic from DB
+                ug.setProfilePic(rs.getString("Profile_pic"));
                 return ug;
             }
         } catch (SQLException e) {
